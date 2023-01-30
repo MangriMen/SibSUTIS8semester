@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"math"
 	"os"
 	"path/filepath"
@@ -41,19 +43,32 @@ func writeBMP(path string, image BMPImage) {
 	writeFileAsBytes(path, bmpToBytes(image))
 }
 
+func printBMPStructure(image BMPImage) {
+	prefix := ""
+	indent := "  "
+
+	header, _ := json.MarshalIndent(image.FileHeader, prefix, indent)
+	info, _ := json.MarshalIndent(image.FileInfo, prefix, indent)
+	rgbQuad, _ := json.MarshalIndent(image.RgbQuad, prefix, indent)
+
+	fmt.Printf("File header: %s\n", header)
+	fmt.Printf("File info: %s\n", info)
+	fmt.Printf("Palette: %s\n", rgbQuad)
+}
+
 func averageColorValues(rgbQuad RgbQuad) RgbQuad {
-	averageValue := (rgbQuad.rgbBlue + rgbQuad.rgbGreen + rgbQuad.rgbRed) / 3
-	rgbQuad.rgbBlue = averageValue
-	rgbQuad.rgbGreen = averageValue
-	rgbQuad.rgbRed = averageValue
+	averageValue := (rgbQuad.RgbBlue + rgbQuad.RgbGreen + rgbQuad.RgbRed) / 3
+	rgbQuad.RgbBlue = averageValue
+	rgbQuad.RgbGreen = averageValue
+	rgbQuad.RgbRed = averageValue
 	return rgbQuad
 }
 
 func convertBMPToBnW(image BMPImage) BMPImage {
 	newImage := image
-	rgbQuadElementsCount := int(math.Pow(2, float64(newImage.fileInfo.bitCount)))
+	rgbQuadElementsCount := int(math.Pow(2, float64(newImage.FileInfo.BitCount)))
 	for i := 0; i < rgbQuadElementsCount; i++ {
-		newImage.rgbQuad[i] = averageColorValues(newImage.rgbQuad[i])
+		newImage.RgbQuad[i] = averageColorValues(newImage.RgbQuad[i])
 	}
 	return newImage
 }
@@ -68,6 +83,8 @@ func main() {
 	outputFilename := filenameWithoutExt + "_BnW.bmp"
 
 	image := readBMP(filename)
+
+	printBMPStructure(image)
 
 	bnwImage := convertBMPToBnW(image)
 

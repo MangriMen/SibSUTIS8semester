@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"math"
 )
 
@@ -35,39 +34,39 @@ const BMPSignature uint16 = 0x4D42
 const RGBQuadElementsCount int = 4
 
 type BitmapFileHeader struct {
-	signature uint16
-	size      uint32
-	reserved1 uint16
-	reserved2 uint16
-	offset    uint32
+	Signature uint16
+	Size      uint32
+	Reserved1 uint16
+	Reserved2 uint16
+	Offset    uint32
 }
 
 type BitmapFileInfo struct {
-	size                 uint32
-	width                int32
-	height               int32
-	planes               uint16
-	bitCount             uint16
-	compression          uint32
-	sizeImage            uint32
-	horizontalResolution int32
-	verticalResolution   int32
-	colorUsed            uint32
-	colorImportant       uint32
+	Size                 uint32
+	Width                int32
+	Height               int32
+	Planes               uint16
+	BitCount             uint16
+	Compression          uint32
+	SizeImage            uint32
+	HorizontalResolution int32
+	VerticalResolution   int32
+	ColorUsed            uint32
+	ColorImportant       uint32
 }
 
 type RgbQuad struct {
-	rgbBlue     byte
-	rgbGreen    byte
-	rgbRed      byte
-	rgbReserved byte
+	RgbBlue     byte
+	RgbGreen    byte
+	RgbRed      byte
+	RgbReserved byte
 }
 
 type BMPImage struct {
-	fileHeader      BitmapFileHeader
-	fileInfo        BitmapFileInfo
-	rgbQuad         []RgbQuad
-	colorIndexArray []byte
+	FileHeader      BitmapFileHeader
+	FileInfo        BitmapFileInfo
+	RgbQuad         []RgbQuad
+	ColorIndexArray []byte
 }
 
 func BytesToUInt32(b []byte) uint32 {
@@ -96,23 +95,23 @@ func UInt16ToBytes(n uint16) []byte {
 
 func RGBQuadToBytes(rgbQuad RgbQuad) []byte {
 	bytes := make([]byte, 4)
-	bytes[0] = rgbQuad.rgbBlue
-	bytes[1] = rgbQuad.rgbGreen
-	bytes[2] = rgbQuad.rgbRed
-	bytes[3] = rgbQuad.rgbReserved
+	bytes[0] = rgbQuad.RgbBlue
+	bytes[1] = rgbQuad.RgbGreen
+	bytes[2] = rgbQuad.RgbRed
+	bytes[3] = rgbQuad.RgbReserved
 	return bytes
 }
 
 func newBitmapFileHeader(data []byte) (BitmapFileHeader, error) {
 	fileHeader := BitmapFileHeader{}
-	fileHeader.signature = BytesToUInt16(data[SignatureBounds.begin:SignatureBounds.end])
-	fileHeader.size = BytesToUInt32(data[SizeHeaderBounds.begin:SizeHeaderBounds.end])
-	fileHeader.reserved1 = BytesToUInt16(data[Reserved1Bounds.begin:Reserved1Bounds.end])
-	fileHeader.reserved2 = BytesToUInt16(data[Reserved2Bounds.begin:Reserved2Bounds.end])
-	fileHeader.offset = BytesToUInt32(data[OffsetBounds.begin:OffsetBounds.end])
+	fileHeader.Signature = BytesToUInt16(data[SignatureBounds.begin:SignatureBounds.end])
+	fileHeader.Size = BytesToUInt32(data[SizeHeaderBounds.begin:SizeHeaderBounds.end])
+	fileHeader.Reserved1 = BytesToUInt16(data[Reserved1Bounds.begin:Reserved1Bounds.end])
+	fileHeader.Reserved2 = BytesToUInt16(data[Reserved2Bounds.begin:Reserved2Bounds.end])
+	fileHeader.Offset = BytesToUInt32(data[OffsetBounds.begin:OffsetBounds.end])
 
 	var err error
-	if fileHeader.signature != BMPSignature {
+	if fileHeader.Signature != BMPSignature {
 		err = errors.New("unsupported format. signature does not match BMP format")
 	}
 
@@ -121,22 +120,22 @@ func newBitmapFileHeader(data []byte) (BitmapFileHeader, error) {
 
 func newBitmapFileInfo(data []byte) BitmapFileInfo {
 	fileInfo := BitmapFileInfo{}
-	fileInfo.size = BytesToUInt32(data[SizeInfoBounds.begin:SizeInfoBounds.end])
-	fileInfo.width = int32(BytesToUInt32(data[WidthBounds.begin:WidthBounds.end]))
-	fileInfo.height = int32(BytesToUInt32(data[HeightBounds.begin:HeightBounds.end]))
-	fileInfo.planes = BytesToUInt16(data[PlanesBounds.begin:PlanesBounds.end])
-	fileInfo.bitCount = BytesToUInt16(data[BitCountBounds.begin:BitCountBounds.end])
-	fileInfo.compression = BytesToUInt32(data[CompressionBounds.begin:CompressionBounds.end])
-	fileInfo.sizeImage = BytesToUInt32(data[SizeImageBounds.begin:SizeImageBounds.end])
-	fileInfo.horizontalResolution = int32(BytesToUInt32(data[HorizontalResolutionBounds.begin:HorizontalResolutionBounds.end]))
-	fileInfo.verticalResolution = int32(BytesToUInt32(data[VerticalResolutionBounds.begin:VerticalResolutionBounds.end]))
-	fileInfo.colorUsed = BytesToUInt32(data[ColorUsedBounds.begin:ColorUsedBounds.end])
-	fileInfo.colorImportant = BytesToUInt32(data[ColorImportantBounds.begin:ColorImportantBounds.end])
+	fileInfo.Size = BytesToUInt32(data[SizeInfoBounds.begin:SizeInfoBounds.end])
+	fileInfo.Width = int32(BytesToUInt32(data[WidthBounds.begin:WidthBounds.end]))
+	fileInfo.Height = int32(BytesToUInt32(data[HeightBounds.begin:HeightBounds.end]))
+	fileInfo.Planes = BytesToUInt16(data[PlanesBounds.begin:PlanesBounds.end])
+	fileInfo.BitCount = BytesToUInt16(data[BitCountBounds.begin:BitCountBounds.end])
+	fileInfo.Compression = BytesToUInt32(data[CompressionBounds.begin:CompressionBounds.end])
+	fileInfo.SizeImage = BytesToUInt32(data[SizeImageBounds.begin:SizeImageBounds.end])
+	fileInfo.HorizontalResolution = int32(BytesToUInt32(data[HorizontalResolutionBounds.begin:HorizontalResolutionBounds.end]))
+	fileInfo.VerticalResolution = int32(BytesToUInt32(data[VerticalResolutionBounds.begin:VerticalResolutionBounds.end]))
+	fileInfo.ColorUsed = BytesToUInt32(data[ColorUsedBounds.begin:ColorUsedBounds.end])
+	fileInfo.ColorImportant = BytesToUInt32(data[ColorImportantBounds.begin:ColorImportantBounds.end])
 	return fileInfo
 }
 
 func newRGBQuad(data []byte) RgbQuad {
-	rgbQuad := RgbQuad{rgbBlue: data[0], rgbGreen: data[1], rgbRed: data[2], rgbReserved: data[3]}
+	rgbQuad := RgbQuad{RgbBlue: data[0], RgbGreen: data[1], RgbRed: data[2], RgbReserved: data[3]}
 	return rgbQuad
 }
 
@@ -148,18 +147,15 @@ func newImageData(data []byte) BMPImage {
 
 	fileInfo := newBitmapFileInfo(data[:BitmapFileInfoBounds.end])
 
-	fmt.Printf("%+v\n", fileHeader)
-	fmt.Printf("%+v\n", fileInfo)
-
-	rgbQuadElementsCount := int(math.Pow(2, float64(fileInfo.bitCount)))
+	rgbQuadElementsCount := int(math.Pow(2, float64(fileInfo.BitCount)))
 	rgbQuad := make([]RgbQuad, rgbQuadElementsCount)
 	for i, j := 0, BitmapFileInfoBounds.end; i < rgbQuadElementsCount; i, j = i+1, j+RGBQuadElementsCount {
 		rgbQuad[i] = newRGBQuad(data[j : j+RGBQuadElementsCount])
 	}
 
-	colorIndexArray := data[fileHeader.offset:]
+	colorIndexArray := data[fileHeader.Offset:]
 
-	imageData := BMPImage{fileHeader: fileHeader, fileInfo: fileInfo, rgbQuad: rgbQuad, colorIndexArray: colorIndexArray}
+	imageData := BMPImage{FileHeader: fileHeader, FileInfo: fileInfo, RgbQuad: rgbQuad, ColorIndexArray: colorIndexArray}
 	return imageData
 }
 
@@ -170,29 +166,29 @@ func bmpFromBytes(data []byte) BMPImage {
 func bmpToBytes(image BMPImage) []byte {
 	var data []byte
 
-	data = append(data, UInt16ToBytes(image.fileHeader.signature)...)
-	data = append(data, UInt32ToBytes(image.fileHeader.size)...)
-	data = append(data, UInt16ToBytes(image.fileHeader.reserved1)...)
-	data = append(data, UInt16ToBytes(image.fileHeader.reserved2)...)
-	data = append(data, UInt32ToBytes(image.fileHeader.offset)...)
+	data = append(data, UInt16ToBytes(image.FileHeader.Signature)...)
+	data = append(data, UInt32ToBytes(image.FileHeader.Size)...)
+	data = append(data, UInt16ToBytes(image.FileHeader.Reserved1)...)
+	data = append(data, UInt16ToBytes(image.FileHeader.Reserved2)...)
+	data = append(data, UInt32ToBytes(image.FileHeader.Offset)...)
 
-	data = append(data, UInt32ToBytes(image.fileInfo.size)...)
-	data = append(data, UInt32ToBytes(uint32(image.fileInfo.width))...)
-	data = append(data, UInt32ToBytes(uint32(image.fileInfo.height))...)
-	data = append(data, UInt16ToBytes(image.fileInfo.planes)...)
-	data = append(data, UInt16ToBytes(image.fileInfo.bitCount)...)
-	data = append(data, UInt32ToBytes(image.fileInfo.compression)...)
-	data = append(data, UInt32ToBytes(image.fileInfo.sizeImage)...)
-	data = append(data, UInt32ToBytes(uint32(image.fileInfo.horizontalResolution))...)
-	data = append(data, UInt32ToBytes(uint32(image.fileInfo.verticalResolution))...)
-	data = append(data, UInt32ToBytes(image.fileInfo.colorUsed)...)
-	data = append(data, UInt32ToBytes(image.fileInfo.colorImportant)...)
+	data = append(data, UInt32ToBytes(image.FileInfo.Size)...)
+	data = append(data, UInt32ToBytes(uint32(image.FileInfo.Width))...)
+	data = append(data, UInt32ToBytes(uint32(image.FileInfo.Height))...)
+	data = append(data, UInt16ToBytes(image.FileInfo.Planes)...)
+	data = append(data, UInt16ToBytes(image.FileInfo.BitCount)...)
+	data = append(data, UInt32ToBytes(image.FileInfo.Compression)...)
+	data = append(data, UInt32ToBytes(image.FileInfo.SizeImage)...)
+	data = append(data, UInt32ToBytes(uint32(image.FileInfo.HorizontalResolution))...)
+	data = append(data, UInt32ToBytes(uint32(image.FileInfo.VerticalResolution))...)
+	data = append(data, UInt32ToBytes(image.FileInfo.ColorUsed)...)
+	data = append(data, UInt32ToBytes(image.FileInfo.ColorImportant)...)
 
-	for i := 0; i < len(image.rgbQuad); i++ {
-		data = append(data, RGBQuadToBytes(image.rgbQuad[i])...)
+	for i := 0; i < len(image.RgbQuad); i++ {
+		data = append(data, RGBQuadToBytes(image.RgbQuad[i])...)
 	}
 
-	data = append(data, image.colorIndexArray...)
+	data = append(data, image.ColorIndexArray...)
 
 	return data
 }
