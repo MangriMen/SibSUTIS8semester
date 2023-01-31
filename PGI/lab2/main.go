@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 func readFileAsBytes(path string) []byte {
@@ -56,51 +57,43 @@ func printBMPStructure(image BMPImage) {
 	fmt.Printf("Palette: %s\n", rgbQuad)
 }
 
-func createBorderOnBMP(image BMPImage) BMPImage {
+func createBorderOnBMP(image BMPImage, borderColorIndex int, borderWidth int) BMPImage {
 	newImage := image
 
 	width := int(newImage.FileInfo.Width)
 	height := int(newImage.FileInfo.Height)
 
-	borderColor := byte(rand.Intn(len(newImage.RgbQuad)))
-	borderWidth := 15
-
 	for i := 0; i < height; i++ {
 		for j := 0; j < width; j++ {
 			if (i < borderWidth || i >= height-borderWidth) || (j < borderWidth || j >= width-borderWidth) {
-				index := i*(width/2) + j/2
-				for k := 0; k < int(newImage.FileInfo.BitCount); k++ {
-					SetPixel(newImage.ColorIndexArray[index:index+1], borderColor, k, newImage.FileInfo.BitCount)
-				}
+				SetPixel(i, j, borderColorIndex, newImage.ColorIndexArray, newImage.FileInfo)
 			}
 		}
 	}
-
-	// for i := 0; i < height; i++ {
-	// 	for j := 0; j < width/2; j++ {
-	// 		if (i < borderWidth || i >= height-borderWidth) || (j < borderWidth/2 || j >= width/2-borderWidth/2) {
-	// 			newImage.ColorIndexArray[i*(width/2)+j] = borderColor<<4 | borderColor
-	// 		}
-	// 	}
-	// }
 
 	return newImage
 }
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
+
 	filename, err := filepath.Abs("../CAT16.bmp")
 	if err != nil {
 		panic(err)
 	}
 
 	filenameWithoutExt := strings.Split(filepath.Base(filename), ".")[0]
-	outputFilename := filenameWithoutExt + "_BnW.bmp"
+	outputFilename := filenameWithoutExt + "_Border.bmp"
 
 	image := readBMP(filename)
 
 	printBMPStructure(image)
 
-	bnwImage := createBorderOnBMP(image)
+	borderColorIndex := rand.Intn(len(image.RgbQuad))
+	borderWidth := 15
+	fmt.Printf("Border color: %+v", image.RgbQuad[borderColorIndex])
+
+	bnwImage := createBorderOnBMP(image, borderColorIndex, borderWidth)
 
 	writeBMP(outputFilename, bnwImage)
 }

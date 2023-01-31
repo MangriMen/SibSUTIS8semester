@@ -69,11 +69,43 @@ type BMPImage struct {
 	ColorIndexArray []byte
 }
 
-func SetPixel(pixels []byte, pixel byte, pixelIndex int, bitCount uint16) {
-	startIndex := pixelIndex * int(bitCount)
-	for i, j := startIndex, 1; i < startIndex+int(bitCount); i, j = i+1, j<<1 {
-		pixels[0] &= 0 << i
-		pixels[0] |= byte((int(pixel) & j) << i)
+const BitsPerByte = 8
+
+func setBit(n int, pos uint) int {
+	n |= (1 << pos)
+	return n
+}
+
+func clearBit(n int, pos uint) int {
+	mask := ^(1 << pos)
+	n &= mask
+	return n
+}
+
+func hasBit(n int, pos uint) bool {
+	val := n & (1 << pos)
+	return (val > 0)
+}
+
+func SetPixel(i int, j int, data int, colorIndexes []byte, fileInfo BitmapFileInfo) {
+	var bitsPerPixel int
+	if fileInfo.BitCount <= BitsPerByte {
+		bitsPerPixel = BitsPerByte / int(fileInfo.BitCount)
+	} else {
+		panic("unsupported bits per pixel")
+	}
+
+	row := i * int(fileInfo.Width) / bitsPerPixel
+	column := j / bitsPerPixel
+	index := row + column
+
+	startBit := int(fileInfo.BitCount) - (j % bitsPerPixel * int(fileInfo.BitCount))
+	endBit := startBit + int(fileInfo.BitCount)
+	for i, j := startBit, 0; i < endBit; i, j = i+1, j+1 {
+		colorIndexes[index] = byte(clearBit(int(colorIndexes[index]), uint(i)))
+		if hasBit(data, uint(j)) {
+			colorIndexes[index] = byte(setBit(int(colorIndexes[index]), uint(i)))
+		}
 	}
 }
 
