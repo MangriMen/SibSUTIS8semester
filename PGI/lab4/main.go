@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"image/color"
-	"math/rand"
 	"os"
 	"path/filepath"
 	"time"
@@ -59,15 +58,14 @@ func main() {
 
 	raster := canvas.NewRasterWithPixels(
 		func(x, y, w, h int) color.Color {
-
-			if x < height && y < width {
-				colorIndex := GetPixel(x, y, image.ColorIndexArray, image.FileInfo)
+			if y < width && x < height {
+				colorIndex := GetPixel(width-y, x, image.ColorIndexArray, image.FileInfo)
 				pixelColor := image.RgbQuad[colorIndex]
 
 				return color.RGBA{pixelColor.RgbRed, pixelColor.RgbGreen, pixelColor.RgbBlue, 0xff}
 			}
 
-			return color.RGBA{uint8(rand.Intn(255)), uint8(rand.Intn(255)), uint8(rand.Intn(255)), 0xff}
+			return color.RGBA{0, 0, 0, 0xff}
 		})
 
 	cnv.SetContent(raster)
@@ -76,6 +74,6 @@ func main() {
 		time.Sleep(time.Second)
 	}()
 
-	w.Resize(fyne.NewSize(float32(height), float32(width)))
+	w.Resize(fyne.NewSize(float32(width+12), float32(width+12)))
 	w.ShowAndRun()
 }
