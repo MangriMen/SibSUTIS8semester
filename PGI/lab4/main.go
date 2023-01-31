@@ -41,7 +41,11 @@ func printBMPStructure(image BMPImage) {
 	fmt.Printf("Palette: %s\n", rgbQuad)
 }
 
-func loadBMP() {
+func main() {
+	a := app.New()
+	w := a.NewWindow("lab 4")
+	cnv := w.Canvas()
+
 	filename, err := filepath.Abs("../CAT16.bmp")
 	if err != nil {
 		panic(err)
@@ -49,17 +53,18 @@ func loadBMP() {
 
 	image := readBMP(filename)
 	printBMPStructure(image)
-}
 
-func main() {
-	a := app.New()
-	w := a.NewWindow("lab 4")
-	cnv := w.Canvas()
+	width := int(image.FileInfo.Width)
+	height := int(image.FileInfo.Height)
 
 	raster := canvas.NewRasterWithPixels(
 		func(x, y, w, h int) color.Color {
-			if x < 300 {
-				return color.RGBA{255, 255, 255, 0xff}
+
+			if x < height && y < width {
+				colorIndex := GetPixel(x, y, image.ColorIndexArray, image.FileInfo)
+				pixelColor := image.RgbQuad[colorIndex]
+
+				return color.RGBA{pixelColor.RgbRed, pixelColor.RgbGreen, pixelColor.RgbBlue, 0xff}
 			}
 
 			return color.RGBA{uint8(rand.Intn(255)), uint8(rand.Intn(255)), uint8(rand.Intn(255)), 0xff}
@@ -71,6 +76,6 @@ func main() {
 		time.Sleep(time.Second)
 	}()
 
-	w.Resize(fyne.NewSize(800, 600))
+	w.Resize(fyne.NewSize(float32(height), float32(width)))
 	w.ShowAndRun()
 }
