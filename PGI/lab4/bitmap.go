@@ -117,7 +117,7 @@ func GetPixel(i int, j int, colorIndexes []byte, fileInfo BitmapFileInfo) byte {
 		panic("unsupported bits per pixel")
 	}
 
-	row := i * int(fileInfo.Width) / bitsPerPixel
+	row := (int(fileInfo.Height) - i - 1) * int(fileInfo.Width) / bitsPerPixel
 	column := j / bitsPerPixel
 	index := row + column
 

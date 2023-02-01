@@ -58,10 +58,9 @@ func main() {
 
 	raster := canvas.NewRasterWithPixels(
 		func(x, y, w, h int) color.Color {
-			if y < width && x < height {
-				colorIndex := GetPixel(width-y, x, image.ColorIndexArray, image.FileInfo)
+			if y < height && x < width {
+				colorIndex := GetPixel(y, x, image.ColorIndexArray, image.FileInfo)
 				pixelColor := image.RgbQuad[colorIndex]
-
 				return color.RGBA{pixelColor.RgbRed, pixelColor.RgbGreen, pixelColor.RgbBlue, 0xff}
 			}
 
@@ -74,6 +73,6 @@ func main() {
 		time.Sleep(time.Second)
 	}()
 
-	w.Resize(fyne.NewSize(float32(width+12), float32(width+12)))
+	w.Resize(fyne.NewSize(float32(width+12), float32(height+12)))
 	w.ShowAndRun()
 }
