@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"math"
 )
 
@@ -31,6 +32,8 @@ var BitmapFileHeaderBounds = Bounds{0, 14}
 var BitmapFileInfoBounds = Bounds{14, 54}
 
 const BMPSignature uint16 = 0x4D42
+
+const BitsPerByte = 8
 const RGBQuadElementsCount int = 4
 
 type BitmapFileHeader struct {
@@ -67,104 +70,6 @@ type BMPImage struct {
 	FileInfo        BitmapFileInfo
 	RgbQuad         []RgbQuad
 	ColorIndexArray []byte
-}
-
-const BitsPerByte = 8
-
-func setBit(n int, pos uint) int {
-	n |= (1 << pos)
-	return n
-}
-
-func clearBit(n int, pos uint) int {
-	mask := ^(1 << pos)
-	n &= mask
-	return n
-}
-
-func hasBit(n int, pos uint) bool {
-	val := n & (1 << pos)
-	return (val > 0)
-}
-
-func SetPixel(i int, j int, data int, colorIndexes []byte, fileInfo BitmapFileInfo) {
-	var bitsPerPixel int
-	if fileInfo.BitCount <= BitsPerByte {
-		bitsPerPixel = BitsPerByte / int(fileInfo.BitCount)
-	} else {
-		panic("unsupported bits per pixel")
-	}
-
-	row := i * int(fileInfo.Width) / bitsPerPixel
-	column := j / bitsPerPixel
-	index := row + column
-
-	startBit := int(fileInfo.BitCount) - (j % bitsPerPixel * int(fileInfo.BitCount))
-	endBit := startBit + int(fileInfo.BitCount)
-	for i, j := startBit, 0; i < endBit; i, j = i+1, j+1 {
-		colorIndexes[index] = byte(clearBit(int(colorIndexes[index]), uint(i)))
-		if hasBit(data, uint(j)) {
-			colorIndexes[index] = byte(setBit(int(colorIndexes[index]), uint(i)))
-		}
-	}
-}
-
-func GetPixel(i int, j int, colorIndexes []byte, fileInfo BitmapFileInfo) byte {
-	var bitsPerPixel int
-	if fileInfo.BitCount <= BitsPerByte {
-		bitsPerPixel = BitsPerByte / int(fileInfo.BitCount)
-	} else {
-		panic("unsupported bits per pixel")
-	}
-
-	row := (int(fileInfo.Height) - i - 1) * int(fileInfo.Width) / bitsPerPixel
-	column := j / bitsPerPixel
-	index := row + column
-
-	var pixel byte = 0
-
-	startBit := int(fileInfo.BitCount) - (j % bitsPerPixel * int(fileInfo.BitCount))
-	endBit := startBit + int(fileInfo.BitCount)
-	for i, j := startBit, 0; i < endBit; i, j = i+1, j+1 {
-		if hasBit(int(colorIndexes[index]), uint(i)) {
-			pixel = byte(setBit(int(pixel), uint(j)))
-		}
-	}
-
-	return pixel
-}
-
-func BytesToUInt32(b []byte) uint32 {
-	return uint32(b[0]) | uint32(b[1])<<8 | uint32(b[2])<<16 | uint32(b[3])<<24
-}
-
-func BytesToUInt16(b []byte) uint16 {
-	return uint16(b[0]) | uint16(b[1])<<8
-}
-
-func UInt32ToBytes(n uint32) []byte {
-	bytes := make([]byte, 4)
-	bytes[0] = byte(n)
-	bytes[1] = byte(n >> 8)
-	bytes[2] = byte(n >> 16)
-	bytes[3] = byte(n >> 24)
-	return bytes
-}
-
-func UInt16ToBytes(n uint16) []byte {
-	bytes := make([]byte, 2)
-	bytes[0] = byte(n)
-	bytes[1] = byte(n >> 8)
-	return bytes
-}
-
-func RGBQuadToBytes(rgbQuad RgbQuad) []byte {
-	bytes := make([]byte, 4)
-	bytes[0] = rgbQuad.RgbBlue
-	bytes[1] = rgbQuad.RgbGreen
-	bytes[2] = rgbQuad.RgbRed
-	bytes[3] = rgbQuad.RgbReserved
-	return bytes
 }
 
 func newBitmapFileHeader(data []byte) (BitmapFileHeader, error) {
@@ -212,10 +117,16 @@ func newImageData(data []byte) BMPImage {
 
 	fileInfo := newBitmapFileInfo(data[:BitmapFileInfoBounds.end])
 
-	rgbQuadElementsCount := int(math.Pow(2, float64(fileInfo.BitCount)))
-	rgbQuad := make([]RgbQuad, rgbQuadElementsCount)
-	for i, j := 0, BitmapFileInfoBounds.end; i < rgbQuadElementsCount; i, j = i+1, j+RGBQuadElementsCount {
-		rgbQuad[i] = newRGBQuad(data[j : j+RGBQuadElementsCount])
+	fmt.Printf("File header: %+v\n", fileHeader)
+	fmt.Printf("File info: %+v\n", fileInfo)
+
+	var rgbQuad []RgbQuad
+	if BitmapFileHeaderBounds.end+int(fileInfo.Size) < int(fileHeader.Offset) {
+		rgbQuadElementsCount := int(math.Pow(2, float64(fileInfo.BitCount)))
+		rgbQuad = make([]RgbQuad, rgbQuadElementsCount)
+		for i, j := 0, BitmapFileInfoBounds.end; i < rgbQuadElementsCount; i, j = i+1, j+RGBQuadElementsCount {
+			rgbQuad[i] = newRGBQuad(data[j : j+RGBQuadElementsCount])
+		}
 	}
 
 	colorIndexArray := data[fileHeader.Offset:]
@@ -226,6 +137,15 @@ func newImageData(data []byte) BMPImage {
 
 func bmpFromBytes(data []byte) BMPImage {
 	return newImageData(data)
+}
+
+func RGBQuadToBytes(rgbQuad RgbQuad) []byte {
+	bytes := make([]byte, 4)
+	bytes[0] = rgbQuad.RgbBlue
+	bytes[1] = rgbQuad.RgbGreen
+	bytes[2] = rgbQuad.RgbRed
+	bytes[3] = rgbQuad.RgbReserved
+	return bytes
 }
 
 func bmpToBytes(image BMPImage) []byte {
@@ -256,4 +176,105 @@ func bmpToBytes(image BMPImage) []byte {
 	data = append(data, image.ColorIndexArray...)
 
 	return data
+}
+
+func getBitsPerPixel(fileInfo BitmapFileInfo) int {
+	if fileInfo.BitCount < BitsPerByte {
+		return BitsPerByte / int(fileInfo.BitCount)
+	}
+
+	return 1
+}
+
+func getPixelIndex(i int, j int, image BMPImage) int {
+	bitsPerPixel := getBitsPerPixel(image.FileInfo)
+
+	width := int(image.FileInfo.Width)
+	height := int(image.FileInfo.Height)
+
+	var row int = (height - i - 1) * width / bitsPerPixel
+	var column int = j / bitsPerPixel
+
+	if image.FileInfo.BitCount >= BitsPerByte {
+		bytesPerColor := int(image.FileInfo.BitCount / BitsPerByte)
+
+		row = (height - i - 1) * width * bytesPerColor
+		column = j * bytesPerColor
+	}
+
+	if column > (width - 1) {
+		column = 0
+		row++
+	}
+
+	index := row + column
+
+	return index
+}
+
+func getPixelBounds(j int, fileInfo BitmapFileInfo) (int, int) {
+	bitsPerPixel := getBitsPerPixel(fileInfo)
+
+	startBit := int(fileInfo.BitCount) - (j % bitsPerPixel * int(fileInfo.BitCount))
+	endBit := startBit + int(fileInfo.BitCount)
+
+	return startBit, endBit
+}
+
+func setColorIndexToPixel(i int, j int, data int, image BMPImage) {
+	index := getPixelIndex(i, j, image)
+	startBit, endBit := getPixelBounds(j, image.FileInfo)
+
+	for i, j := startBit, 0; i < endBit; i, j = i+1, j+1 {
+		image.ColorIndexArray[index] = byte(clearBit(int(image.ColorIndexArray[index]), uint(i)))
+		if hasBit(data, uint(j)) {
+			image.ColorIndexArray[index] = byte(setBit(int(image.ColorIndexArray[index]), uint(i)))
+		}
+	}
+}
+
+func getColorIndexFromPixel(i int, j int, image BMPImage) byte {
+	index := getPixelIndex(i, j, image)
+	startBit, endBit := getPixelBounds(j, image.FileInfo)
+
+	bitsPerPixel := getBitsPerPixel(image.FileInfo)
+	if bitsPerPixel == 1 {
+		startBit = 0
+		endBit = 8
+	}
+
+	var pixel byte = 0
+	for i, j := startBit, 0; i < endBit; i, j = i+1, j+1 {
+		if hasBit(int(image.ColorIndexArray[index]), uint(i)) {
+			pixel = byte(setBit(int(pixel), uint(j)))
+		}
+	}
+
+	return pixel
+}
+
+func getPixel(i int, j int, image BMPImage) RgbQuad {
+	index := getPixelIndex(i, j, image)
+
+	var pixel RgbQuad = RgbQuad{}
+	pixel.RgbBlue = image.ColorIndexArray[index]
+	pixel.RgbGreen = image.ColorIndexArray[index+1]
+	pixel.RgbRed = image.ColorIndexArray[index+2]
+
+	if image.FileInfo.BitCount == 32 {
+		pixel.RgbReserved = image.ColorIndexArray[index+3]
+	}
+
+	return pixel
+}
+
+func GetPixelColor(i int, j int, image BMPImage) RgbQuad {
+	if image.FileInfo.BitCount <= BitsPerByte {
+		colorIndex := getColorIndexFromPixel(i, j, image)
+		pixelColor := image.RgbQuad[colorIndex]
+		return pixelColor
+	}
+
+	color := getPixel(i, j, image)
+	return color
 }

@@ -23,10 +23,6 @@ func readFileAsBytes(path string) []byte {
 	return image
 }
 
-func readBMP(path string) BMPImage {
-	return bmpFromBytes(readFileAsBytes(path))
-}
-
 func printBMPStructure(image BMPImage) {
 	prefix := ""
 	indent := "  "
@@ -41,30 +37,29 @@ func printBMPStructure(image BMPImage) {
 }
 
 func main() {
-	a := app.New()
-	w := a.NewWindow("lab 4")
-	cnv := w.Canvas()
-
-	filename, err := filepath.Abs("../CAT16.bmp")
+	filename, err := filepath.Abs("../CAT256.bmp")
 	if err != nil {
 		panic(err)
 	}
 
-	image := readBMP(filename)
+	image := bmpFromBytes(readFileAsBytes(filename))
 	printBMPStructure(image)
 
 	width := int(image.FileInfo.Width)
 	height := int(image.FileInfo.Height)
 
+	a := app.New()
+	w := a.NewWindow("lab 4")
+	cnv := w.Canvas()
+
 	raster := canvas.NewRasterWithPixels(
 		func(x, y, w, h int) color.Color {
-			if y < height && x < width {
-				colorIndex := GetPixel(y, x, image.ColorIndexArray, image.FileInfo)
-				pixelColor := image.RgbQuad[colorIndex]
+			if x < width && y < height {
+				pixelColor := GetPixelColor(y, x, image)
 				return color.RGBA{pixelColor.RgbRed, pixelColor.RgbGreen, pixelColor.RgbBlue, 0xff}
 			}
 
-			return color.RGBA{0, 0, 0, 0xff}
+			return color.RGBA{}
 		})
 
 	cnv.SetContent(raster)
