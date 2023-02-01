@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"math"
 )
 
@@ -65,11 +64,18 @@ type RgbQuad struct {
 	RgbReserved byte
 }
 
+type BMPMeta struct {
+	bitsPerPixel  int
+	bytesPerColor int
+	widthAligned  int32
+}
+
 type BMPImage struct {
 	FileHeader      BitmapFileHeader
 	FileInfo        BitmapFileInfo
 	RgbQuad         []RgbQuad
 	ColorIndexArray []byte
+	Meta            BMPMeta
 }
 
 func newBitmapFileHeader(data []byte) (BitmapFileHeader, error) {
@@ -117,10 +123,7 @@ func newImageData(data []byte) BMPImage {
 
 	fileInfo := newBitmapFileInfo(data[:BitmapFileInfoBounds.end])
 
-	fmt.Printf("File header: %+v\n", fileHeader)
-	fmt.Printf("File info: %+v\n", fileInfo)
-
-	var rgbQuad []RgbQuad
+	var rgbQuad []RgbQuad = []RgbQuad{}
 	if BitmapFileHeaderBounds.end+int(fileInfo.Size) < int(fileHeader.Offset) {
 		rgbQuadElementsCount := int(math.Pow(2, float64(fileInfo.BitCount)))
 		rgbQuad = make([]RgbQuad, rgbQuadElementsCount)
@@ -131,7 +134,19 @@ func newImageData(data []byte) BMPImage {
 
 	colorIndexArray := data[fileHeader.Offset:]
 
-	imageData := BMPImage{FileHeader: fileHeader, FileInfo: fileInfo, RgbQuad: rgbQuad, ColorIndexArray: colorIndexArray}
+	meta := BMPMeta{}
+	meta.bitsPerPixel = getBitsPerPixel(fileInfo)
+	meta.bytesPerColor = int(fileInfo.BitCount / BitsPerByte)
+
+	bytesPerRowAligned := 4 * int32(math.Ceil(float64(int(fileInfo.Width)*int(fileInfo.BitCount))/32))
+
+	if fileInfo.BitCount < BitsPerByte {
+		meta.widthAligned = bytesPerRowAligned * int32(meta.bitsPerPixel)
+	} else {
+		meta.widthAligned = bytesPerRowAligned / int32(meta.bytesPerColor)
+	}
+
+	imageData := BMPImage{FileHeader: fileHeader, FileInfo: fileInfo, RgbQuad: rgbQuad, ColorIndexArray: colorIndexArray, Meta: meta}
 	return imageData
 }
 
@@ -187,24 +202,14 @@ func getBitsPerPixel(fileInfo BitmapFileInfo) int {
 }
 
 func getPixelIndex(i int, j int, image BMPImage) int {
-	bitsPerPixel := getBitsPerPixel(image.FileInfo)
-
-	width := int(image.FileInfo.Width)
 	height := int(image.FileInfo.Height)
 
-	var row int = (height - i - 1) * width / bitsPerPixel
-	var column int = j / bitsPerPixel
+	var row int = (height - i - 1) * int(image.Meta.widthAligned) / image.Meta.bitsPerPixel
+	var column int = j / image.Meta.bitsPerPixel
 
 	if image.FileInfo.BitCount >= BitsPerByte {
-		bytesPerColor := int(image.FileInfo.BitCount / BitsPerByte)
-
-		row = (height - i - 1) * width * bytesPerColor
-		column = j * bytesPerColor
-	}
-
-	if column > (width - 1) {
-		column = 0
-		row++
+		row = (height - i - 1) * int(image.Meta.widthAligned) * image.Meta.bytesPerColor
+		column = j * image.Meta.bytesPerColor
 	}
 
 	index := row + column
@@ -212,18 +217,16 @@ func getPixelIndex(i int, j int, image BMPImage) int {
 	return index
 }
 
-func getPixelBounds(j int, fileInfo BitmapFileInfo) (int, int) {
-	bitsPerPixel := getBitsPerPixel(fileInfo)
-
-	startBit := int(fileInfo.BitCount) - (j % bitsPerPixel * int(fileInfo.BitCount))
-	endBit := startBit + int(fileInfo.BitCount)
+func getPixelBounds(j int, image BMPImage) (int, int) {
+	startBit := int(image.FileInfo.BitCount) - (j % image.Meta.bitsPerPixel * int(image.FileInfo.BitCount))
+	endBit := startBit + int(image.FileInfo.BitCount)
 
 	return startBit, endBit
 }
 
 func setColorIndexToPixel(i int, j int, data int, image BMPImage) {
 	index := getPixelIndex(i, j, image)
-	startBit, endBit := getPixelBounds(j, image.FileInfo)
+	startBit, endBit := getPixelBounds(j, image)
 
 	for i, j := startBit, 0; i < endBit; i, j = i+1, j+1 {
 		image.ColorIndexArray[index] = byte(clearBit(int(image.ColorIndexArray[index]), uint(i)))
@@ -235,10 +238,9 @@ func setColorIndexToPixel(i int, j int, data int, image BMPImage) {
 
 func getColorIndexFromPixel(i int, j int, image BMPImage) byte {
 	index := getPixelIndex(i, j, image)
-	startBit, endBit := getPixelBounds(j, image.FileInfo)
+	startBit, endBit := getPixelBounds(j, image)
 
-	bitsPerPixel := getBitsPerPixel(image.FileInfo)
-	if bitsPerPixel == 1 {
+	if image.Meta.bitsPerPixel == 1 {
 		startBit = 0
 		endBit = 8
 	}

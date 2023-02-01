@@ -37,7 +37,7 @@ func printBMPStructure(image BMPImage) {
 }
 
 func main() {
-	filename, err := filepath.Abs("../CAT256.bmp")
+	filename, err := filepath.Abs("../_сarib_TC.bmp")
 	if err != nil {
 		panic(err)
 	}
@@ -56,7 +56,13 @@ func main() {
 		func(x, y, w, h int) color.Color {
 			if x < width && y < height {
 				pixelColor := GetPixelColor(y, x, image)
-				return color.RGBA{pixelColor.RgbRed, pixelColor.RgbGreen, pixelColor.RgbBlue, 0xff}
+
+				var alpha byte = 0xff
+				if image.FileInfo.BitCount == 32 {
+					alpha = pixelColor.RgbReserved
+				}
+
+				return color.RGBA{pixelColor.RgbRed, pixelColor.RgbGreen, pixelColor.RgbBlue, alpha}
 			}
 
 			return color.RGBA{}
