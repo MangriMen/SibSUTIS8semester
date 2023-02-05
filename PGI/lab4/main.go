@@ -37,7 +37,7 @@ func printBMPStructure(image BMPImage) {
 }
 
 func main() {
-	filename, err := filepath.Abs("../_сarib_TC.bmp")
+	filename, err := filepath.Abs("../_carib_TC.bmp")
 	if err != nil {
 		panic(err)
 	}
