@@ -67,11 +67,11 @@ func createBorderOnBMP(image BMPImage, borderWidth int, borderColorIndex int, bo
 	newImage.FileInfo.Height += int32(borderWidth) * 2
 
 	bytesPerRowAligned := 4 * int32(math.Ceil(float64(int(newImage.FileInfo.Width)*int(newImage.FileInfo.BitCount))/32))
-
+	newImage.Meta.widthAlignedBytes = bytesPerRowAligned
 	if newImage.FileInfo.BitCount < BitsPerByte {
 		newImage.Meta.widthAligned = bytesPerRowAligned * int32(newImage.Meta.bitsPerPixel)
 	} else {
-		newImage.Meta.widthAligned = bytesPerRowAligned / int32(newImage.Meta.bytesPerColor)
+		newImage.Meta.widthAligned = int32(math.Round(float64(bytesPerRowAligned) / float64(newImage.Meta.bytesPerColor)))
 	}
 
 	newImage.FileInfo.SizeImage = uint32(bytesPerRowAligned) * uint32(newImage.FileInfo.Height)
@@ -119,7 +119,7 @@ func createBorderOnBMP(image BMPImage, borderWidth int, borderColorIndex int, bo
 }
 
 func main() {
-	filename, err := filepath.Abs("../_carib_TC.bmp")
+	filename, err := filepath.Abs("../CAT16.bmp")
 	if err != nil {
 		panic(err)
 	}

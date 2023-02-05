@@ -65,9 +65,10 @@ type RgbQuad struct {
 }
 
 type BMPMeta struct {
-	bitsPerPixel  int
-	bytesPerColor int
-	widthAligned  int32
+	bitsPerPixel      int
+	bytesPerColor     int
+	widthAligned      int32
+	widthAlignedBytes int32
 }
 
 type BMPImage struct {
@@ -139,6 +140,7 @@ func newImageData(data []byte) BMPImage {
 	meta.bytesPerColor = int(fileInfo.BitCount / BitsPerByte)
 
 	bytesPerRowAligned := 4 * int32(math.Ceil(float64(int(fileInfo.Width)*int(fileInfo.BitCount))/32))
+	meta.widthAlignedBytes = bytesPerRowAligned
 
 	if fileInfo.BitCount < BitsPerByte {
 		meta.widthAligned = bytesPerRowAligned * int32(meta.bitsPerPixel)
@@ -208,7 +210,7 @@ func getPixelIndex(i int, j int, image BMPImage) int {
 	var column int = j / image.Meta.bitsPerPixel
 
 	if image.FileInfo.BitCount >= BitsPerByte {
-		row = (height - i - 1) * int(image.Meta.widthAligned) * image.Meta.bytesPerColor
+		row = (height - i - 1) * int(image.Meta.widthAlignedBytes)
 		column = j * image.Meta.bytesPerColor
 	}
 
