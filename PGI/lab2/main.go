@@ -131,7 +131,7 @@ func main() {
 
 	printBMPStructure(image)
 
-	borderWidth := 50
+	borderWidth := 15
 	fmt.Printf("Border width: %dpx\n", borderWidth)
 
 	var borderColorIndex int = 0
