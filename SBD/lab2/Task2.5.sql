@@ -1,0 +1,20 @@
+DROP SEQUENCE seq;
+
+CREATE SEQUENCE seq
+  INCREMENT BY 2
+  START WITH 5000;
+
+DROP TABLE task2_5;
+
+CREATE TABLE task2_5 (id INT, sname VARCHAR2(10), comm NUMBER(7,2));
+
+DECLARE
+  CURSOR cur IS
+  SELECT sname, comm FROM sal;
+BEGIN
+  FOR rec IN cur
+  LOOP
+    INSERT INTO task2_5 VALUES(seq.NEXTVAL, rec.sname, rec.comm);
+  END LOOP;
+END;
+/

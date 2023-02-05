@@ -65,10 +65,9 @@ type RgbQuad struct {
 }
 
 type BMPMeta struct {
-	bitsPerPixel      int
-	bytesPerColor     int
-	widthAligned      int32
-	widthAlignedBytes int32
+	bitsPerPixel  int
+	bytesPerColor int
+	widthAligned  int32
 }
 
 type BMPImage struct {
@@ -140,7 +139,6 @@ func newImageData(data []byte) BMPImage {
 	meta.bytesPerColor = int(fileInfo.BitCount / BitsPerByte)
 
 	bytesPerRowAligned := 4 * int32(math.Ceil(float64(int(fileInfo.Width)*int(fileInfo.BitCount))/32))
-	meta.widthAlignedBytes = bytesPerRowAligned
 
 	if fileInfo.BitCount < BitsPerByte {
 		meta.widthAligned = bytesPerRowAligned * int32(meta.bitsPerPixel)
@@ -210,7 +208,7 @@ func getPixelIndex(i int, j int, image BMPImage) int {
 	var column int = j / image.Meta.bitsPerPixel
 
 	if image.FileInfo.BitCount >= BitsPerByte {
-		row = (height - i - 1) * int(image.Meta.widthAlignedBytes)
+		row = (height - i - 1) * int(image.Meta.widthAligned) * image.Meta.bytesPerColor
 		column = j * image.Meta.bytesPerColor
 	}
 
@@ -220,9 +218,6 @@ func getPixelIndex(i int, j int, image BMPImage) int {
 }
 
 func getPixelBounds(j int, image BMPImage) (int, int) {
-	if image.FileInfo.BitCount == BitsPerByte {
-		return 0, BitsPerByte
-	}
 	startBit := int(image.FileInfo.BitCount) - (j % image.Meta.bitsPerPixel * int(image.FileInfo.BitCount))
 	endBit := startBit + int(image.FileInfo.BitCount)
 
@@ -275,18 +270,6 @@ func getPixel(i int, j int, image BMPImage) RgbQuad {
 	return pixel
 }
 
-func setPixel(i int, j int, color RgbQuad, image BMPImage) {
-	index := getPixelIndex(i, j, image)
-
-	image.ColorIndexArray[index] = color.RgbBlue
-	image.ColorIndexArray[index+1] = color.RgbGreen
-	image.ColorIndexArray[index+2] = color.RgbRed
-
-	if image.FileInfo.BitCount == 32 {
-		image.ColorIndexArray[index+3] = color.RgbReserved
-	}
-}
-
 func GetPixelColor(i int, j int, image BMPImage) RgbQuad {
 	if image.FileInfo.BitCount <= BitsPerByte {
 		colorIndex := getColorIndexFromPixel(i, j, image)
@@ -296,8 +279,4 @@ func GetPixelColor(i int, j int, image BMPImage) RgbQuad {
 
 	color := getPixel(i, j, image)
 	return color
-}
-
-func SetPixelColor(i int, j int, color RgbQuad, image BMPImage) {
-	setPixel(i, j, color, image)
 }
