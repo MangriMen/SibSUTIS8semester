@@ -52,10 +52,18 @@ func main() {
 	w := a.NewWindow("lab 4")
 	cnv := w.Canvas()
 
+	var scaleCoeff float32 = 1
+
+	scaledHeight := int(float32(height) * scaleCoeff)
+	scaledWidth := int(float32(width) * scaleCoeff)
+
+	fmt.Printf("Scale: %0.2f\n", scaleCoeff)
+	fmt.Printf("Resolution: %dx%d\n", scaledWidth, scaledHeight)
+
 	raster := canvas.NewRasterWithPixels(
 		func(x, y, w, h int) color.Color {
-			if x < width && y < height {
-				pixelColor := GetPixelColor(y, x, image)
+			if x < scaledWidth && y < scaledHeight {
+				pixelColor := GetPixelColor(int(float32(y)/scaleCoeff), int(float32(x)/scaleCoeff), image)
 
 				var alpha byte = 0xff
 				if image.FileInfo.BitCount == 32 {

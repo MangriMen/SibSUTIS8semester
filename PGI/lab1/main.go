@@ -57,10 +57,10 @@ func printBMPStructure(image BMPImage) {
 }
 
 func averageColorValues(rgbQuad RgbQuad) RgbQuad {
-	averageValue := (rgbQuad.RgbBlue + rgbQuad.RgbGreen + rgbQuad.RgbRed) / 3
-	rgbQuad.RgbBlue = averageValue
-	rgbQuad.RgbGreen = averageValue
-	rgbQuad.RgbRed = averageValue
+	averageValue := (int(rgbQuad.RgbBlue) + int(rgbQuad.RgbGreen) + int(rgbQuad.RgbRed)) / 3
+	rgbQuad.RgbBlue = byte(averageValue)
+	rgbQuad.RgbGreen = byte(averageValue)
+	rgbQuad.RgbRed = byte(averageValue)
 	return rgbQuad
 }
 
