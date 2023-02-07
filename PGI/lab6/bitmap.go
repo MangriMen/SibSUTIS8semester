@@ -67,8 +67,8 @@ type RgbQuad struct {
 type BMPMeta struct {
 	bitsPerPixel      int
 	bytesPerColor     int
-	widthAligned      int32
-	widthAlignedBytes int32
+	widthAligned      uint32
+	widthAlignedBytes uint32
 }
 
 type BMPImage struct {
@@ -116,37 +116,36 @@ func newRGBQuad(data []byte) RgbQuad {
 	return rgbQuad
 }
 
-func newImageData(data []byte) BMPImage {
-	fileHeader, fileHeaderErr := newBitmapFileHeader(data[:BitmapFileHeaderBounds.end])
-	if fileHeaderErr != nil {
-		panic(fileHeaderErr)
-	}
-
-	fileInfo := newBitmapFileInfo(data[:BitmapFileInfoBounds.end])
-
-	var rgbQuad []RgbQuad = []RgbQuad{}
-	if BitmapFileHeaderBounds.end+int(fileInfo.Size) < int(fileHeader.Offset) {
-		rgbQuadElementsCount := int(math.Pow(2, float64(fileInfo.BitCount)))
-		rgbQuad = make([]RgbQuad, rgbQuadElementsCount)
-		for i, j := 0, BitmapFileInfoBounds.end; i < rgbQuadElementsCount; i, j = i+1, j+RGBQuadElementsCount {
-			rgbQuad[i] = newRGBQuad(data[j : j+RGBQuadElementsCount])
-		}
-	}
-
-	colorIndexArray := data[fileHeader.Offset:]
-
+func newMeta(bitCount uint16, width int32) BMPMeta {
 	meta := BMPMeta{}
-	meta.bitsPerPixel = getBitsPerPixel(fileInfo)
-	meta.bytesPerColor = int(fileInfo.BitCount / BitsPerByte)
 
-	bytesPerRowAligned := 4 * int32(math.Ceil(float64(int(fileInfo.Width)*int(fileInfo.BitCount))/32))
-	meta.widthAlignedBytes = bytesPerRowAligned
+	meta.bitsPerPixel = getBitsPerPixel(int(bitCount))
+	meta.bytesPerColor = int(bitCount / BitsPerByte)
 
-	if fileInfo.BitCount < BitsPerByte {
-		meta.widthAligned = bytesPerRowAligned * int32(meta.bitsPerPixel)
+	meta.widthAlignedBytes = 4 * uint32(math.Ceil(float64(int(width)*int(bitCount))/32))
+	if bitCount < BitsPerByte {
+		meta.widthAligned = meta.widthAlignedBytes * uint32(meta.bitsPerPixel)
 	} else {
-		meta.widthAligned = bytesPerRowAligned / int32(meta.bytesPerColor)
+		meta.widthAligned = meta.widthAlignedBytes / uint32(meta.bytesPerColor)
 	}
+
+	return meta
+}
+
+func newRgbQuadPalette(data []byte) []RgbQuad {
+	rgbQuad := make([]RgbQuad, len(data)/RGBQuadElementsCount)
+	for i, j := 0, 0; i < len(rgbQuad); i, j = i+1, j+RGBQuadElementsCount {
+		rgbQuad[i] = newRGBQuad(data[j : j+RGBQuadElementsCount])
+	}
+	return rgbQuad
+}
+
+func newImageData(data []byte) BMPImage {
+	fileHeader, _ := newBitmapFileHeader(data[:BitmapFileHeaderBounds.end])
+	fileInfo := newBitmapFileInfo(data[:BitmapFileInfoBounds.end])
+	rgbQuad := newRgbQuadPalette(data[BitmapFileInfoBounds.end:fileHeader.Offset])
+	colorIndexArray := data[fileHeader.Offset:]
+	meta := newMeta(fileInfo.BitCount, fileInfo.Width)
 
 	imageData := BMPImage{FileHeader: fileHeader, FileInfo: fileInfo, RgbQuad: rgbQuad, ColorIndexArray: colorIndexArray, Meta: meta}
 	return imageData
@@ -195,9 +194,9 @@ func bmpToBytes(image BMPImage) []byte {
 	return data
 }
 
-func getBitsPerPixel(fileInfo BitmapFileInfo) int {
-	if fileInfo.BitCount < BitsPerByte {
-		return BitsPerByte / int(fileInfo.BitCount)
+func getBitsPerPixel(bitCount int) int {
+	if bitCount < BitsPerByte {
+		return BitsPerByte / bitCount
 	}
 
 	return 1
