@@ -69,16 +69,17 @@ func newPCXHeader(data []byte) PCXHeader {
 func newPCXImage(data []byte) PCXImage {
 	imageDataRightBound := len(data) - OptionalPaletteSizeBytes
 
-	fileHeader := newPCXHeader(data[:128])
-	imageData := data[128:imageDataRightBound]
-
 	var optionalPalette = []RgbTriple{}
-	if data[imageDataRightBound-1] == 0x0C {
+	if len(data) > OptionalPaletteSizeBytes && data[imageDataRightBound-1] == 0x0C {
 		optionalPalette = make([]RgbTriple, OptionalPaletteSize)
 		for i, j := 0, imageDataRightBound; i < len(optionalPalette); i, j = i+1, j+RGBTripleELementsCount {
 			optionalPalette[i] = newRgbTriple(data[j : j+RGBTripleELementsCount])
 		}
+	} else {
+		imageDataRightBound = len(data)
 	}
+	fileHeader := newPCXHeader(data[:128])
+	imageData := data[128:imageDataRightBound]
 
 	decodedData := []byte{}
 	for i := 0; i < len(imageData); i++ {
@@ -109,18 +110,31 @@ func EGAToRGB(egaColor byte) RgbTriple {
 }
 
 func PcxGetPixelColor(i int, j int, image PCXImage) RgbTriple {
-	row := j * int(image.FileHeader.BytePerLine)
-	column := i
-
-	index := row + column
-
-	colorIndex := image.DecodedData[index]
-
 	var color RgbTriple
-	if len(image.OptionalPalette) > 0 {
-		color = image.OptionalPalette[colorIndex]
-	} else {
-		color = EGAToRGB(image.FileHeader.Palette[colorIndex])
+
+	if image.FileHeader.Planes == 1 {
+		row := j * int(image.FileHeader.BytePerLine)
+		column := i
+
+		index := row + column
+
+		colorIndex := image.DecodedData[index]
+
+		if len(image.OptionalPalette) > 0 {
+			color = image.OptionalPalette[colorIndex]
+		} else {
+			color = EGAToRGB(image.FileHeader.Palette[colorIndex])
+		}
+
+	} else if image.FileHeader.Planes == 3 {
+		rowR := j * 3 * int(image.FileHeader.BytePerLine)
+		rowG := rowR + int(image.FileHeader.BytePerLine)
+		rowB := rowG + int(image.FileHeader.BytePerLine)
+		column := i
+
+		color.RgbRed = image.DecodedData[rowR+column]
+		color.RgbGreen = image.DecodedData[rowG+column]
+		color.RgbBlue = image.DecodedData[rowB+column]
 	}
 
 	return color

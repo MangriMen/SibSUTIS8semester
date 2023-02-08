@@ -24,7 +24,7 @@ func readFileAsBytes(path string) []byte {
 }
 
 func main() {
-	filename, err := filepath.Abs("../CAT16.pcx")
+	filename, err := filepath.Abs("../carib_TC_16bit.pcx")
 	if err != nil {
 		panic(err)
 	}
@@ -38,7 +38,7 @@ func main() {
 	height := int(image.FileHeader.YMax)
 
 	a := app.New()
-	w := a.NewWindow("lab 4")
+	w := a.NewWindow("lab 8")
 	cnv := w.Canvas()
 
 	raster := canvas.NewRasterWithPixels(
