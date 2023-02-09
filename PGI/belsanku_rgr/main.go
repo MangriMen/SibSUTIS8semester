@@ -183,7 +183,7 @@ func convertTrueColorPcxTo16Pcx(sourceImage PCXImage) PCXImage {
 	for i := 0; i < int(sourceImage.FileHeader.XMax); i++ {
 		for j := 0; j < int(sourceImage.FileHeader.YMax); j++ {
 			//color := PcxGetPixelColor(i, j, sourceImage)
-			PcxSetPixelColor(i, j, keys[0], newImage)
+			PcxSetPixelColor(i, j, EGAToRGB(newImage.FileHeader.Palette[0]), newImage)
 		}
 	}
 
@@ -201,10 +201,10 @@ func main() {
 
 	fmt.Println("Original image: ")
 	image := PcxFromBytes(readFileAsBytes(filename))
-	fmt.Printf("%+v", image.FileHeader)
+	fmt.Printf("%+v\n", image.FileHeader)
 
-	// newImage := convertTrueColorPcxTo16Pcx(image)
-	// fmt.Printf("%+v", newImage.FileHeader)
+	newImage := convertTrueColorPcxTo16Pcx(image)
+	fmt.Printf("%+v", newImage.FileHeader)
 
-	writeFileAsBytes(outputFilename, PcxToBytes(image))
+	writeFileAsBytes(outputFilename, PcxToBytes(newImage))
 }
