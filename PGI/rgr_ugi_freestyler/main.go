@@ -193,9 +193,10 @@ func splitByColorMedian(rgbQuad []RgbQuad, median uint64, colorName string) ([]R
 	return partA, partB
 }
 
-func medianCut(rgbQuad []RgbQuad, level int) []RgbQuad {
+func split_bucket(bucket []RgbQuad) ([]RgbQuad, []RgbQuad) {
 	bounds := ColorBounds{Bounds{255, 0}, Bounds{255, 0}, Bounds{255, 0}}
-	for _, color := range rgbQuad {
+
+	for _, color := range bucket {
 		if int64(color.RgbRed) > int64(bounds.Red.end) {
 			bounds.Red.end = uint64(color.RgbRed)
 		}
@@ -225,62 +226,63 @@ func medianCut(rgbQuad []RgbQuad, level int) []RgbQuad {
 	maxLength := int64(math.Round(math.Max(float64(redLength), math.Max(float64(blueLength), float64(greenLength)))))
 
 	colorName := ""
-	median := uint64(0)
 	switch maxLength {
 	case int64(redLength):
 		colorName = "red"
-		median = (bounds.Red.begin + bounds.Red.end) / 2
 	case int64(greenLength):
 		colorName = "green"
-		median = (bounds.Green.begin + bounds.Green.end) / 2
 	case int64(blueLength):
 		colorName = "blue"
-		median = (bounds.Blue.begin + bounds.Blue.end) / 2
 	}
 
-	if level >= 8 {
-		/* Average color from cube */
-		// averageRed := 0
-		// averageGreen := 0
-		// averageBlue := 0
-		// for _, color := range rgbQuad {
-		// 	averageRed += int(color.RgbRed)
-		// 	averageGreen += int(color.RgbGreen)
-		// 	averageBlue += int(color.RgbBlue)
-		// }
-		// return []RgbQuad{{RgbRed: byte(averageRed / len(rgbQuad)), RgbGreen: byte(averageGreen / len(rgbQuad)), RgbBlue: byte(averageBlue / len(rgbQuad)), RgbReserved: 0xff}}
+	switch colorName {
+	case "red":
+		sort.Slice(bucket, func(i, j int) bool {
+			return bucket[i].RgbRed > bucket[j].RgbRed
+		})
+	case "green":
+		sort.Slice(bucket, func(i, j int) bool {
+			return bucket[i].RgbGreen > bucket[j].RgbGreen
+		})
+	case "blue":
+		sort.Slice(bucket, func(i, j int) bool {
+			return bucket[i].RgbBlue > bucket[j].RgbBlue
+		})
+	}
 
-		/* Middle color from cube */
-		// switch colorName {
-		// case "red":
-		// 	sort.SliceStable(rgbQuad, func(i, j int) bool {
-		// 		return rgbQuad[i].RgbRed > rgbQuad[j].RgbRed
-		// 	})
-		// case "green":
-		// 	sort.SliceStable(rgbQuad, func(i, j int) bool {
-		// 		return rgbQuad[i].RgbGreen > rgbQuad[j].RgbGreen
-		// 	})
-		// case "blue":
-		// 	sort.SliceStable(rgbQuad, func(i, j int) bool {
-		// 		return rgbQuad[i].RgbBlue > rgbQuad[j].RgbBlue
-		// 	})
-		// }
+	return bucket[:len(bucket)/2], bucket[len(bucket)/2:]
+}
 
-		// return []RgbQuad{rgbQuad[len(rgbQuad)/2]}
-
-		/* ??? */
-		if len(rgbQuad) > 0 {
-			return []RgbQuad{rgbQuad[0]}
+func medianCut(rgbQuad []RgbQuad, colors int) ([]RgbQuad, map[RgbQuad]int) {
+	buckets := [][]RgbQuad{rgbQuad}
+	for len(buckets) < colors {
+		new_buckets := [][]RgbQuad{}
+		for _, bucket := range buckets {
+			partA, partB := split_bucket(bucket)
+			new_buckets = append(new_buckets, partA)
+			new_buckets = append(new_buckets, partB)
 		}
-		return []RgbQuad{}
+		buckets = new_buckets
 	}
 
-	partA, partB := splitByColorMedian(rgbQuad, median, colorName)
+	palette := make([]RgbQuad, colors)
+	colorMap := make(map[RgbQuad]int, 0)
 
-	palette := []RgbQuad{}
-	palette = append(palette, medianCut(partA, level+1)...)
-	palette = append(palette, medianCut(partB, level+1)...)
-	return palette
+	for i, bucket := range buckets {
+		var avgRed float64 = 0
+		var avgGreen float64 = 0
+		var avgBlue float64 = 0
+
+		for _, pixel := range bucket {
+			avgRed += float64(pixel.RgbRed) / float64(len(bucket))
+			avgGreen += float64(pixel.RgbGreen) / float64(len(bucket))
+			avgBlue += float64(pixel.RgbBlue) / float64(len(bucket))
+			colorMap[pixel] = i
+		}
+		palette[i] = RgbQuad{RgbRed: byte(avgRed), RgbGreen: byte(avgGreen), RgbBlue: byte(avgBlue), RgbReserved: 0xff}
+	}
+
+	return palette, colorMap
 }
 
 func convertTrueColorBmpTo256CBmp(image BMPImage) BMPImage {
@@ -302,14 +304,15 @@ func convertTrueColorBmpTo256CBmp(image BMPImage) BMPImage {
 	newImage.FileHeader.Size = newImage.FileInfo.SizeImage + newImage.FileHeader.Offset
 
 	frequentColors := getFrequentColorKeysTrueColor(image)
-	newImage.RgbQuad = medianCut(frequentColors, 0)
+	newPalette, colorMap := medianCut(frequentColors, int(colorsCount))
+
+	newImage.RgbQuad = newPalette
 
 	newImage.ColorIndexArray = make([]byte, newImage.FileInfo.SizeImage)
 	for i := 0; i < int(newImage.FileInfo.Height); i++ {
 		for j := 0; j < int(newImage.FileInfo.Width); j++ {
 			color := GetPixelColor(i, j, image)
-			similarColorIndex := uint64(getIndexOfSimilarColor(color, newImage.RgbQuad))
-			setColorIndexToPixel(i, j, similarColorIndex, newImage)
+			setColorIndexToPixel(i, j, uint64(colorMap[color]), newImage)
 		}
 	}
 
