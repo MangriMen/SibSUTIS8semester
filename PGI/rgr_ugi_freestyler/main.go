@@ -78,7 +78,7 @@ func getFrequentColorKeys(image BMPImage) []int {
 
 func getIndexOfSimilarColor(color RgbQuad, rgbQuad []RgbQuad) int {
 	var minColorIndexDelta int
-	for i, minDelta := 0, 1e9; i < len(rgbQuad); i++ {
+	for i, minDelta := 0, 1e18; i < len(rgbQuad); i++ {
 		delta := getColorDelta(color, rgbQuad[i])
 		if delta < minDelta {
 			minDelta = delta
@@ -116,7 +116,7 @@ func convert256CBmpTo16CBmp(image BMPImage) BMPImage {
 	for i := 0; i < int(newImage.FileInfo.Height); i++ {
 		for j := 0; j < int(newImage.FileInfo.Width); j++ {
 			color := image.RgbQuad[getColorIndexFromPixel(i, j, image)]
-			similarColorIndex := getIndexOfSimilarColor(color, newImage.RgbQuad)
+			similarColorIndex := uint64(getIndexOfSimilarColor(color, newImage.RgbQuad))
 			setColorIndexToPixel(i, j, similarColorIndex, newImage)
 		}
 	}
@@ -159,14 +159,14 @@ type ColorBounds struct {
 	Blue  Bounds
 }
 
-func splitByColorMedian(rgbQuad []RgbQuad, median int, colorName string) ([]RgbQuad, []RgbQuad) {
+func splitByColorMedian(rgbQuad []RgbQuad, median uint64, colorName string) ([]RgbQuad, []RgbQuad) {
 	partA := []RgbQuad{}
 	partB := []RgbQuad{}
 
 	switch colorName {
 	case "red":
 		for _, color := range rgbQuad {
-			if int(color.RgbRed) >= median {
+			if uint64(color.RgbRed) >= median {
 				partA = append(partA, color)
 			} else {
 				partB = append(partB, color)
@@ -174,7 +174,7 @@ func splitByColorMedian(rgbQuad []RgbQuad, median int, colorName string) ([]RgbQ
 		}
 	case "green":
 		for _, color := range rgbQuad {
-			if int(color.RgbGreen) >= median {
+			if uint64(color.RgbGreen) >= median {
 				partA = append(partA, color)
 			} else {
 				partB = append(partB, color)
@@ -182,7 +182,7 @@ func splitByColorMedian(rgbQuad []RgbQuad, median int, colorName string) ([]RgbQ
 		}
 	case "blue":
 		for _, color := range rgbQuad {
-			if int(color.RgbBlue) >= median {
+			if uint64(color.RgbBlue) >= median {
 				partA = append(partA, color)
 			} else {
 				partB = append(partB, color)
@@ -196,25 +196,25 @@ func splitByColorMedian(rgbQuad []RgbQuad, median int, colorName string) ([]RgbQ
 func medianCut(rgbQuad []RgbQuad, level int) []RgbQuad {
 	bounds := ColorBounds{Bounds{255, 0}, Bounds{255, 0}, Bounds{255, 0}}
 	for _, color := range rgbQuad {
-		if int(color.RgbRed) > bounds.Red.end {
-			bounds.Red.end = int(color.RgbRed)
+		if int64(color.RgbRed) > int64(bounds.Red.end) {
+			bounds.Red.end = uint64(color.RgbRed)
 		}
-		if int(color.RgbRed) < bounds.Red.begin {
-			bounds.Red.begin = int(color.RgbRed)
-		}
-
-		if int(color.RgbGreen) > bounds.Green.end {
-			bounds.Green.end = int(color.RgbGreen)
-		}
-		if int(color.RgbGreen) < bounds.Green.begin {
-			bounds.Green.begin = int(color.RgbGreen)
+		if int64(color.RgbRed) < int64(bounds.Red.begin) {
+			bounds.Red.begin = uint64(color.RgbRed)
 		}
 
-		if int(color.RgbBlue) > bounds.Blue.end {
-			bounds.Blue.end = int(color.RgbBlue)
+		if int64(color.RgbGreen) > int64(bounds.Green.end) {
+			bounds.Green.end = uint64(color.RgbGreen)
 		}
-		if int(color.RgbBlue) < bounds.Blue.begin {
-			bounds.Blue.begin = int(color.RgbBlue)
+		if int64(color.RgbGreen) < int64(bounds.Green.begin) {
+			bounds.Green.begin = uint64(color.RgbGreen)
+		}
+
+		if int64(color.RgbBlue) > int64(bounds.Blue.end) {
+			bounds.Blue.end = uint64(color.RgbBlue)
+		}
+		if int64(color.RgbBlue) < int64(bounds.Blue.begin) {
+			bounds.Blue.begin = uint64(color.RgbBlue)
 		}
 	}
 
@@ -222,18 +222,18 @@ func medianCut(rgbQuad []RgbQuad, level int) []RgbQuad {
 	greenLength := bounds.Green.end - bounds.Green.begin
 	blueLength := bounds.Blue.end - bounds.Blue.begin
 
-	maxLength := int(math.Max(float64(redLength), math.Max(float64(blueLength), float64(greenLength))))
+	maxLength := int64(math.Round(math.Max(float64(redLength), math.Max(float64(blueLength), float64(greenLength)))))
 
 	colorName := ""
-	median := 0
+	median := uint64(0)
 	switch maxLength {
-	case redLength:
+	case int64(redLength):
 		colorName = "red"
 		median = (bounds.Red.begin + bounds.Red.end) / 2
-	case greenLength:
+	case int64(greenLength):
 		colorName = "green"
 		median = (bounds.Green.begin + bounds.Green.end) / 2
-	case blueLength:
+	case int64(blueLength):
 		colorName = "blue"
 		median = (bounds.Blue.begin + bounds.Blue.end) / 2
 	}
@@ -308,7 +308,7 @@ func convertTrueColorBmpTo256CBmp(image BMPImage) BMPImage {
 	for i := 0; i < int(newImage.FileInfo.Height); i++ {
 		for j := 0; j < int(newImage.FileInfo.Width); j++ {
 			color := GetPixelColor(i, j, image)
-			similarColorIndex := getIndexOfSimilarColor(color, newImage.RgbQuad)
+			similarColorIndex := uint64(getIndexOfSimilarColor(color, newImage.RgbQuad))
 			setColorIndexToPixel(i, j, similarColorIndex, newImage)
 		}
 	}
@@ -317,7 +317,7 @@ func convertTrueColorBmpTo256CBmp(image BMPImage) BMPImage {
 }
 
 func main() {
-	filename, err := filepath.Abs("../Belsanku.bmp")
+	filename, err := filepath.Abs("../_carib_TC.bmp")
 	if err != nil {
 		panic(err)
 	}

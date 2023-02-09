@@ -1,17 +1,17 @@
 package main
 
-func setBit(n int, pos uint) int {
+func setBit(n int64, pos uint) int64 {
 	n |= (1 << pos)
 	return n
 }
 
-func clearBit(n int, pos uint) int {
-	mask := ^(1 << pos)
+func clearBit(n int64, pos uint) int64 {
+	mask := int64(^(1 << pos))
 	n &= mask
 	return n
 }
 
-func hasBit(n int, pos uint) bool {
+func hasBit(n uint64, pos uint) bool {
 	val := n & (1 << pos)
 	return (val > 0)
 }

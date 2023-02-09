@@ -6,7 +6,7 @@ import (
 )
 
 type Bounds struct {
-	begin, end int
+	begin, end uint64
 }
 
 var SignatureBounds = Bounds{0, 2}
@@ -228,14 +228,14 @@ func getPixelBounds(j int, image BMPImage) (int, int) {
 	return startBit, endBit
 }
 
-func setColorIndexToPixel(i int, j int, data int, image BMPImage) {
-	index := getPixelIndex(i, j, image)
+func setColorIndexToPixel(i int, j int, data uint64, image BMPImage) {
+	index := int64(getPixelIndex(i, j, image))
 	startBit, endBit := getPixelBounds(j, image)
 
 	for i, j := startBit, 0; i < endBit; i, j = i+1, j+1 {
-		image.ColorIndexArray[index] = byte(clearBit(int(image.ColorIndexArray[index]), uint(i)))
+		image.ColorIndexArray[index] = byte(clearBit(int64(image.ColorIndexArray[index]), uint(i)))
 		if hasBit(data, uint(j)) {
-			image.ColorIndexArray[index] = byte(setBit(int(image.ColorIndexArray[index]), uint(i)))
+			image.ColorIndexArray[index] = byte(setBit(int64(image.ColorIndexArray[index]), uint(i)))
 		}
 	}
 }
@@ -251,8 +251,8 @@ func getColorIndexFromPixel(i int, j int, image BMPImage) byte {
 
 	var pixel byte = 0
 	for i, j := startBit, 0; i < endBit; i, j = i+1, j+1 {
-		if hasBit(int(image.ColorIndexArray[index]), uint(i)) {
-			pixel = byte(setBit(int(pixel), uint(j)))
+		if hasBit(uint64(image.ColorIndexArray[index]), uint(i)) {
+			pixel = byte(setBit(int64(pixel), uint(j)))
 		}
 	}
 
