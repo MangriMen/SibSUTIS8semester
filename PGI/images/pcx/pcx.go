@@ -1,4 +1,6 @@
-package main
+package pcx
+
+import "example.com/pgi_utils/binary"
 
 const RGBTripleELementsCount = 3
 const OptionalPaletteSizeBytes = 768
@@ -49,19 +51,19 @@ func newPCXHeader(data []byte) PCXHeader {
 	fileHeader.Version = uint8(data[1])
 	fileHeader.Coding = uint8(data[2])
 	fileHeader.BitPerPixel = uint8(data[3])
-	fileHeader.XMin = BytesToUInt16(data[4:6])
-	fileHeader.YMin = BytesToUInt16(data[6:8])
-	fileHeader.XMax = BytesToUInt16(data[8:10])
-	fileHeader.YMax = BytesToUInt16(data[10:12])
-	fileHeader.HRes = BytesToUInt16(data[12:14])
-	fileHeader.VRes = BytesToUInt16(data[14:16])
+	fileHeader.XMin = binary.BytesToUInt16(data[4:6])
+	fileHeader.YMin = binary.BytesToUInt16(data[6:8])
+	fileHeader.XMax = binary.BytesToUInt16(data[8:10])
+	fileHeader.YMax = binary.BytesToUInt16(data[10:12])
+	fileHeader.HRes = binary.BytesToUInt16(data[12:14])
+	fileHeader.VRes = binary.BytesToUInt16(data[14:16])
 	fileHeader.Palette = [48]byte(data[16:64])
 	fileHeader.Reserved = uint8(data[64])
 	fileHeader.Planes = uint8(data[65])
-	fileHeader.BytePerLine = BytesToUInt16(data[66:68])
-	fileHeader.PaletteInfo = BytesToUInt16(data[68:70])
-	fileHeader.HScreenSize = BytesToUInt16(data[70:72])
-	fileHeader.VScreenSize = BytesToUInt16(data[72:74])
+	fileHeader.BytePerLine = binary.BytesToUInt16(data[66:68])
+	fileHeader.PaletteInfo = binary.BytesToUInt16(data[68:70])
+	fileHeader.HScreenSize = binary.BytesToUInt16(data[70:72])
+	fileHeader.VScreenSize = binary.BytesToUInt16(data[72:74])
 	fileHeader.Filler = [54]byte(data[74:128])
 	return fileHeader
 }
@@ -96,7 +98,7 @@ func newPCXImage(data []byte) PCXImage {
 	return PCXImage{FileHeader: fileHeader, Data: imageData, OptionalPalette: optionalPalette, DecodedData: decodedData}
 }
 
-func PcxFromBytes(data []byte) PCXImage {
+func FromBytes(data []byte) PCXImage {
 	return newPCXImage(data)
 }
 
@@ -108,7 +110,7 @@ func EGAToRGB(egaColor byte) RgbTriple {
 	return rgbColor
 }
 
-func PcxGetPixelColor(i int, j int, image PCXImage) RgbTriple {
+func GetPixelColor(i int, j int, image PCXImage) RgbTriple {
 	row := j * int(image.FileHeader.BytePerLine)
 	column := i
 

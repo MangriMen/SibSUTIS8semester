@@ -1,112 +1,48 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"math"
-	"os"
 	"path/filepath"
-	"strings"
+
+	bmp "example.com/images/bitmap"
+	"example.com/pgi_utils/binary"
+	"example.com/pgi_utils/file"
+	"example.com/pgi_utils/helpers"
 )
 
-func readFileAsBytes(path string) []byte {
-	image, err := os.ReadFile(path)
+func InjectTextInBmp(image bmp.BMPImage, text []byte) bmp.BMPImage {
+	newImage := bmp.GetCopy(image)
 
-	if err != nil {
-		panic(err)
-	}
+	bitsCountForTextData := int(math.Round(float64(len(text)) / float64(newImage.FileInfo.SizeImage) * float64(binary.BitsPerByte)))
+	textBitLength := len(text) * binary.BitsPerByte
 
-	return image
-}
-
-func writeFileAsBytes(path string, data []byte) {
-	var err error
-
-	err = os.RemoveAll(path)
-
-	if err != nil {
-		panic(err)
-	}
-
-	err = os.WriteFile(path, data, 0644)
-
-	if err != nil {
-		panic(err)
-	}
-}
-
-func printBMPStructure(image BMPImage) {
-	prefix := ""
-	indent := "  "
-
-	header, _ := json.MarshalIndent(image.FileHeader, prefix, indent)
-	info, _ := json.MarshalIndent(image.FileInfo, prefix, indent)
-	rgbQuad, _ := json.MarshalIndent(image.RgbQuad, prefix, indent)
-
-	fmt.Printf("File header: %s\n", header)
-	fmt.Printf("File info: %s\n", info)
-	fmt.Printf("Palette: %s\n", rgbQuad)
-}
-
-func injectTextInBmp(image BMPImage, text []byte) BMPImage {
-	newImage := BMPImage{}
-
-	newImage.FileHeader = image.FileHeader
-	newImage.FileInfo = image.FileInfo
-	newImage.RgbQuad = append(newImage.RgbQuad, image.RgbQuad...)
-	newImage.ColorIndexArray = append(newImage.ColorIndexArray, image.ColorIndexArray...)
-	newImage.Meta = newMeta(image.FileInfo.BitCount, image.FileInfo.Width)
-
-	bitsCountForTextData := int(math.Round(float64(len(text)) / float64(newImage.FileInfo.SizeImage) * float64(BitsPerByte)))
-
-	currentTextArrayIndex := 0
-	currentTextBit := 0
-	for i := 0; i < len(newImage.ColorIndexArray); i++ {
-		if currentTextArrayIndex == len(text) {
-			break
-		}
+	for i, textBit := 0, 0; textBit < textBitLength && i < len(newImage.ColorIndexArray); i++ {
 		for j := 0; j < bitsCountForTextData; j++ {
-			newImage.ColorIndexArray[i] = byte(clearBit(int(newImage.ColorIndexArray[i]), uint(j)))
-			if hasBit(int(text[currentTextArrayIndex]), uint(currentTextBit)) {
-				newImage.ColorIndexArray[i] = byte(setBit(int(newImage.ColorIndexArray[i]), uint(j)))
-			}
-			currentTextBit++
-			if currentTextBit >= 8 {
-				currentTextBit = 0
-				currentTextArrayIndex++
-			}
-		}
-	}
+			newImage.ColorIndexArray[i] = byte(binary.ClearBit(int(newImage.ColorIndexArray[i]), uint(j)))
 
-	for i := currentTextArrayIndex; i < len(text); i++ {
-		for j := currentTextBit; j < len(text); j++ {
-			fmt.Println("kek")
+			if binary.HasBit(int(text[textBit/binary.BitsPerByte]), uint(textBit%binary.BitsPerByte)) {
+				newImage.ColorIndexArray[i] = byte(binary.SetBit(int(newImage.ColorIndexArray[i]), uint(j)))
+			}
+
+			textBit++
 		}
 	}
 
 	return newImage
 }
 
-func getTextFromBmp(image BMPImage, textFileSize int) []byte {
+func GetTextFromBmp(image bmp.BMPImage, textFileSize int) []byte {
 	text := make([]byte, textFileSize/8)
 
-	bitsCountForTextData := int(math.Round(float64(len(text)) / float64(image.FileInfo.SizeImage) * float64(BitsPerByte)))
+	bitsCountForTextData := int(math.Round(float64(len(text)) / float64(image.FileInfo.SizeImage) * float64(binary.BitsPerByte)))
 
-	currentTextArrayIndex := 0
-	currentTextBit := 0
-	for i := 0; i < len(image.ColorIndexArray); i++ {
-		if currentTextArrayIndex == len(text) {
-			break
-		}
+	for i, textBit := 0, 0; textBit < textFileSize && i < len(image.ColorIndexArray); i++ {
 		for j := 0; j < bitsCountForTextData; j++ {
-			if hasBit(int(image.ColorIndexArray[i]), uint(j)) {
-				text[currentTextArrayIndex] = byte(setBit(int(text[currentTextArrayIndex]), uint(currentTextBit)))
+			if binary.HasBit(int(image.ColorIndexArray[i]), uint(j)) {
+				text[textBit/binary.BitsPerByte] = byte(binary.SetBit(int(text[textBit/binary.BitsPerByte]), uint(textBit%binary.BitsPerByte)))
 			}
-			currentTextBit++
-			if currentTextBit >= 8 {
-				currentTextBit = 0
-				currentTextArrayIndex++
-			}
+
+			textBit++
 		}
 	}
 
@@ -114,15 +50,15 @@ func getTextFromBmp(image BMPImage, textFileSize int) []byte {
 }
 
 func main() {
-	filename, err := filepath.Abs("../_carib_TC.bmp")
+	inputFilename, err := filepath.Abs("../_carib_TC.bmp")
 	if err != nil {
 		panic(err)
 	}
 
-	filenameWithoutExt := strings.Split(filepath.Base(filename), ".")[0]
+	filenameWithoutExt := file.GetFilenameWithoutExt(inputFilename)
 
-	image := bmpFromBytes(readFileAsBytes(filename))
-	printBMPStructure(image)
+	image := bmp.FromBytes(file.Read(inputFilename))
+	helpers.PrintBmpStructure(image)
 
 	sizes := []string{"0.1.txt", "0.2.txt", "0.5.txt"}
 
@@ -132,13 +68,13 @@ func main() {
 			panic(err)
 		}
 
-		txtFile := readFileAsBytes(textFilename)
-		convertedImage := injectTextInBmp(image, txtFile)
+		txtFile := file.Read(textFilename)
+		convertedImage := InjectTextInBmp(image, txtFile)
 
 		outputFilename := filenameWithoutExt + "_" + size + "_Stenography.bmp"
-		writeFileAsBytes(outputFilename, bmpToBytes(convertedImage))
+		file.Write(outputFilename, bmp.ToBytes(convertedImage))
 
-		textFromBmp := getTextFromBmp(convertedImage, len(txtFile)*8)
-		writeFileAsBytes(size+"_from_bmp.txt", textFromBmp)
+		textFromBmp := GetTextFromBmp(convertedImage, len(txtFile)*8)
+		file.Write(size+"_from_bmp.txt", textFromBmp)
 	}
 }

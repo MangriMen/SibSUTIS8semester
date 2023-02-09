@@ -1,56 +1,30 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"image/color"
-	"os"
 	"path/filepath"
 	"time"
 
+	bmp "example.com/images/bitmap"
+	"example.com/pgi_utils/file"
+	"example.com/pgi_utils/helpers"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 )
 
-func readFileAsBytes(path string) []byte {
-	image, err := os.ReadFile(path)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return image
-}
-
-func printBMPStructure(image BMPImage) {
-	prefix := ""
-	indent := "  "
-
-	header, _ := json.MarshalIndent(image.FileHeader, prefix, indent)
-	info, _ := json.MarshalIndent(image.FileInfo, prefix, indent)
-	rgbQuad, _ := json.MarshalIndent(image.RgbQuad, prefix, indent)
-
-	fmt.Printf("File header: %s\n", header)
-	fmt.Printf("File info: %s\n", info)
-	fmt.Printf("Palette: %s\n", rgbQuad)
-}
-
 func main() {
-	filename, err := filepath.Abs("../_carib_TC.bmp")
+	inputFilename, err := filepath.Abs("../_carib_TC.bmp")
 	if err != nil {
 		panic(err)
 	}
 
-	image := bmpFromBytes(readFileAsBytes(filename))
-	printBMPStructure(image)
+	image := bmp.FromBytes(file.Read(inputFilename))
+	helpers.PrintBmpStructure(image)
 
 	width := int(image.FileInfo.Width)
 	height := int(image.FileInfo.Height)
-
-	a := app.New()
-	w := a.NewWindow("lab 4")
-	cnv := w.Canvas()
 
 	var scaleCoeff float32 = 1
 
@@ -60,10 +34,14 @@ func main() {
 	fmt.Printf("Scale: %0.2f\n", scaleCoeff)
 	fmt.Printf("Resolution: %dx%d\n", scaledWidth, scaledHeight)
 
+	a := app.New()
+	w := a.NewWindow("lab 4")
+	cnv := w.Canvas()
+
 	raster := canvas.NewRasterWithPixels(
 		func(x, y, w, h int) color.Color {
 			if x < scaledWidth && y < scaledHeight {
-				pixelColor := GetPixelColor(int(float32(y)/scaleCoeff), int(float32(x)/scaleCoeff), image)
+				pixelColor := bmp.GetPixelColor(int(float32(y)/scaleCoeff), int(float32(x)/scaleCoeff), image)
 
 				var alpha byte = 0xff
 				if image.FileInfo.BitCount == 32 {

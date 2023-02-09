@@ -1,81 +1,37 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"os"
 	"path/filepath"
-	"strings"
+
+	bmp "example.com/images/bitmap"
+	"example.com/pgi_utils/file"
+	"example.com/pgi_utils/helpers"
 )
 
-func readFileAsBytes(path string) []byte {
-	image, err := os.ReadFile(path)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return image
+func BlendPixelColor(imageColorComponent byte, logoColorComponent, opacity float64) byte {
+	return byte(float64(imageColorComponent)*opacity + float64(logoColorComponent)*(1-opacity))
 }
 
-func writeFileAsBytes(path string, data []byte) {
-	var err error
+func AddLogoToBmp(logo bmp.BMPImage, opacity float64, x, y int, image bmp.BMPImage) bmp.BMPImage {
+	newImage := bmp.GetCopy(image)
 
-	err = os.RemoveAll(path)
-
-	if err != nil {
-		panic(err)
-	}
-
-	err = os.WriteFile(path, data, 0644)
-
-	if err != nil {
-		panic(err)
-	}
-}
-
-func printBMPStructure(image BMPImage) {
-	prefix := ""
-	indent := "  "
-
-	header, _ := json.MarshalIndent(image.FileHeader, prefix, indent)
-	info, _ := json.MarshalIndent(image.FileInfo, prefix, indent)
-	rgbQuad, _ := json.MarshalIndent(image.RgbQuad, prefix, indent)
-
-	fmt.Printf("File header: %s\n", header)
-	fmt.Printf("File info: %s\n", info)
-	fmt.Printf("Palette: %s\n", rgbQuad)
-}
-
-func addLogoToBmp(logo BMPImage, opacity float64, x, y int, image BMPImage) BMPImage {
-	newImage := BMPImage{}
-
-	newImage.FileHeader = image.FileHeader
-	newImage.FileInfo = image.FileInfo
-	newImage.RgbQuad = append(newImage.RgbQuad, image.RgbQuad...)
-	newImage.ColorIndexArray = append(newImage.ColorIndexArray, image.ColorIndexArray...)
-	newImage.Meta = newMeta(image.FileInfo.BitCount, image.FileInfo.Width)
-
-	backgroundColor := RgbQuad{0xff, 0xff, 0xff, 0}
-
-	logoStartX := x
-	logoStartY := y
+	backgroundColor := bmp.RgbQuad{RgbBlue: 0xff, RgbGreen: 0xff, RgbRed: 0xff, RgbReserved: 0}
 
 	for i := 0; i < int(logo.FileInfo.Height); i++ {
 		for j := 0; j < int(logo.FileInfo.Width); j++ {
-			logoPixelColor := GetPixelColor(i, j, logo)
-			if logoPixelColor == backgroundColor {
+			logoPixel := bmp.GetPixelColor(i, j, logo)
+			if logoPixel == backgroundColor {
 				continue
 			}
 
-			imagePixelColor := GetPixelColor(logoStartX+i, logoStartY+j, newImage)
+			imagePixel := bmp.GetPixelColor(x+i, y+j, newImage)
 
-			newPixelColor := RgbQuad{}
-			newPixelColor.RgbRed = byte(float64(imagePixelColor.RgbRed)*opacity + float64(logoPixelColor.RgbRed)*(1-opacity))
-			newPixelColor.RgbGreen = byte(float64(imagePixelColor.RgbGreen)*opacity + float64(logoPixelColor.RgbGreen)*(1-opacity))
-			newPixelColor.RgbBlue = byte(float64(imagePixelColor.RgbBlue)*opacity + float64(logoPixelColor.RgbBlue)*(1-opacity))
+			newColor := bmp.RgbQuad{}
+			newColor.RgbRed = BlendPixelColor(imagePixel.RgbRed, float64(logoPixel.RgbRed), opacity)
+			newColor.RgbGreen = BlendPixelColor(imagePixel.RgbGreen, float64(logoPixel.RgbGreen), opacity)
+			newColor.RgbBlue = BlendPixelColor(imagePixel.RgbBlue, float64(logoPixel.RgbBlue), opacity)
 
-			SetPixelColor(logoStartX+i, logoStartY+j, newPixelColor, newImage)
+			bmp.SetPixelColor(x+i, y+j, newColor, newImage)
 		}
 	}
 
@@ -93,14 +49,18 @@ func main() {
 		panic(err)
 	}
 
-	filenameWithoutExt := strings.Split(filepath.Base(imageFilename), ".")[0]
-	outputFilename := filenameWithoutExt + "_With_Logo.bmp"
+	outputFilename := file.GetFilenameWithoutExt(imageFilename) + "_With_Logo.bmp"
 
-	image := bmpFromBytes(readFileAsBytes(imageFilename))
-	logo := bmpFromBytes(readFileAsBytes(logoFilename))
-	printBMPStructure(image)
+	image := bmp.FromBytes(file.Read(imageFilename))
+	helpers.PrintBmpStructure(image)
 
-	convertedImage := addLogoToBmp(logo, 0.5, 200, 200, image)
+	logo := bmp.FromBytes(file.Read(logoFilename))
 
-	writeFileAsBytes(outputFilename, bmpToBytes(convertedImage))
+	x := 200
+	y := 200
+	opacity := 0.5
+
+	convertedImage := AddLogoToBmp(logo, opacity, x, y, image)
+
+	file.Write(outputFilename, bmp.ToBytes(convertedImage))
 }
