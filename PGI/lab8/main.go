@@ -1,52 +1,47 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"image/color"
 	"os"
 	"path/filepath"
 	"time"
 
+	"example.com/images/pcx"
+	"example.com/pgi_utils/file"
+	"example.com/pgi_utils/helpers"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 )
 
-func readFileAsBytes(path string) []byte {
-	image, err := os.ReadFile(path)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return image
-}
-
 func main() {
-	filename, err := filepath.Abs("../CAT16.pcx")
+	filename := "../carib_TC.pcx"
+
+	if len(os.Args) > 1 {
+		filename = os.Args[1]
+	}
+
+	inputFilename, err := filepath.Abs(filename)
 	if err != nil {
 		panic(err)
 	}
 
-	image := PcxFromBytes(readFileAsBytes(filename))
-
-	header, _ := json.MarshalIndent(image.FileHeader, "", "  ")
-	fmt.Printf("%s", header)
+	image := pcx.FromBytes(file.Read(inputFilename))
+	helpers.PrintPCXStructure(image)
 
 	width := int(image.FileHeader.XMax)
 	height := int(image.FileHeader.YMax)
 
 	a := app.New()
-	w := a.NewWindow("lab 4")
+	w := a.NewWindow("lab 8")
 	cnv := w.Canvas()
 
 	raster := canvas.NewRasterWithPixels(
 		func(x, y, w, h int) color.Color {
 			if x < width && y < height {
-				pixelColor := PcxGetPixelColor(x, y, image)
+				pixelColor := pcx.GetPixelColor(y, x, image)
 
-				return color.RGBA{pixelColor.RgbRed, pixelColor.RgbGreen, pixelColor.RgbBlue, 0xff}
+				return color.RGBA{pixelColor.RGBTRed, pixelColor.RGBTGreen, pixelColor.RGBTBlue, 0xff}
 			}
 
 			return color.RGBA{}
