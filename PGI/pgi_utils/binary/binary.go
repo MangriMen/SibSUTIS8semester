@@ -1,17 +1,19 @@
-package main
+package binary
 
-func setBit(n int, pos uint) int {
+const BitsPerByte = 8
+
+func SetBit(n int, pos uint) int {
 	n |= (1 << pos)
 	return n
 }
 
-func clearBit(n int, pos uint) int {
+func ClearBit(n int, pos uint) int {
 	mask := ^(1 << pos)
 	n &= mask
 	return n
 }
 
-func hasBit(n int, pos uint) bool {
+func HasBit(n int, pos uint) bool {
 	val := n & (1 << pos)
 	return (val > 0)
 }

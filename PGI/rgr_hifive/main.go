@@ -166,19 +166,19 @@ func convertTrueColorBMPToPaletteBMP(image bmp.BMPImage, bitCount int) bmp.BMPIm
 }
 
 func main() {
-	inputFilename, err := filepath.Abs("../_carib_TC.bmp")
+	inputFilename, err := filepath.Abs("../CAT256.bmp")
 	if err != nil {
 		panic(err)
 	}
 
-	outputFilename := file.GetFilenameWithoutExt(inputFilename) + "_To_256C.bmp"
+	outputFilename := file.GetFilenameWithoutExt(inputFilename) + "_To_16C.bmp"
 
 	image := bmp.FromBytes(file.Read(inputFilename))
 
 	fmt.Println("Original image: ")
 	helpers.PrintBMPStructure(image)
 
-	convertedImage := convertTrueColorBMPToPaletteBMP(image, 8)
+	convertedImage := convertTrueColorBMPToPaletteBMP(image, 4)
 
 	fmt.Println("Converted 256 colors to 16 colors image: ")
 	helpers.PrintBMPStructure(convertedImage)
