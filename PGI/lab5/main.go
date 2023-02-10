@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"image/color"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	bmp "example.com/images/bitmap"
@@ -15,10 +17,18 @@ import (
 )
 
 func main() {
-	filename := "../CAT16.bmp"
+	filename := "../_carib_TC.bmp"
+	var scaleCoeff float32 = 0.5
 
-	if len(os.Args) > 1 {
+	if len(os.Args) > 2 {
 		filename = os.Args[1]
+
+		number, err := strconv.ParseFloat(os.Args[2], 32)
+		if err != nil {
+			panic(err)
+		}
+
+		scaleCoeff = float32(number)
 	}
 
 	inputFilename, err := filepath.Abs(filename)
@@ -32,14 +42,20 @@ func main() {
 	width := int(image.FileInfo.Width)
 	height := int(image.FileInfo.Height)
 
+	scaledHeight := int(float32(height) * scaleCoeff)
+	scaledWidth := int(float32(width) * scaleCoeff)
+
+	fmt.Printf("Scale: %0.2f\n", scaleCoeff)
+	fmt.Printf("Resolution: %dx%d\n", scaledWidth, scaledHeight)
+
 	a := app.New()
 	w := a.NewWindow("lab 4")
 	cnv := w.Canvas()
 
 	raster := canvas.NewRasterWithPixels(
 		func(x, y, w, h int) color.Color {
-			if x < width && y < height {
-				pixelColor := bmp.GetPixelColor(y, x, image)
+			if x < scaledWidth && y < scaledHeight {
+				pixelColor := bmp.GetPixelColor(int(float32(y)/scaleCoeff), int(float32(x)/scaleCoeff), image)
 
 				var alpha byte = 0xff
 				if image.FileInfo.BitCount == 32 {

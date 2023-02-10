@@ -1,0 +1,17 @@
+DROP TABLE mysal;
+CREATE TABLE mysal AS (SELECT * FROM sal);
+
+DROP TABLE mycust;
+CREATE TABLE mycust AS (SELECT * FROM cust);
+
+DROP TABLE myord;
+CREATE TABLE myord AS (SELECT * FROM ord);
+
+DELETE FROM mysal;
+DELETE FROM mycust;
+TRUNCATE TABLE myord;
+ROLLBACK;
+
+SELECT * FROM mysal;
+SELECT * FROM mycust;
+SELECT * FROM myord;

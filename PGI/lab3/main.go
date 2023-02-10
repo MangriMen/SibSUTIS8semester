@@ -1,61 +1,14 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"math/rand"
 	"os"
 	"path/filepath"
-	"strings"
-	"time"
+
+	bmp "example.com/images/bitmap"
+	"example.com/pgi_utils/file"
+	"example.com/pgi_utils/helpers"
+	"example.com/pgi_utils/types"
 )
-
-func readFileAsBytes(path string) []byte {
-	image, err := os.ReadFile(path)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return image
-}
-
-func writeFileAsBytes(path string, data []byte) {
-	var err error
-
-	err = os.RemoveAll(path)
-
-	if err != nil {
-		panic(err)
-	}
-
-	err = os.WriteFile(path, data, 0644)
-
-	if err != nil {
-		panic(err)
-	}
-}
-
-func readBMP(path string) BMPImage {
-	return bmpFromBytes(readFileAsBytes(path))
-}
-
-func writeBMP(path string, image BMPImage) {
-	writeFileAsBytes(path, bmpToBytes(image))
-}
-
-func printBMPStructure(image BMPImage) {
-	prefix := ""
-	indent := "  "
-
-	header, _ := json.MarshalIndent(image.FileHeader, prefix, indent)
-	info, _ := json.MarshalIndent(image.FileInfo, prefix, indent)
-	rgbQuad, _ := json.MarshalIndent(image.RgbQuad, prefix, indent)
-
-	fmt.Printf("File header: %s\n", header)
-	fmt.Printf("File info: %s\n", info)
-	fmt.Printf("Palette: %s\n", rgbQuad)
-}
 
 type rotationDirection int
 
@@ -64,32 +17,46 @@ const (
 	right rotationDirection = iota
 )
 
-func rotateBMP(image BMPImage, rotationDirection rotationDirection) BMPImage {
-	newImage := BMPImage{}
+func RotateBmp(image bmp.BMPImage, rotationDirection rotationDirection) bmp.BMPImage {
+	newImage := image
 
-	newImage.FileHeader = image.FileHeader
-	newImage.FileInfo = image.FileInfo
 	newImage.FileInfo.Width, newImage.FileInfo.Height = newImage.FileInfo.Height, newImage.FileInfo.Width
 
-	newImage.ColorIndexArray = make([]byte, 0)
-	newImage.RgbQuad = make([]RgbQuad, 0)
+	newImage.Meta = bmp.NewMeta(newImage.FileInfo.BitCount, newImage.FileInfo.Width)
+	newImage.FileInfo.SizeImage = uint32(newImage.Meta.WidthAlignedBytes) * uint32(newImage.FileInfo.Height)
 
-	newImage.ColorIndexArray = append(newImage.ColorIndexArray, image.ColorIndexArray...)
-	newImage.RgbQuad = append(newImage.RgbQuad, image.RgbQuad...)
+	newImage.RGBQuad = append([]types.RGBQuad(nil), image.RGBQuad...)
+	newImage.ColorIndexArray = make([]byte, newImage.FileInfo.SizeImage)
 
 	width := int(image.FileInfo.Width)
 	height := int(image.FileInfo.Height)
 
-	if rotationDirection == left {
-		for i := 0; i < height; i++ {
-			for j := 0; j < width; j++ {
-				SetPixel(j, i, int(GetPixel(height-i-1, j, image.ColorIndexArray, image.FileInfo)), newImage.ColorIndexArray, newImage.FileInfo)
+	if rotationDirection == right {
+		if newImage.FileInfo.BitCount <= 8 {
+			for i := 0; i < height; i++ {
+				for j := 0; j < width; j++ {
+					bmp.SetPixelColorIndex(j, i, bmp.GetPixelColorIndex(height-i-1, j, image), newImage)
+				}
+			}
+		} else {
+			for i := 0; i < height; i++ {
+				for j := 0; j < width; j++ {
+					bmp.SetPixelColor(j, i, bmp.GetPixelColor(height-i-1, j, image), newImage)
+				}
 			}
 		}
 	} else {
-		for i := 0; i < height; i++ {
-			for j := 0; j < width; j++ {
-				SetPixel(j, i, int(GetPixel(i, width-j-1, image.ColorIndexArray, image.FileInfo)), newImage.ColorIndexArray, newImage.FileInfo)
+		if newImage.FileInfo.BitCount <= 8 {
+			for i := 0; i < height; i++ {
+				for j := 0; j < width; j++ {
+					bmp.SetPixelColorIndex(j, i, bmp.GetPixelColorIndex(i, width-j-1, image), newImage)
+				}
+			}
+		} else {
+			for i := 0; i < height; i++ {
+				for j := 0; j < width; j++ {
+					bmp.SetPixelColor(j, i, bmp.GetPixelColor(i, width-j-1, image), newImage)
+				}
 			}
 		}
 	}
@@ -98,21 +65,31 @@ func rotateBMP(image BMPImage, rotationDirection rotationDirection) BMPImage {
 }
 
 func main() {
-	rand.Seed(time.Now().UnixNano())
+	filename := "../_carib_TC.bmp"
+	direction := left
 
-	filename, err := filepath.Abs("../CAT16.bmp")
+	if len(os.Args) > 2 {
+		filename = os.Args[1]
+
+		switch os.Args[2] {
+		case "left":
+			direction = left
+		case "right":
+			direction = right
+		}
+	}
+
+	inputFilename, err := filepath.Abs(filename)
 	if err != nil {
 		panic(err)
 	}
 
-	filenameWithoutExt := strings.Split(filepath.Base(filename), ".")[0]
-	outputFilename := filenameWithoutExt + "_Rotation.bmp"
+	outputFilename := file.GetFilenameWithoutExt(inputFilename) + "_Rotation.bmp"
 
-	image := readBMP(filename)
+	image := bmp.FromBytes(file.Read(inputFilename))
+	helpers.PrintBMPStructure(image)
 
-	printBMPStructure(image)
+	rotatedImage := RotateBmp(image, direction)
 
-	bnwImage := rotateBMP(image, right)
-
-	writeBMP(outputFilename, bnwImage)
+	file.Write(outputFilename, bmp.ToBytes(rotatedImage))
 }
