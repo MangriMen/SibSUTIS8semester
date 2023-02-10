@@ -1,4 +1,4 @@
-module lab6
+module rgr_ugi_freestyler
 
 go 1.20
 
