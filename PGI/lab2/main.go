@@ -1,107 +1,41 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"math"
 	"math/rand"
 	"os"
 	"path/filepath"
-	"strings"
+	"strconv"
+
+	bmp "example.com/images/bitmap"
+	"example.com/pgi_utils/file"
+	"example.com/pgi_utils/helpers"
+	"example.com/pgi_utils/types"
 )
 
-func readFileAsBytes(path string) []byte {
-	image, err := os.ReadFile(path)
+func AddBorderToBmp(image bmp.BMPImage, borderWidth int, borderColorIndex uint8, borderColor types.RGBQuad) bmp.BMPImage {
+	newImage := image
 
-	if err != nil {
-		panic(err)
-	}
+	var sides int = 2
+	newImage.FileInfo.Width += int32(borderWidth * sides)
+	newImage.FileInfo.Height += int32(borderWidth * sides)
 
-	return image
-}
+	newImage.Meta = bmp.NewMeta(newImage.FileInfo.BitCount, newImage.FileInfo.Width)
+	newImage.FileInfo.SizeImage = uint32(newImage.Meta.WidthAlignedBytes) * uint32(newImage.FileInfo.Height)
 
-func writeFileAsBytes(path string, data []byte) {
-	var err error
-
-	err = os.RemoveAll(path)
-
-	if err != nil {
-		panic(err)
-	}
-
-	err = os.WriteFile(path, data, 0644)
-
-	if err != nil {
-		panic(err)
-	}
-}
-
-func readBMP(path string) BMPImage {
-	return bmpFromBytes(readFileAsBytes(path))
-}
-
-func writeBMP(path string, image BMPImage) {
-	writeFileAsBytes(path, bmpToBytes(image))
-}
-
-func printBMPStructure(image BMPImage) {
-	prefix := ""
-	indent := "  "
-
-	header, _ := json.MarshalIndent(image.FileHeader, prefix, indent)
-	info, _ := json.MarshalIndent(image.FileInfo, prefix, indent)
-	rgbQuad, _ := json.MarshalIndent(image.RgbQuad, prefix, indent)
-
-	fmt.Printf("File header: %s\n", header)
-	fmt.Printf("File info: %s\n", info)
-	fmt.Printf("Palette: %s\n", rgbQuad)
-}
-
-func createBorderOnBMP(image BMPImage, borderWidth int, borderColorIndex int, borderColor RgbQuad) BMPImage {
-	newImage := BMPImage{}
-	newImage.FileHeader = image.FileHeader
-	newImage.FileInfo = image.FileInfo
-	newImage.Meta = image.Meta
-
-	newImage.FileInfo.Width += int32(borderWidth) * 2
-	newImage.FileInfo.Height += int32(borderWidth) * 2
-
-	bytesPerRowAligned := 4 * int32(math.Ceil(float64(int(newImage.FileInfo.Width)*int(newImage.FileInfo.BitCount))/32))
-	newImage.Meta.widthAlignedBytes = bytesPerRowAligned
-	if newImage.FileInfo.BitCount < BitsPerByte {
-		newImage.Meta.widthAligned = bytesPerRowAligned * int32(newImage.Meta.bitsPerPixel)
-	} else {
-		newImage.Meta.widthAligned = int32(math.Round(float64(bytesPerRowAligned) / float64(newImage.Meta.bytesPerColor)))
-	}
-
-	newImage.FileInfo.SizeImage = uint32(bytesPerRowAligned) * uint32(newImage.FileInfo.Height)
-
-	newImage.RgbQuad = image.RgbQuad
-
+	newImage.RGBQuad = append([]types.RGBQuad(nil), image.RGBQuad...)
 	newImage.ColorIndexArray = make([]byte, newImage.FileInfo.SizeImage)
 
 	width := int(newImage.FileInfo.Width)
 	height := int(newImage.FileInfo.Height)
 
 	if image.FileInfo.BitCount <= 8 {
-		for i, oldI := borderWidth, 0; i < height-borderWidth; i, oldI = i+1, oldI+1 {
-			for j, oldJ := borderWidth, 0; j < width-borderWidth; j, oldJ = j+1, oldJ+1 {
-				setColorIndexToPixel(i, j, int(getColorIndexFromPixel(oldI, oldJ, image)), newImage)
-			}
-		}
-	} else {
-		for i, oldI := borderWidth, 0; i < height-borderWidth; i, oldI = i+1, oldI+1 {
-			for j, oldJ := borderWidth, 0; j < width-borderWidth; j, oldJ = j+1, oldJ+1 {
-				SetPixelColor(i, j, GetPixelColor(oldI, oldJ, image), newImage)
-			}
-		}
-	}
-
-	if image.FileInfo.BitCount <= 8 {
 		for i := 0; i < height; i++ {
 			for j := 0; j < width; j++ {
 				if (i < borderWidth || i >= height-borderWidth) || (j < borderWidth || j >= width-borderWidth) {
-					setColorIndexToPixel(i, j, borderColorIndex, newImage)
+					bmp.SetPixelColorIndex(i, j, borderColorIndex, newImage)
+				} else {
+					bmp.SetPixelColorIndex(i, j, bmp.GetPixelColorIndex(i-borderWidth, j-borderWidth, image), newImage)
 				}
 			}
 		}
@@ -109,7 +43,9 @@ func createBorderOnBMP(image BMPImage, borderWidth int, borderColorIndex int, bo
 		for i := 0; i < height; i++ {
 			for j := 0; j < width; j++ {
 				if (i < borderWidth || i >= height-borderWidth) || (j < borderWidth || j >= width-borderWidth) {
-					SetPixelColor(i, j, borderColor, newImage)
+					bmp.SetPixelColor(i, j, borderColor, newImage)
+				} else {
+					bmp.SetPixelColor(i, j, bmp.GetPixelColor(i-borderWidth, j-borderWidth, image), newImage)
 				}
 			}
 		}
@@ -119,35 +55,46 @@ func createBorderOnBMP(image BMPImage, borderWidth int, borderColorIndex int, bo
 }
 
 func main() {
-	filename, err := filepath.Abs("../CAT16.bmp")
+	filename := "../_carib_TC.bmp"
+	borderWidth := 15
+
+	if len(os.Args) > 2 {
+		filename = os.Args[1]
+
+		var atoiError error
+		borderWidth, atoiError = strconv.Atoi(os.Args[2])
+
+		if atoiError != nil {
+			panic(atoiError)
+		}
+	}
+
+	inputFilename, err := filepath.Abs(filename)
 	if err != nil {
 		panic(err)
 	}
 
-	filenameWithoutExt := strings.Split(filepath.Base(filename), ".")[0]
-	outputFilename := filenameWithoutExt + "_Border.bmp"
+	outputFilename := file.GetFilenameWithoutExt(inputFilename) + "_Border.bmp"
 
-	image := readBMP(filename)
+	image := bmp.FromBytes(file.Read(inputFilename))
+	helpers.PrintBMPStructure(image)
 
-	printBMPStructure(image)
-
-	borderWidth := 15
 	fmt.Printf("Border width: %dpx\n", borderWidth)
 
-	var borderColorIndex int = 0
-	var borderColor RgbQuad = RgbQuad{}
+	var borderColorIndex uint8
+	var borderColor types.RGBQuad
 
 	fmt.Print("Border color: ")
 	if image.FileInfo.BitCount <= 8 {
-		borderColorIndex = rand.Intn(len(image.RgbQuad))
-		fmt.Printf("%+v", image.RgbQuad[borderColorIndex])
+		borderColorIndex = uint8(rand.Intn(len(image.RGBQuad)))
+		fmt.Printf("%+v", image.RGBQuad[borderColorIndex])
 	} else {
-		borderColor = RgbQuad{byte(rand.Intn(255)), byte(rand.Intn(255)), byte(rand.Intn(255)), 0xff}
+		borderColor = types.RGBQuad{RGBBlue: byte(rand.Intn(255)), RGBGreen: byte(rand.Intn(255)), RGBRed: byte(rand.Intn(255)), RGBReserved: 0xff}
 		fmt.Printf("%+v", borderColor)
 	}
 	fmt.Println()
 
-	bnwImage := createBorderOnBMP(image, borderWidth, borderColorIndex, borderColor)
+	imageWithBorder := AddBorderToBmp(image, borderWidth, borderColorIndex, borderColor)
 
-	writeBMP(outputFilename, bnwImage)
+	file.Write(outputFilename, bmp.ToBytes(imageWithBorder))
 }
