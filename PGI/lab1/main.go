@@ -1,92 +1,45 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"math"
 	"os"
 	"path/filepath"
-	"strings"
+
+	bmp "example.com/images/bitmap"
+	"example.com/pgi_utils/file"
+	"example.com/pgi_utils/helpers"
+	"example.com/pgi_utils/types"
 )
 
-func readFileAsBytes(path string) []byte {
-	image, err := os.ReadFile(path)
+func ConvertToAverageColor(color types.RGBQuad) types.RGBQuad {
+	averageValue := byte((int(color.RGBBlue) + int(color.RGBGreen) + int(color.RGBRed)) / 3)
+	return types.RGBQuad{RGBBlue: averageValue, RGBGreen: averageValue, RGBRed: averageValue, RGBReserved: color.RGBReserved}
+}
 
-	if err != nil {
-		panic(err)
+func ConvertBmpToBnW(image bmp.BMPImage) bmp.BMPImage {
+	bnwImage := bmp.GetCopy(image)
+	for i, color := range bnwImage.RGBQuad {
+		bnwImage.RGBQuad[i] = ConvertToAverageColor(color)
 	}
-
-	return image
-}
-
-func writeFileAsBytes(path string, data []byte) {
-	var err error
-
-	err = os.RemoveAll(path)
-
-	if err != nil {
-		panic(err)
-	}
-
-	err = os.WriteFile(path, data, 0644)
-
-	if err != nil {
-		panic(err)
-	}
-}
-
-func readBMP(path string) BMPImage {
-	return bmpFromBytes(readFileAsBytes(path))
-}
-
-func writeBMP(path string, image BMPImage) {
-	writeFileAsBytes(path, bmpToBytes(image))
-}
-
-func printBMPStructure(image BMPImage) {
-	prefix := ""
-	indent := "  "
-
-	header, _ := json.MarshalIndent(image.FileHeader, prefix, indent)
-	info, _ := json.MarshalIndent(image.FileInfo, prefix, indent)
-	rgbQuad, _ := json.MarshalIndent(image.RgbQuad, prefix, indent)
-
-	fmt.Printf("File header: %s\n", header)
-	fmt.Printf("File info: %s\n", info)
-	fmt.Printf("Palette: %s\n", rgbQuad)
-}
-
-func averageColorValues(rgbQuad RgbQuad) RgbQuad {
-	averageValue := (int(rgbQuad.RgbBlue) + int(rgbQuad.RgbGreen) + int(rgbQuad.RgbRed)) / 3
-	rgbQuad.RgbBlue = byte(averageValue)
-	rgbQuad.RgbGreen = byte(averageValue)
-	rgbQuad.RgbRed = byte(averageValue)
-	return rgbQuad
-}
-
-func convertBMPToBnW(image BMPImage) BMPImage {
-	newImage := image
-	rgbQuadElementsCount := int(math.Pow(2, float64(newImage.FileInfo.BitCount)))
-	for i := 0; i < rgbQuadElementsCount; i++ {
-		newImage.RgbQuad[i] = averageColorValues(newImage.RgbQuad[i])
-	}
-	return newImage
+	return bnwImage
 }
 
 func main() {
-	filename, err := filepath.Abs("../CAT16.bmp")
+	filename := "../CAT16.bmp"
+	if len(os.Args) > 1 {
+		filename = os.Args[1]
+	}
+
+	inputFilename, err := filepath.Abs(filename)
 	if err != nil {
 		panic(err)
 	}
 
-	filenameWithoutExt := strings.Split(filepath.Base(filename), ".")[0]
-	outputFilename := filenameWithoutExt + "_BnW.bmp"
+	outputFilename := file.GetFilenameWithoutExt(inputFilename) + "_BnW.bmp"
 
-	image := readBMP(filename)
+	image := bmp.FromBytes(file.Read(inputFilename))
+	helpers.PrintBMPStructure(image)
 
-	printBMPStructure(image)
+	bnwImage := ConvertBmpToBnW(image)
 
-	bnwImage := convertBMPToBnW(image)
-
-	writeBMP(outputFilename, bnwImage)
+	file.Write(outputFilename, bmp.ToBytes(bnwImage))
 }
