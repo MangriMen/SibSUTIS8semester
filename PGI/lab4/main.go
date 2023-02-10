@@ -1,49 +1,33 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"image/color"
 	"os"
 	"path/filepath"
 	"time"
 
+	bmp "example.com/images/bitmap"
+	"example.com/pgi_utils/file"
+	"example.com/pgi_utils/helpers"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 )
 
-func readFileAsBytes(path string) []byte {
-	image, err := os.ReadFile(path)
-
-	if err != nil {
-		panic(err)
-	}
-
-	return image
-}
-
-func printBMPStructure(image BMPImage) {
-	prefix := ""
-	indent := "  "
-
-	header, _ := json.MarshalIndent(image.FileHeader, prefix, indent)
-	info, _ := json.MarshalIndent(image.FileInfo, prefix, indent)
-	rgbQuad, _ := json.MarshalIndent(image.RgbQuad, prefix, indent)
-
-	fmt.Printf("File header: %s\n", header)
-	fmt.Printf("File info: %s\n", info)
-	fmt.Printf("Palette: %s\n", rgbQuad)
-}
-
 func main() {
-	filename, err := filepath.Abs("../_carib_TC.bmp")
+	filename := "../CAT16.bmp"
+
+	if len(os.Args) > 1 {
+		filename = os.Args[1]
+	}
+
+	inputFilename, err := filepath.Abs(filename)
 	if err != nil {
 		panic(err)
 	}
 
-	image := bmpFromBytes(readFileAsBytes(filename))
-	printBMPStructure(image)
+	image := bmp.FromBytes(file.Read(inputFilename))
+	helpers.PrintBMPStructure(image)
 
 	width := int(image.FileInfo.Width)
 	height := int(image.FileInfo.Height)
@@ -55,14 +39,14 @@ func main() {
 	raster := canvas.NewRasterWithPixels(
 		func(x, y, w, h int) color.Color {
 			if x < width && y < height {
-				pixelColor := GetPixelColor(y, x, image)
+				pixelColor := bmp.GetPixelColor(y, x, image)
 
 				var alpha byte = 0xff
 				if image.FileInfo.BitCount == 32 {
-					alpha = pixelColor.RgbReserved
+					alpha = pixelColor.RGBReserved
 				}
 
-				return color.RGBA{pixelColor.RgbRed, pixelColor.RgbGreen, pixelColor.RgbBlue, alpha}
+				return color.RGBA{pixelColor.RGBRed, pixelColor.RGBGreen, pixelColor.RGBBlue, alpha}
 			}
 
 			return color.RGBA{}
