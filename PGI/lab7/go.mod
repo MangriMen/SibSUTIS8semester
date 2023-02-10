@@ -1,4 +1,4 @@
-module lab3
+module lab7
 
 go 1.20
 
