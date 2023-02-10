@@ -6,23 +6,42 @@ type Bounds struct {
 
 const RGBQuadElementsCount int = 4
 
-type RgbQuad struct {
-	RgbBlue     byte
-	RgbGreen    byte
-	RgbRed      byte
-	RgbReserved byte
+type RGBQuad struct {
+	RGBBlue     byte
+	RGBGreen    byte
+	RGBRed      byte
+	RGBReserved byte
 }
 
-func NewRgbQuad(data []byte) RgbQuad {
-	rgbQuad := RgbQuad{RgbBlue: data[0], RgbGreen: data[1], RgbRed: data[2], RgbReserved: data[3]}
-	return rgbQuad
+func NewRGBQuad(data []byte) RGBQuad {
+	return RGBQuad{RGBBlue: data[0], RGBGreen: data[1], RGBRed: data[2], RGBReserved: data[3]}
 }
 
-func RgbQuadToBytes(rgbQuad RgbQuad) []byte {
+func RGBQuadToBytes(rgbQuad RGBQuad) []byte {
 	bytes := make([]byte, 4)
-	bytes[0] = rgbQuad.RgbBlue
-	bytes[1] = rgbQuad.RgbGreen
-	bytes[2] = rgbQuad.RgbRed
-	bytes[3] = rgbQuad.RgbReserved
+	bytes[0] = rgbQuad.RGBBlue
+	bytes[1] = rgbQuad.RGBGreen
+	bytes[2] = rgbQuad.RGBRed
+	bytes[3] = rgbQuad.RGBReserved
+	return bytes
+}
+
+const RGBTripleELementsCount = 3
+
+type RGBTriple struct {
+	RGBTBlue  uint8
+	RGBTGreen uint8
+	RGBTRed   uint8
+}
+
+func NewRGBTriple(data []byte) RGBTriple {
+	return RGBTriple{RGBTRed: data[0], RGBTGreen: data[1], RGBTBlue: data[2]}
+}
+
+func RGBTripleToBytes(rgbTriple RGBTriple) []byte {
+	bytes := make([]byte, 3)
+	bytes[0] = rgbTriple.RGBTBlue
+	bytes[1] = rgbTriple.RGBTGreen
+	bytes[2] = rgbTriple.RGBTRed
 	return bytes
 }

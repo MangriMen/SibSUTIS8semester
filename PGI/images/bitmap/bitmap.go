@@ -63,7 +63,7 @@ type BMPMeta struct {
 type BMPImage struct {
 	FileHeader      BitmapFileHeader
 	FileInfo        BitmapFileInfo
-	RgbQuad         []types.RgbQuad
+	RGBQuad         []types.RGBQuad
 	ColorIndexArray []byte
 	Meta            BMPMeta
 }
@@ -147,18 +147,18 @@ func NewMeta(bitCount uint16, width int32) BMPMeta {
 	return meta
 }
 
-func newRgbQuadPalette(data []byte) []types.RgbQuad {
-	rgbQuad := make([]types.RgbQuad, len(data)/types.RGBQuadElementsCount)
+func newRGBQuadPalette(data []byte) []types.RGBQuad {
+	rgbQuad := make([]types.RGBQuad, len(data)/types.RGBQuadElementsCount)
 	for i, j := 0, 0; i < len(rgbQuad); i, j = i+1, j+types.RGBQuadElementsCount {
-		rgbQuad[i] = types.NewRgbQuad(data[j : j+types.RGBQuadElementsCount])
+		rgbQuad[i] = types.NewRGBQuad(data[j : j+types.RGBQuadElementsCount])
 	}
 	return rgbQuad
 }
 
-func rgbQuadPaletteToBytes(palette []types.RgbQuad) []byte {
+func rgbQuadPaletteToBytes(palette []types.RGBQuad) []byte {
 	var data []byte
 	for _, color := range palette {
-		data = append(data, types.RgbQuadToBytes(color)...)
+		data = append(data, types.RGBQuadToBytes(color)...)
 	}
 	return data
 }
@@ -166,11 +166,11 @@ func rgbQuadPaletteToBytes(palette []types.RgbQuad) []byte {
 func newImageData(data []byte) BMPImage {
 	fileHeader, _ := newBitmapFileHeader(data[:BitmapFileHeaderBounds.End])
 	fileInfo := newBitmapFileInfo(data[:BitmapFileInfoBounds.End])
-	rgbQuad := newRgbQuadPalette(data[BitmapFileInfoBounds.End:fileHeader.Offset])
+	rgbQuad := newRGBQuadPalette(data[BitmapFileInfoBounds.End:fileHeader.Offset])
 	colorIndexArray := data[fileHeader.Offset:]
 	meta := NewMeta(fileInfo.BitCount, fileInfo.Width)
 
-	imageData := BMPImage{FileHeader: fileHeader, FileInfo: fileInfo, RgbQuad: rgbQuad, ColorIndexArray: colorIndexArray, Meta: meta}
+	imageData := BMPImage{FileHeader: fileHeader, FileInfo: fileInfo, RGBQuad: rgbQuad, ColorIndexArray: colorIndexArray, Meta: meta}
 	return imageData
 }
 
@@ -182,14 +182,14 @@ func ToBytes(image BMPImage) []byte {
 	var data []byte
 	data = append(data, bitmapFileHeaderToBytes(image.FileHeader)...)
 	data = append(data, bitmapFileInfoToBytes(image.FileInfo)...)
-	data = append(data, rgbQuadPaletteToBytes(image.RgbQuad)...)
+	data = append(data, rgbQuadPaletteToBytes(image.RGBQuad)...)
 	data = append(data, image.ColorIndexArray...)
 	return data
 }
 
 func GetCopy(image BMPImage) BMPImage {
 	imageCopy := image
-	imageCopy.RgbQuad = append([]types.RgbQuad(nil), image.RgbQuad...)
+	imageCopy.RGBQuad = append([]types.RGBQuad(nil), image.RGBQuad...)
 	imageCopy.ColorIndexArray = append([]byte(nil), image.ColorIndexArray...)
 	return imageCopy
 }
@@ -261,37 +261,37 @@ func GetPixelColorIndex(i int, j int, image BMPImage) uint8 {
 	return colorIndex
 }
 
-func getPixel(i int, j int, image BMPImage) types.RgbQuad {
+func getPixel(i int, j int, image BMPImage) types.RGBQuad {
 	index := getPixelIndex(i, j, image)
 
-	var pixel types.RgbQuad
-	pixel.RgbBlue = image.ColorIndexArray[index]
-	pixel.RgbGreen = image.ColorIndexArray[index+1]
-	pixel.RgbRed = image.ColorIndexArray[index+2]
+	var color types.RGBQuad
+	color.RGBBlue = image.ColorIndexArray[index]
+	color.RGBGreen = image.ColorIndexArray[index+1]
+	color.RGBRed = image.ColorIndexArray[index+2]
 
 	if image.FileInfo.BitCount == 32 {
-		pixel.RgbReserved = image.ColorIndexArray[index+3]
+		color.RGBReserved = image.ColorIndexArray[index+3]
 	}
 
-	return pixel
+	return color
 }
 
-func setPixel(i int, j int, color types.RgbQuad, image BMPImage) {
+func setPixel(i int, j int, color types.RGBQuad, image BMPImage) {
 	index := getPixelIndex(i, j, image)
 
-	image.ColorIndexArray[index] = color.RgbBlue
-	image.ColorIndexArray[index+1] = color.RgbGreen
-	image.ColorIndexArray[index+2] = color.RgbRed
+	image.ColorIndexArray[index] = color.RGBBlue
+	image.ColorIndexArray[index+1] = color.RGBGreen
+	image.ColorIndexArray[index+2] = color.RGBRed
 
 	if image.FileInfo.BitCount == 32 {
-		image.ColorIndexArray[index+3] = color.RgbReserved
+		image.ColorIndexArray[index+3] = color.RGBReserved
 	}
 }
 
-func GetPixelColor(i int, j int, image BMPImage) types.RgbQuad {
+func GetPixelColor(i int, j int, image BMPImage) types.RGBQuad {
 	if image.FileInfo.BitCount <= binary.BitsPerByte {
 		colorIndex := GetPixelColorIndex(i, j, image)
-		color := image.RgbQuad[colorIndex]
+		color := image.RGBQuad[colorIndex]
 		return color
 	}
 
@@ -299,6 +299,6 @@ func GetPixelColor(i int, j int, image BMPImage) types.RgbQuad {
 	return color
 }
 
-func SetPixelColor(i int, j int, color types.RgbQuad, image BMPImage) {
+func SetPixelColor(i int, j int, color types.RGBQuad, image BMPImage) {
 	setPixel(i, j, color, image)
 }

@@ -1,11 +1,14 @@
 package main
 
 import (
+	"os"
 	"path/filepath"
+	"strconv"
 
 	bmp "example.com/images/bitmap"
 	"example.com/pgi_utils/file"
 	"example.com/pgi_utils/helpers"
+	"example.com/pgi_utils/types"
 )
 
 func BlendPixelColor(imageColorComponent byte, logoColorComponent, opacity float64) byte {
@@ -15,7 +18,7 @@ func BlendPixelColor(imageColorComponent byte, logoColorComponent, opacity float
 func AddLogoToBmp(logo bmp.BMPImage, opacity float64, x, y int, image bmp.BMPImage) bmp.BMPImage {
 	newImage := bmp.GetCopy(image)
 
-	backgroundColor := bmp.RgbQuad{RgbBlue: 0xff, RgbGreen: 0xff, RgbRed: 0xff, RgbReserved: 0}
+	backgroundColor := types.RGBQuad{RGBBlue: 0xff, RGBGreen: 0xff, RGBRed: 0xff, RGBReserved: 0}
 
 	for i := 0; i < int(logo.FileInfo.Height); i++ {
 		for j := 0; j < int(logo.FileInfo.Width); j++ {
@@ -26,10 +29,10 @@ func AddLogoToBmp(logo bmp.BMPImage, opacity float64, x, y int, image bmp.BMPIma
 
 			imagePixel := bmp.GetPixelColor(x+i, y+j, newImage)
 
-			newColor := bmp.RgbQuad{}
-			newColor.RgbRed = BlendPixelColor(imagePixel.RgbRed, float64(logoPixel.RgbRed), opacity)
-			newColor.RgbGreen = BlendPixelColor(imagePixel.RgbGreen, float64(logoPixel.RgbGreen), opacity)
-			newColor.RgbBlue = BlendPixelColor(imagePixel.RgbBlue, float64(logoPixel.RgbBlue), opacity)
+			newColor := types.RGBQuad{}
+			newColor.RGBRed = BlendPixelColor(imagePixel.RGBRed, float64(logoPixel.RGBRed), opacity)
+			newColor.RGBGreen = BlendPixelColor(imagePixel.RGBGreen, float64(logoPixel.RGBGreen), opacity)
+			newColor.RGBBlue = BlendPixelColor(imagePixel.RGBBlue, float64(logoPixel.RGBBlue), opacity)
 
 			bmp.SetPixelColor(x+i, y+j, newColor, newImage)
 		}
@@ -39,7 +42,35 @@ func AddLogoToBmp(logo bmp.BMPImage, opacity float64, x, y int, image bmp.BMPIma
 }
 
 func main() {
-	imageFilename, err := filepath.Abs("../_carib_TC.bmp")
+	filename := "../_carib_TC.bmp"
+	x := 200
+	y := 200
+	opacity := 0.5
+
+	if len(os.Args) > 4 {
+		filename = os.Args[1]
+
+		xPos, err := strconv.Atoi(os.Args[2])
+		if err != nil {
+			panic(err)
+		}
+
+		yPos, err := strconv.Atoi(os.Args[3])
+		if err != nil {
+			panic(err)
+		}
+
+		opac, err := strconv.ParseFloat(os.Args[4], 32)
+		if err != nil {
+			panic(err)
+		}
+
+		x = int(xPos)
+		y = int(yPos)
+		opacity = opac
+	}
+
+	imageFilename, err := filepath.Abs(filename)
 	if err != nil {
 		panic(err)
 	}
@@ -52,13 +83,9 @@ func main() {
 	outputFilename := file.GetFilenameWithoutExt(imageFilename) + "_With_Logo.bmp"
 
 	image := bmp.FromBytes(file.Read(imageFilename))
-	helpers.PrintBmpStructure(image)
+	helpers.PrintBMPStructure(image)
 
 	logo := bmp.FromBytes(file.Read(logoFilename))
-
-	x := 200
-	y := 200
-	opacity := 0.5
 
 	convertedImage := AddLogoToBmp(logo, opacity, x, y, image)
 

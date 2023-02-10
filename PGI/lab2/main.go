@@ -3,14 +3,17 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"os"
 	"path/filepath"
+	"strconv"
 
 	bmp "example.com/images/bitmap"
 	"example.com/pgi_utils/file"
 	"example.com/pgi_utils/helpers"
+	"example.com/pgi_utils/types"
 )
 
-func AddBorderToBmp(image bmp.BMPImage, borderWidth int, borderColorIndex uint8, borderColor bmp.RgbQuad) bmp.BMPImage {
+func AddBorderToBmp(image bmp.BMPImage, borderWidth int, borderColorIndex uint8, borderColor types.RGBQuad) bmp.BMPImage {
 	newImage := image
 
 	var sides int = 2
@@ -20,7 +23,7 @@ func AddBorderToBmp(image bmp.BMPImage, borderWidth int, borderColorIndex uint8,
 	newImage.Meta = bmp.NewMeta(newImage.FileInfo.BitCount, newImage.FileInfo.Width)
 	newImage.FileInfo.SizeImage = uint32(newImage.Meta.WidthAlignedBytes) * uint32(newImage.FileInfo.Height)
 
-	newImage.RgbQuad = append([]bmp.RgbQuad(nil), image.RgbQuad...)
+	newImage.RGBQuad = append([]types.RGBQuad(nil), image.RGBQuad...)
 	newImage.ColorIndexArray = make([]byte, newImage.FileInfo.SizeImage)
 
 	width := int(newImage.FileInfo.Width)
@@ -52,7 +55,21 @@ func AddBorderToBmp(image bmp.BMPImage, borderWidth int, borderColorIndex uint8,
 }
 
 func main() {
-	inputFilename, err := filepath.Abs("../_carib_TC.bmp")
+	filename := "../_carib_TC.bmp"
+	borderWidth := 15
+
+	if len(os.Args) > 2 {
+		filename = os.Args[1]
+
+		var atoiError error
+		borderWidth, atoiError = strconv.Atoi(os.Args[2])
+
+		if atoiError != nil {
+			panic(atoiError)
+		}
+	}
+
+	inputFilename, err := filepath.Abs(filename)
 	if err != nil {
 		panic(err)
 	}
@@ -60,20 +77,19 @@ func main() {
 	outputFilename := file.GetFilenameWithoutExt(inputFilename) + "_Border.bmp"
 
 	image := bmp.FromBytes(file.Read(inputFilename))
-	helpers.PrintBmpStructure(image)
+	helpers.PrintBMPStructure(image)
 
-	borderWidth := 15
 	fmt.Printf("Border width: %dpx\n", borderWidth)
 
 	var borderColorIndex uint8
-	var borderColor bmp.RgbQuad
+	var borderColor types.RGBQuad
 
 	fmt.Print("Border color: ")
 	if image.FileInfo.BitCount <= 8 {
-		borderColorIndex = uint8(rand.Intn(len(image.RgbQuad)))
-		fmt.Printf("%+v", image.RgbQuad[borderColorIndex])
+		borderColorIndex = uint8(rand.Intn(len(image.RGBQuad)))
+		fmt.Printf("%+v", image.RGBQuad[borderColorIndex])
 	} else {
-		borderColor = bmp.RgbQuad{RgbBlue: byte(rand.Intn(255)), RgbGreen: byte(rand.Intn(255)), RgbRed: byte(rand.Intn(255)), RgbReserved: 0xff}
+		borderColor = types.RGBQuad{RGBBlue: byte(rand.Intn(255)), RGBGreen: byte(rand.Intn(255)), RGBRed: byte(rand.Intn(255)), RGBReserved: 0xff}
 		fmt.Printf("%+v", borderColor)
 	}
 	fmt.Println()

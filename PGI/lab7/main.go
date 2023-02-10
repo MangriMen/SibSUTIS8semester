@@ -2,6 +2,7 @@ package main
 
 import (
 	"math"
+	"os"
 	"path/filepath"
 
 	bmp "example.com/images/bitmap"
@@ -50,7 +51,13 @@ func GetTextFromBmp(image bmp.BMPImage, textFileSize int) []byte {
 }
 
 func main() {
-	inputFilename, err := filepath.Abs("../_carib_TC.bmp")
+	filename := "../_carib_TC.bmp"
+
+	if len(os.Args) > 1 {
+		filename = os.Args[1]
+	}
+
+	inputFilename, err := filepath.Abs(filename)
 	if err != nil {
 		panic(err)
 	}
@@ -58,7 +65,7 @@ func main() {
 	filenameWithoutExt := file.GetFilenameWithoutExt(inputFilename)
 
 	image := bmp.FromBytes(file.Read(inputFilename))
-	helpers.PrintBmpStructure(image)
+	helpers.PrintBMPStructure(image)
 
 	sizes := []string{"0.1.txt", "0.2.txt", "0.5.txt"}
 

@@ -1,11 +1,13 @@
 package main
 
 import (
+	"os"
 	"path/filepath"
 
 	bmp "example.com/images/bitmap"
 	"example.com/pgi_utils/file"
 	"example.com/pgi_utils/helpers"
+	"example.com/pgi_utils/types"
 )
 
 type rotationDirection int
@@ -23,7 +25,7 @@ func RotateBmp(image bmp.BMPImage, rotationDirection rotationDirection) bmp.BMPI
 	newImage.Meta = bmp.NewMeta(newImage.FileInfo.BitCount, newImage.FileInfo.Width)
 	newImage.FileInfo.SizeImage = uint32(newImage.Meta.WidthAlignedBytes) * uint32(newImage.FileInfo.Height)
 
-	newImage.RgbQuad = append([]bmp.RgbQuad(nil), image.RgbQuad...)
+	newImage.RGBQuad = append([]types.RGBQuad(nil), image.RGBQuad...)
 	newImage.ColorIndexArray = make([]byte, newImage.FileInfo.SizeImage)
 
 	width := int(image.FileInfo.Width)
@@ -63,7 +65,21 @@ func RotateBmp(image bmp.BMPImage, rotationDirection rotationDirection) bmp.BMPI
 }
 
 func main() {
-	inputFilename, err := filepath.Abs("../_carib_TC.bmp")
+	filename := "../_carib_TC.bmp"
+	direction := left
+
+	if len(os.Args) > 2 {
+		filename = os.Args[1]
+
+		switch os.Args[2] {
+		case "left":
+			direction = left
+		case "right":
+			direction = right
+		}
+	}
+
+	inputFilename, err := filepath.Abs(filename)
 	if err != nil {
 		panic(err)
 	}
@@ -71,9 +87,9 @@ func main() {
 	outputFilename := file.GetFilenameWithoutExt(inputFilename) + "_Rotation.bmp"
 
 	image := bmp.FromBytes(file.Read(inputFilename))
-	helpers.PrintBmpStructure(image)
+	helpers.PrintBMPStructure(image)
 
-	rotatedImage := RotateBmp(image, left)
+	rotatedImage := RotateBmp(image, direction)
 
 	file.Write(outputFilename, bmp.ToBytes(rotatedImage))
 }

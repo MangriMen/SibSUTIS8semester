@@ -2,6 +2,7 @@ package main
 
 import (
 	"image/color"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -14,27 +15,33 @@ import (
 )
 
 func main() {
-	inputFilename, err := filepath.Abs("../CAT16.pcx")
+	filename := "../carib_TC.pcx"
+
+	if len(os.Args) > 1 {
+		filename = os.Args[1]
+	}
+
+	inputFilename, err := filepath.Abs(filename)
 	if err != nil {
 		panic(err)
 	}
 
 	image := pcx.FromBytes(file.Read(inputFilename))
-	helpers.PrintPcxStructure(image)
+	helpers.PrintPCXStructure(image)
 
 	width := int(image.FileHeader.XMax)
 	height := int(image.FileHeader.YMax)
 
 	a := app.New()
-	w := a.NewWindow("lab 4")
+	w := a.NewWindow("lab 8")
 	cnv := w.Canvas()
 
 	raster := canvas.NewRasterWithPixels(
 		func(x, y, w, h int) color.Color {
 			if x < width && y < height {
-				pixelColor := pcx.GetPixelColor(x, y, image)
+				pixelColor := pcx.GetPixelColor(y, x, image)
 
-				return color.RGBA{pixelColor.RgbRed, pixelColor.RgbGreen, pixelColor.RgbBlue, 0xff}
+				return color.RGBA{pixelColor.RGBTRed, pixelColor.RGBTGreen, pixelColor.RGBTBlue, 0xff}
 			}
 
 			return color.RGBA{}

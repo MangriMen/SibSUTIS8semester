@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"image/color"
+	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	bmp "example.com/images/bitmap"
@@ -15,18 +17,30 @@ import (
 )
 
 func main() {
-	inputFilename, err := filepath.Abs("../_carib_TC.bmp")
+	filename := "../_carib_TC.bmp"
+	var scaleCoeff float32 = 0.5
+
+	if len(os.Args) > 2 {
+		filename = os.Args[1]
+
+		number, err := strconv.ParseFloat(os.Args[2], 32)
+		if err != nil {
+			panic(err)
+		}
+
+		scaleCoeff = float32(number)
+	}
+
+	inputFilename, err := filepath.Abs(filename)
 	if err != nil {
 		panic(err)
 	}
 
 	image := bmp.FromBytes(file.Read(inputFilename))
-	helpers.PrintBmpStructure(image)
+	helpers.PrintBMPStructure(image)
 
 	width := int(image.FileInfo.Width)
 	height := int(image.FileInfo.Height)
-
-	var scaleCoeff float32 = 1
 
 	scaledHeight := int(float32(height) * scaleCoeff)
 	scaledWidth := int(float32(width) * scaleCoeff)
@@ -45,10 +59,10 @@ func main() {
 
 				var alpha byte = 0xff
 				if image.FileInfo.BitCount == 32 {
-					alpha = pixelColor.RgbReserved
+					alpha = pixelColor.RGBReserved
 				}
 
-				return color.RGBA{pixelColor.RgbRed, pixelColor.RgbGreen, pixelColor.RgbBlue, alpha}
+				return color.RGBA{pixelColor.RGBRed, pixelColor.RGBGreen, pixelColor.RGBBlue, alpha}
 			}
 
 			return color.RGBA{}
