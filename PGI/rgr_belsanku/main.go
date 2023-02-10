@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"sort"
 
-	bmp "example.com/images/bitmap"
 	"example.com/images/pcx"
+	"example.com/pgi_utils/binary"
 	"example.com/pgi_utils/file"
 	"example.com/pgi_utils/helpers"
 	"example.com/pgi_utils/types"
@@ -132,50 +132,36 @@ func getFrequentColorKeysTrueColor(image pcx.PCXImage) []types.RGBTriple {
 	return keys
 }
 
-func convertPixelsToPalette(colorsCount int, newImage bmp.BMPImage, sourceImage pcx.PCXImage, colorMap map[types.RGBTriple]int) {
+func convertPixelsToPalette(colorsCount int, newImage, sourceImage pcx.PCXImage, colorMap map[types.RGBTriple]int) {
 	switch colorsCount {
 	case 16:
 		for i := 0; i < int(sourceImage.FileHeader.YMax); i++ {
 			for j := 0; j < int(sourceImage.FileHeader.XMax); j++ {
 				color := pcx.EGAToRGB(pcx.RGBtoEGA(pcx.GetPixelColor(i, j, sourceImage)))
-				bmp.SetPixelColorIndex(i, j, uint8(colorMap[color]), newImage)
+				pcx.SetPixelColorIndex(i, j, uint8(colorMap[color]), newImage)
 			}
 		}
 	case 256:
 		for i := 0; i < int(sourceImage.FileHeader.YMax); i++ {
 			for j := 0; j < int(sourceImage.FileHeader.XMax); j++ {
 				color := pcx.GetPixelColor(i, j, sourceImage)
-				bmp.SetPixelColorIndex(i, j, uint8(colorMap[color]), newImage)
+				pcx.SetPixelColorIndex(i, j, uint8(colorMap[color]), newImage)
 			}
 		}
 	}
 }
 
-func convertTrueColorPCXToPaletteBMP(sourceImage pcx.PCXImage, bitCount int) bmp.BMPImage {
+func convertTrueColorPcxToPalettePcx(sourceImage pcx.PCXImage, bitCount int) pcx.PCXImage {
 	colorsCount := int(math.Pow(2, float64(bitCount)))
 
-	newImage := bmp.BMPImage{}
+	newImage := pcx.GetCopy(sourceImage)
 
-	newImage.FileInfo.Size = uint32(bmp.BitmapFileInfoBounds.End - bmp.BitmapFileHeaderBounds.End)
-	newImage.FileInfo.Width = int32(sourceImage.FileHeader.XMax)
-	newImage.FileInfo.Height = int32(sourceImage.FileHeader.YMax)
-	newImage.FileInfo.Planes = 1
-	newImage.FileInfo.BitCount = uint16(bitCount)
-	newImage.FileInfo.Compression = 0
-	newImage.FileInfo.HorizontalResolution = int32(sourceImage.FileHeader.HScreenSize) * int32(sourceImage.FileHeader.XMax)
-	newImage.FileInfo.VerticalResolution = int32(sourceImage.FileHeader.VScreenSize) * int32(sourceImage.FileHeader.YMax)
-	newImage.FileInfo.ColorUsed = uint32(colorsCount)
-	newImage.FileInfo.ColorImportant = uint32(colorsCount)
-
-	newImage.Meta = bmp.NewMeta(uint16(bitCount), newImage.FileInfo.Width)
-
-	newImage.FileInfo.SizeImage = uint32(newImage.Meta.WidthAlignedBytes) * uint32(newImage.FileInfo.Height)
-
-	newImage.FileHeader.Signature = uint16(bmp.BMPSignature)
-	newImage.FileHeader.Offset = uint32(bmp.BitmapFileInfoBounds.End) + uint32(colorsCount)*uint32(types.RGBQuadElementsCount)
-	newImage.FileHeader.Size = newImage.FileHeader.Offset + newImage.FileInfo.SizeImage
+	newImage.FileHeader.BitPerPixel = 8
+	newImage.FileHeader.Planes = 1
+	newImage.FileHeader.BytePerLine = sourceImage.FileHeader.BytePerLine / uint16(binary.BitsPerByte/newImage.FileHeader.BitPerPixel)
 
 	frequentColors := getFrequentColorKeysTrueColor(sourceImage)
+
 	switch colorsCount {
 	case 16:
 		uniqueEgaColors := []byte{}
@@ -201,12 +187,16 @@ func convertTrueColorPCXToPaletteBMP(sourceImage pcx.PCXImage, bitCount int) bmp
 
 	newPalette, colorMap := medianCut(frequentColors, int(colorsCount))
 
-	newImage.RGBQuad = make([]types.RGBQuad, colorsCount)
-	for i := 0; i < len(newPalette); i++ {
-		newImage.RGBQuad[i] = types.RGBQuad{RGBRed: newPalette[i].RGBTRed, RGBGreen: newPalette[i].RGBTGreen, RGBBlue: newPalette[i].RGBTBlue, RGBReserved: 0xff}
+	switch colorsCount {
+	case 16:
+		for i := 0; i < len(newPalette); i++ {
+			newImage.FileHeader.Palette[i] = pcx.RGBtoEGA(newPalette[i])
+		}
+	case 256:
+		newImage.OptionalPalette = newPalette
 	}
 
-	newImage.ColorIndexArray = make([]byte, newImage.FileInfo.SizeImage)
+	newImage.DecodedData = make([]byte, int(newImage.FileHeader.BytePerLine)*(int(newImage.FileHeader.YMax))*2)
 	convertPixelsToPalette(colorsCount, newImage, sourceImage, colorMap)
 
 	return newImage
@@ -218,17 +208,17 @@ func main() {
 		panic(err)
 	}
 
-	outputFilename := file.GetFilenameWithoutExt(inputFilename) + "_8bit.bmp"
+	outputFilename := file.GetFilenameWithoutExt(inputFilename) + "_4bit.pcx"
 
 	image := pcx.FromBytes(file.Read(inputFilename))
 
 	fmt.Println("Original image: ")
 	helpers.PrintPCXStructure(image)
 
-	newImage := convertTrueColorPCXToPaletteBMP(image, 8)
+	newImage := convertTrueColorPcxToPalettePcx(image, 4)
 
 	fmt.Println("New image: ")
-	helpers.PrintBMPStructure(newImage)
+	helpers.PrintPCXStructure(newImage)
 
-	file.Write(outputFilename, bmp.ToBytes(newImage))
+	file.Write(outputFilename, pcx.ToBytes(newImage))
 }
