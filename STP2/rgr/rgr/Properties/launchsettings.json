@@ -1,0 +1,10 @@
+﻿{
+    "profiles": {
+      "rgr (Package)": {
+        "commandName": "MsixPackage"
+      },
+      "rgr (Unpackaged)": {
+        "commandName": "Project"
+      }
+    }
+}
