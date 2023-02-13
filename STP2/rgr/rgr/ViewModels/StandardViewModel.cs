@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using lab5;
 using lab9;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using rgr.Controls;
 
 namespace rgr.ViewModels;
 
@@ -13,6 +15,16 @@ public class StandardViewModel : ObservableRecipient
 
     public string MainInput => FractionEditor.CurrentNumber;
 
+    public bool IsNoError
+    {
+        get => !FractionEditor.IsError;
+        set
+        {
+            FractionEditor.IsError = !value;
+            OnPropertyChanged(nameof(IsNoError));
+        }
+    }
+
     private string _buffer = string.Empty;
     public string Buffer
     {
@@ -20,8 +32,8 @@ public class StandardViewModel : ObservableRecipient
         set => SetProperty(ref _buffer, value);
     }
 
-    public string _firstOperand = string.Empty;
-    public string _secondOperand = string.Empty;
+    public SimpleFraction _firstOperand = new(1, 1);
+    public SimpleFraction _secondOperand = new(1, 1);
     public string _lastOperation = string.Empty;
 
     public TextBlock? _mainInputObject;
@@ -39,35 +51,48 @@ public class StandardViewModel : ObservableRecipient
     {
         if (symbol == ",")
         {
-            var delimeterIndex = FractionEditor.CurrentNumber.IndexOf(',');
-            if (delimeterIndex == -1)
+            if (FractionEditor.CurrentNumber.Contains(symbol))
             {
-               FractionEditor.CurrentNumber += ',';
-                OnPropertyChanged(nameof(MainInput));
-                CalculateFontSize();
+                return;
             }
-            return;
+            FractionEditor.CurrentNumber += symbol;
         }
-
-        if (_isNewInput)
+        else
         {
-            FractionEditor.Clear();
+            if (FractionEditor.IsError)
+            {
+                ClearAll();
+                IsNoError = !false;
+            }
+
+            if (_isNewInput)
+            {
+                FractionEditor.Clear();
+                _isNewInput = false;
+            }
+
+            if (MainInput.Length > 16)
+            {
+                return;
+            }
+
+            FractionEditor.AppendNumber(int.Parse(symbol));
         }
 
-        if (MainInput.Length > 16)
-        {
-            return;
-        }
-
-        FractionEditor.AppendNumber(int.Parse(symbol));
         OnPropertyChanged(nameof(MainInput));
         CalculateFontSize();
-
-        _isNewInput = false;
     }
 
     public void EraseNumberFromInput()
     {
+        if (FractionEditor.IsError)
+        {
+            IsNoError = !false;
+            ClearAll();
+            OnPropertyChanged(nameof(MainInput));
+            return;
+        }
+
         FractionEditor.PopNumber();
         OnPropertyChanged(nameof(MainInput));
         CalculateFontSize();
@@ -75,6 +100,8 @@ public class StandardViewModel : ObservableRecipient
 
     public void ClearInput()
     {
+        IsNoError = !false;
+
         FractionEditor.Clear();
         OnPropertyChanged(nameof(MainInput));
     }
@@ -97,58 +124,143 @@ public class StandardViewModel : ObservableRecipient
         OnPropertyChanged(nameof(MainInput));
     }
 
-    public void OperationPerformed(string operation)
+    public void EqualPerformed(string operation)
     {
-        switch (operation)
+        if (FractionEditor.IsError)
         {
-            case "=":
-                _secondOperand = MainInput;
-                Buffer += $"{MainInput} {operation}";
-                var a = new SimpleFraction(_firstOperand);
-                var b = new SimpleFraction(_secondOperand);
+            IsNoError = !false;
+            ClearAll();
+            OnPropertyChanged(nameof(MainInput));
+        }
 
-                switch (_lastOperation)
-                {
-                    case "+":
-                        FractionEditor.CurrentNumber = (a + b).ToFloatString();
-                        break;
-                    case "-":
-                        FractionEditor.CurrentNumber = (a - b).ToFloatString();
-                        break;
-                    case "×":
-                        FractionEditor.CurrentNumber = (a * b).ToFloatString();
-                        break;
-                    case "÷":
-                        FractionEditor.CurrentNumber = (a / b).ToFloatString();
-                        break;
-                }
+        Buffer += $"{MainInput} {operation}";
+
+        _secondOperand = new(MainInput);
+
+        var result = new SimpleFraction(1, 1);
+        switch (_lastOperation)
+        {
+            case "+":
+                result = _firstOperand + _secondOperand;
                 break;
-            default:
-                _firstOperand = MainInput;
-                _lastOperation = operation;
-                Buffer = $"{MainInput} {operation} ";
+            case "-":
+                result = _firstOperand - _secondOperand;
                 break;
+            case "×":
+                result = _firstOperand * _secondOperand;
+                break;
+            case "÷":
+                result = _firstOperand / _secondOperand;
+                break;
+        }
+
+        _firstOperand = result;
+
+        try
+        {
+            FractionEditor.CurrentNumber = result.ToFloatString();
+        }
+        catch
+        {
+            IsNoError = !true;
         }
 
         OnPropertyChanged(nameof(MainInput));
         _isNewInput = true;
     }
 
+    public void OperationPerformed(string operation)
+    {
+        Buffer = $"{MainInput} {operation} ";
+
+        _lastOperation = operation;
+
+        _firstOperand = new(MainInput);
+
+        OnPropertyChanged(nameof(MainInput));
+        _isNewInput = true;
+    }
+
+    private readonly Dictionary<string, string> _visualOperation = new()
+    {
+        {"1/x", "1/( {0} )" },
+        {"x²", "sqr( {0} )" },
+        {"²√x", "sqrt( {0} )" },
+    };
+
     public void OneOperandOperationPerformed(string operation)
     {
+        Buffer = string.Format(_visualOperation[operation], MainInput);
+
+        _firstOperand = new(MainInput);
+        var result = new SimpleFraction(1, 1);
         switch (operation)
         {
             case "1/x":
-                Buffer = $"1/( {MainInput} )";
+                result = SimpleFraction.Revers(_firstOperand);
                 break;
             case "x²":
-                Buffer = $"sqr( {MainInput} )";
+                result = SimpleFraction.Pow(_firstOperand, 2);
                 break;
             case "²√x":
-                Buffer = $"sqrt( {MainInput} )";
+                result = SimpleFraction.Pow(_firstOperand, 0.5);
                 break;
         }
+
+        _firstOperand = result;
+        FractionEditor.CurrentNumber = result.ToFloatString();
+
+        OnPropertyChanged(nameof(MainInput));
         _isNewInput = true;
+    }
+
+    public void ProcessButton(CalculatorButton.Actions action, string content)
+    {
+        switch (action)
+        {
+            case CalculatorButton.Actions.Zero:
+            case CalculatorButton.Actions.One:
+            case CalculatorButton.Actions.Two:
+            case CalculatorButton.Actions.Three:
+            case CalculatorButton.Actions.Four:
+            case CalculatorButton.Actions.Five:
+            case CalculatorButton.Actions.Six:
+            case CalculatorButton.Actions.Seven:
+            case CalculatorButton.Actions.Eight:
+            case CalculatorButton.Actions.Nine:
+                AppendSymbolToInput(content);
+                break;
+            case CalculatorButton.Actions.Plus:
+            case CalculatorButton.Actions.Minus:
+            case CalculatorButton.Actions.Multiply:
+            case CalculatorButton.Actions.Divide:
+            case CalculatorButton.Actions.Module:
+                OperationPerformed(content);
+                break;
+            case CalculatorButton.Actions.Reciprocal:
+            case CalculatorButton.Actions.Sqr:
+            case CalculatorButton.Actions.Sqrt:
+                OneOperandOperationPerformed(content);
+                break;
+            case CalculatorButton.Actions.Equal:
+                EqualPerformed(content);
+                break;
+            case CalculatorButton.Actions.ChangeSign:
+                ToggleNegative();
+                break;
+            case CalculatorButton.Actions.Backspace:
+                EraseNumberFromInput();
+                break;
+            case CalculatorButton.Actions.Clear:
+                ClearInput();
+                break;
+            case CalculatorButton.Actions.ClearEntry:
+                ClearAll();
+                break;
+            case CalculatorButton.Actions.Delimiter:
+                AppendSymbolToInput(content);
+                break;
+        }
     }
 
     public void CalculateFontSize()
@@ -158,63 +270,22 @@ public class StandardViewModel : ObservableRecipient
             return;
         }
 
-        var desiredHeight = 80;
+        var desiredHeight = 60;
 
         var fontsizeMultiplier = Math.Sqrt(desiredHeight / MainInputObject.ActualHeight);
 
         MainInputObject.FontSize = Math.Floor(MainInputObject.FontSize * fontsizeMultiplier);
     }
 
-    public void NumberButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    public void CalcualtorButtonClick(object sender, RoutedEventArgs e)
     {
-        var button = (Button)sender;
-        var buttonContent = button?.Content?.ToString() ?? string.Empty;
-
-        if (buttonContent == string.Empty)
+        var button = (CalculatorButton)sender;
+        if (button == null || button.Action == CalculatorButton.Actions.None)
         {
             return;
         }
 
-        AppendSymbolToInput(buttonContent);
-    }
-
-    public void OperationButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-    {
-        var button = (Button)sender;
-        var buttonContent = button?.Content?.ToString() ?? string.Empty;
-
-        if (buttonContent == string.Empty)
-        {
-            return;
-        }
-
-        OperationPerformed(buttonContent);
-    }
-
-    public void OneOperandOperationButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-    {
-        var button = (Button)sender;
-        var buttonContent = button?.Content?.ToString() ?? string.Empty;
-
-        if (buttonContent == string.Empty)
-        {
-            return;
-        }
-
-        OneOperandOperationPerformed(buttonContent);
-    }
-
-    public void DelimeterButtonClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-    {
-        var button = (Button)sender;
-        var buttonContent = button?.Content?.ToString() ?? string.Empty;
-
-        if (buttonContent == string.Empty)
-        {
-            return;
-        }
-
-        AppendSymbolToInput(buttonContent);
+        ProcessButton(button.Action, button.Content);
     }
 
     public void MainInput_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

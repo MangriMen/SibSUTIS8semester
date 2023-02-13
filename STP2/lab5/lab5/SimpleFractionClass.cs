@@ -21,7 +21,6 @@ namespace lab5
                 _nominator /= GCD;
                 _denominator /= GCD;
             }
-
         }
 
         private static BigInteger Gcd(BigInteger a, BigInteger b)
@@ -72,7 +71,9 @@ namespace lab5
                 var integerPart = fractionString[..delimeterPosition];
                 var fractionalPart = fractionString[(delimeterPosition + 1)..];
 
-                _denominator = BigInteger.Parse("1" + new string('0', double.Parse(fractionalPart.TrimEnd('0')).ToString().Length));
+                var trimmedFractional = fractionalPart.TrimEnd('0');
+
+                _denominator = BigInteger.Parse($"1{new string('0', trimmedFractional.Length)}");
                 _nominator = BigInteger.Parse(integerPart) * _denominator + (BigInteger)double.Parse(fractionalPart);
 
                 return;
@@ -101,7 +102,10 @@ namespace lab5
             var firstNumber = a._nominator * unionDenominator / a._denominator;
             var secondNumber = b._nominator * unionDenominator / b._denominator;
 
-            return new(firstNumber + secondNumber, unionDenominator);
+            var result = new SimpleFraction(firstNumber + secondNumber, unionDenominator);
+            result.Reduce();
+
+            return result;
         }
 
         public static SimpleFraction operator -(SimpleFraction a, SimpleFraction b)
@@ -111,12 +115,18 @@ namespace lab5
             var firstNumber = a._nominator * unionDenominator / a._denominator;
             var secondNumber = b._nominator * unionDenominator / b._denominator;
 
-            return new(firstNumber - secondNumber, unionDenominator);
+            var result = new SimpleFraction(firstNumber - secondNumber, unionDenominator);
+            result.Reduce();
+
+            return result;
         }
 
         public static SimpleFraction operator *(SimpleFraction a, SimpleFraction b)
         {
-            return new(a._nominator * b._nominator, a._denominator * b._denominator);
+            var result = new SimpleFraction(a._nominator * b._nominator, a._denominator * b._denominator);
+            result.Reduce();
+
+            return result;
         }
 
         public static SimpleFraction operator /(SimpleFraction a, SimpleFraction b)
@@ -130,12 +140,26 @@ namespace lab5
                 denominator *= -1;
             }
 
-            return new(nominator, denominator);
+            var result = new SimpleFraction(nominator, denominator);
+            result.Reduce();
+
+            return result;
         }
 
-        public static SimpleFraction Pow(SimpleFraction a, int n = 2)
+        public static SimpleFraction Pow(SimpleFraction a, double n = 2)
         {
-            return new((BigInteger)Math.Pow((double)a._nominator, n), (BigInteger)Math.Pow((double)a._denominator, n));
+            var nominator = Math.Pow((double)a._nominator, n);
+            var denominator = Math.Pow((double)a._denominator, n);
+            if (n < 1)
+            {
+                var res = (nominator / denominator).ToString();
+                return new(res);
+            }
+
+            var result = new SimpleFraction((BigInteger)nominator, (BigInteger)denominator);
+            result.Reduce();
+
+            return result;
         }
 
         public static SimpleFraction Revers(SimpleFraction a)
@@ -151,12 +175,12 @@ namespace lab5
 
         public static bool operator ==(SimpleFraction a, SimpleFraction b)
         {
-            return (a._nominator == b._nominator && a._denominator == b._denominator);
+            return a._nominator == b._nominator && a._denominator == b._denominator;
         }
 
         public static bool operator !=(SimpleFraction a, SimpleFraction b)
         {
-            return (a._nominator != b._nominator && a._denominator != b._denominator);
+            return a._nominator != b._nominator && a._denominator != b._denominator;
         }
 
         public BigInteger GetNominatorInt()
@@ -192,13 +216,15 @@ namespace lab5
         public string ToFloatString()
         {
             var floatNumber = (double)GetNominatorInt() / (double)GetDenominatorInt();
-            var integerLength = GetNominatorInt().ToString().Length;
 
-            if (integerLength > 15) {
+            var floatStr = floatNumber.ToString();
+
+            if (floatStr.Length > 18)
+            {
                 return floatNumber.ToString("e10");
             }
 
-            var floatStr = floatNumber.ToString($"0.{new string('#', 16 - integerLength)}");
+            floatStr = floatNumber.ToString($"0.{new string('#', 16)}");
 
             if (floatStr.Length > 18)
             {

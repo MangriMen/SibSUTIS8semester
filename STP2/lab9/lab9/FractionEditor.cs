@@ -4,11 +4,22 @@ namespace lab9
 {
     public class FractionEditor
     {
+        private bool _isError = false;
+        public bool IsError
+        {
+            get => _isError; set
+            {
+                _isError = value;
+                _currentNumber = "Error";
+            }
+        }
+
         private string _currentNumber = "";
         public string CurrentNumber
         {
             get => _currentNumber;
-            set {
+            set
+            {
                 bool isValid = Regex.Match(value, "[0-9]+").Success;
                 if (!isValid)
                 {
