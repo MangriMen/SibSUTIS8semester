@@ -94,4 +94,7 @@
   <data name="SettingsPage_PrivacyTermsLink.NavigateUri" xml:space="preserve">
     <value>https://YourPrivacyUrlGoesHere/</value>
   </data>
+  <data name="Shell_NumberConverter.Content" xml:space="preserve">
+    <value>NumberConverter</value>
+  </data>
 </root>

@@ -20,6 +20,7 @@
   <ItemGroup>
     <None Remove="CalculatorButton.xaml" />
     <None Remove="Controls\CalculatorButton.xaml" />
+    <None Remove="Controls\MemoryButton.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,8 +36,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\lab11\lab11\lab11.csproj" />
     <ProjectReference Include="..\..\lab5\lab5\lab5.csproj" />
     <ProjectReference Include="..\..\lab6\lab6\lab6.csproj" />
+    <ProjectReference Include="..\..\lab7\lab7\lab7.csproj" />
+    <ProjectReference Include="..\..\lab8\lab8\lab8.csproj" />
     <ProjectReference Include="..\..\lab9\lab9\lab9.csproj" />
     <ProjectReference Include="..\rgr.Core\rgr.Core.csproj" />
   </ItemGroup>
@@ -44,6 +48,10 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Controls\MemoryButton.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Controls\CalculatorButton.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -16,6 +16,7 @@ public class PageService : IPageService
     {
         Configure<StandardViewModel, StandardPage>();
         Configure<SettingsViewModel, SettingsPage>();
+        Configure<NumberConverterViewModel, NumberConverterPage>();
     }
 
     public Type GetPageType(string key)

@@ -37,7 +37,12 @@
             IsBackButtonVisible="Collapsed"
             IsBackEnabled="{x:Bind ViewModel.IsBackEnabled, Mode=OneWay}"
             IsSettingsVisible="True"
+            PaneDisplayMode="LeftMinimal"
             SelectedItem="{x:Bind ViewModel.Selected, Mode=OneWay}">
+            <NavigationView.Resources>
+                <Thickness x:Key="NavigationViewMinimalHeaderMargin">-24,8,0,0</Thickness>
+                <Thickness x:Key="NavigationViewHeaderMargin">0,0,0,0</Thickness>
+            </NavigationView.Resources>
             <NavigationView.MenuItems>
                 <!--
                 TODO: Update item titles by updating <x:Uid>.Content entries in Strings/en-us/Resources.resw.
@@ -49,6 +54,11 @@
                 <NavigationViewItem x:Uid="Shell_Standard" helpers:NavigationHelper.NavigateTo="rgr.ViewModels.StandardViewModel">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem x:Uid="Shell_NumberConverter" helpers:NavigationHelper.NavigateTo="rgr.ViewModels.NumberConverterViewModel">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7c3;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>

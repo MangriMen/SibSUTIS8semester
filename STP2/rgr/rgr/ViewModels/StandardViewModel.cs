@@ -23,14 +23,28 @@ public class StandardViewModel : ObservableRecipient
     {
     }
 
-    public void CalcualtorButtonClick(object sender, RoutedEventArgs e)
+    public void CalculatorButtonClick(object sender, RoutedEventArgs e)
     {
         var button = (CalculatorButton)sender;
         if (button == null || button.Action == CalculatorButton.Actions.None)
         {
             return;
         }
-        Calculator.ProcessButton(button.Action, button.Content);
+
+        Calculator.ProcessCalculatorButton(button.Action, button.Content);
+        CalculateFontSize();
+    }
+
+    public void MemoryButtonClick(object sender, RoutedEventArgs e)
+    {
+        var button = (MemoryButton)sender;
+        if (button == null || button.Action == MemoryButton.Actions.None)
+        {
+            return;
+        }
+
+        Calculator.ProcessMemoryButton(button.Action, button.Content);
+        CalculateFontSize();
     }
 
     public void CalculateFontSize()

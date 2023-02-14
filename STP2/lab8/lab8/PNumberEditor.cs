@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace lab9;
+namespace lab8;
 
-public class FractionEditor
+public class PNumberEditor
 {
     private bool _isError = false;
     public bool IsError
@@ -30,7 +30,7 @@ public class FractionEditor
         }
     }
 
-    public FractionEditor()
+    public PNumberEditor()
     {
         Clear();
     }
@@ -57,15 +57,15 @@ public class FractionEditor
         }
     }
 
-    public void AppendNumber(int num)
+    public void AppendNumber(string num)
     {
         if (IsNull())
         {
-            _currentNumber = num.ToString();
+            _currentNumber = num;
             return;
         }
 
-        _currentNumber += num.ToString();
+        _currentNumber += num;
     }
 
     public void PopNumber()

@@ -1,10 +1,13 @@
-﻿using System.Reflection.Emit;
+﻿using System.ComponentModel;
+using System.Reflection.Emit;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace rgr.Controls;
-public sealed partial class CalculatorButton : UserControl
+public sealed partial class CalculatorButton : UserControl, INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public enum Actions
     {
         None,
@@ -18,6 +21,12 @@ public sealed partial class CalculatorButton : UserControl
         Seven,
         Eight,
         Nine,
+        Ten,
+        Eleven,
+        Twelve,
+        Thirteen,
+        Fourteen,
+        Fifteen,
         Plus,
         Minus,
         Multiply,
@@ -47,6 +56,12 @@ public sealed partial class CalculatorButton : UserControl
         { Actions.Seven, "7"},
         { Actions.Eight, "8"},
         { Actions.Nine, "9"},
+        { Actions.Ten, "A"},
+        { Actions.Eleven, "B"},
+        { Actions.Twelve, "C"},
+        { Actions.Thirteen, "D"},
+        { Actions.Fourteen, "E"},
+        { Actions.Fifteen, "F"},
         { Actions.Plus, "+"},
         { Actions.Minus, "-"},
         { Actions.Multiply, "×"},
@@ -83,10 +98,24 @@ public sealed partial class CalculatorButton : UserControl
     }
 
     private readonly new DependencyProperty ContentProperty = DependencyProperty.Register(
-    nameof(Label),
+    nameof(Content),
     typeof(string),
     typeof(CalculatorButton),
     new PropertyMetadata(null));
+
+    private int _notation = 0;
+    public int Notation
+    {
+        get => _notation;
+        set
+        {
+            _notation = value;
+
+            IsEnabled = Convert.ToInt32(Content, 16) < _notation;
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Notation)));
+        }
+    }
 
     public CalculatorButton()
     {
