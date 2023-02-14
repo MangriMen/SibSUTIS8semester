@@ -21,7 +21,6 @@
     <None Remove="CalculatorButton.xaml" />
     <None Remove="Controls\CalculatorButton.xaml" />
     <None Remove="Controls\MemoryButton.xaml" />
-    <None Remove="Views\BlankPage1.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,9 +48,6 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Page Update="Views\BlankPage1.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Update="Controls\MemoryButton.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
