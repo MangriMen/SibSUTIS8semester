@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace lab5
 {
-    public class SimpleFraction
+    public class Fraction
     {
         private BigInteger _nominator = 0;
         private BigInteger _denominator = 0;
@@ -39,7 +39,15 @@ namespace lab5
             return a / Gcd(a, b) * b;
         }
 
-        public SimpleFraction(BigInteger numerator, BigInteger denominator)
+        public Fraction()
+        {
+            _nominator = 0;
+            _denominator = 1;
+
+            Reduce();
+        }
+
+        public Fraction(BigInteger numerator, BigInteger denominator)
         {
             _nominator = numerator;
             _denominator = denominator;
@@ -47,7 +55,7 @@ namespace lab5
             Reduce();
         }
 
-        public SimpleFraction(string fractionString)
+        public Fraction(string fractionString)
         {
             int delimeterPosition = fractionString.IndexOf('/');
 
@@ -83,7 +91,7 @@ namespace lab5
             _denominator = BigInteger.Parse(fractionString[(delimeterPosition + 1)..]);
         }
 
-        public SimpleFraction(SimpleFraction x)
+        public Fraction(Fraction x)
         {
             _nominator = x._nominator;
             _denominator = x._denominator;
@@ -95,41 +103,41 @@ namespace lab5
             Console.WriteLine($"Denominator {_denominator}");
         }
 
-        public static SimpleFraction operator +(SimpleFraction a, SimpleFraction b)
+        public static Fraction operator +(Fraction a, Fraction b)
         {
             var unionDenominator = Lcm(a._denominator, b._denominator);
 
             var firstNumber = a._nominator * unionDenominator / a._denominator;
             var secondNumber = b._nominator * unionDenominator / b._denominator;
 
-            var result = new SimpleFraction(firstNumber + secondNumber, unionDenominator);
+            var result = new Fraction(firstNumber + secondNumber, unionDenominator);
             result.Reduce();
 
             return result;
         }
 
-        public static SimpleFraction operator -(SimpleFraction a, SimpleFraction b)
+        public static Fraction operator -(Fraction a, Fraction b)
         {
             var unionDenominator = Lcm(a._denominator, b._denominator);
 
             var firstNumber = a._nominator * unionDenominator / a._denominator;
             var secondNumber = b._nominator * unionDenominator / b._denominator;
 
-            var result = new SimpleFraction(firstNumber - secondNumber, unionDenominator);
+            var result = new Fraction(firstNumber - secondNumber, unionDenominator);
             result.Reduce();
 
             return result;
         }
 
-        public static SimpleFraction operator *(SimpleFraction a, SimpleFraction b)
+        public static Fraction operator *(Fraction a, Fraction b)
         {
-            var result = new SimpleFraction(a._nominator * b._nominator, a._denominator * b._denominator);
+            var result = new Fraction(a._nominator * b._nominator, a._denominator * b._denominator);
             result.Reduce();
 
             return result;
         }
 
-        public static SimpleFraction operator /(SimpleFraction a, SimpleFraction b)
+        public static Fraction operator /(Fraction a, Fraction b)
         {
             var nominator = a._nominator * b._denominator;
             var denominator = a._denominator * b._nominator;
@@ -140,13 +148,13 @@ namespace lab5
                 denominator *= -1;
             }
 
-            var result = new SimpleFraction(nominator, denominator);
+            var result = new Fraction(nominator, denominator);
             result.Reduce();
 
             return result;
         }
 
-        public static SimpleFraction Pow(SimpleFraction a, double n = 2)
+        public static Fraction Pow(Fraction a, double n = 2)
         {
             var nominator = Math.Pow((double)a._nominator, n);
             var denominator = Math.Pow((double)a._denominator, n);
@@ -156,29 +164,29 @@ namespace lab5
                 return new(res);
             }
 
-            var result = new SimpleFraction((BigInteger)nominator, (BigInteger)denominator);
+            var result = new Fraction((BigInteger)nominator, (BigInteger)denominator);
             result.Reduce();
 
             return result;
         }
 
-        public static SimpleFraction Revers(SimpleFraction a)
+        public static Fraction Revers(Fraction a)
         {
             return new(a._denominator, a._nominator);
         }
 
-        public static SimpleFraction Minus(SimpleFraction a)
+        public static Fraction Minus(Fraction a)
         {
-            SimpleFraction z = new(0, 1);
+            Fraction z = new(0, 1);
             return new(z - a);
         }
 
-        public static bool operator ==(SimpleFraction a, SimpleFraction b)
+        public static bool operator ==(Fraction a, Fraction b)
         {
             return a._nominator == b._nominator && a._denominator == b._denominator;
         }
 
-        public static bool operator !=(SimpleFraction a, SimpleFraction b)
+        public static bool operator !=(Fraction a, Fraction b)
         {
             return a._nominator != b._nominator && a._denominator != b._denominator;
         }

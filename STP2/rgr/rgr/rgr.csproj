@@ -7,6 +7,9 @@
     <ApplicationIcon>Assets/WindowIcon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64;arm64</Platforms>
+    <LangVersion>11.0</LangVersion>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
     <PublishProfile>Properties\PublishProfiles\win10-$(Platform).pubxml</PublishProfile>
 	<ImplicitUsings>enable</ImplicitUsings>
@@ -33,6 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\lab5\lab5\lab5.csproj" />
+    <ProjectReference Include="..\..\lab6\lab6\lab6.csproj" />
     <ProjectReference Include="..\..\lab9\lab9\lab9.csproj" />
     <ProjectReference Include="..\rgr.Core\rgr.Core.csproj" />
   </ItemGroup>

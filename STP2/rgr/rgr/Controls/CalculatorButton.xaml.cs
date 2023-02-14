@@ -34,7 +34,7 @@ public sealed partial class CalculatorButton : UserControl
         ClearEntry,
     }
 
-    private readonly Dictionary<Actions, string> _contents = new()
+    public static readonly Dictionary<Actions, string> ActionSymbols = new()
     {
         { Actions.None, "" },
         { Actions.Zero, "0"},
@@ -70,7 +70,7 @@ public sealed partial class CalculatorButton : UserControl
         set
         {
             _action = value;
-            Content = _contents[_action];
+            Content = ActionSymbols[_action];
         }
     }
 
