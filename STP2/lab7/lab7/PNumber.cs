@@ -1,200 +1,181 @@
 ﻿using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace lab7
 {
     public class PNumber
     {
-        double num = 0.0;
-        double numBase = 0.0;
-        double accuracy = 0.0;
-        public PNumber(double a_ = 0, double b_ = 2, double c_ = 0)
-        {
-            if (b_ < 2 || b_ > 16)
-            {
-                throw new Exception("Base must be in range [2..16]");
-            }
+        const int MIN_BASE = 2;
+        const int MAX_BASE = 16;
 
-            num = a_;
-            numBase = b_;
-            accuracy = c_;
+        double _number = 0.0;
+        int _base = 2;
+        int _accuracy = 0;
+
+        public PNumber(double number = 0, int @base = 2, int accuracy = 0)
+        {
+            Init(number, @base, accuracy);
         }
 
-        public PNumber(string str_)
+        public PNumber(string str)
         {
-            var delimeterPos = str_.Split(",");
+            var args = Regex.Replace(str, @"\s+", "").Split(",");
+            Init(double.Parse(args[0]), int.Parse(args[1]), int.Parse(args[2]));
+        }
 
-            double num_ = double.Parse(delimeterPos[0]);
-            int base_ = int.Parse(delimeterPos[1]);
-            int accuracy_ = int.Parse(delimeterPos[2]);
+        private void Init(double number = 0, int @base = 2, int accuracy = 0)
+        {
+            CheckBaseRange(@base);
 
-            if (base_ < 2 || base_ > 16)
+            _number = number;
+            _base = @base;
+            _accuracy = accuracy;
+        }
+
+        private static void CheckBaseRange(int base_)
+        {
+            if (base_ < MIN_BASE || base_ > MAX_BASE)
             {
                 throw new Exception("Base must be in range [2..16]");
             }
+        }
 
-            num = num_;
-            numBase = base_;
-            accuracy = accuracy_;
+        private static void CheckAccuracy(int accuracy)
+        {
+            if (accuracy < 0)
+            {
+                throw new Exception("Accuracy must be higher than zero");
+            }
+        }
+
+        private static void CheckBaseAccuracyEquals(PNumber lhs, PNumber rhs)
+        {
+            if (lhs._base != rhs._base || lhs._accuracy != rhs._accuracy)
+            {
+                throw new Exception("Base and accuracy must be equals");
+            }
         }
 
         public static PNumber operator +(PNumber lhs, PNumber rhs)
         {
-            if (lhs.numBase != rhs.numBase && lhs.accuracy != rhs.accuracy)
-            {
-                throw new Exception("Base and accuracy must be equals");
-            }
-
-            return new PNumber(lhs.num + rhs.num, lhs.numBase, lhs.accuracy);
+            CheckBaseAccuracyEquals(lhs, rhs);
+            return new PNumber(lhs._number + rhs._number, lhs._base, lhs._accuracy);
         }
 
         public static PNumber operator -(PNumber lhs, PNumber rhs)
         {
-            if (lhs.numBase != rhs.numBase && lhs.accuracy != rhs.accuracy)
-            {
-                throw new Exception("Base and accuracy must be equals");
-            }
-
-            return new PNumber(lhs.num - rhs.num, lhs.numBase, lhs.accuracy);
+            CheckBaseAccuracyEquals(lhs, rhs);
+            return new PNumber(lhs._number - rhs._number, lhs._base, lhs._accuracy);
         }
 
         public static PNumber operator *(PNumber lhs, PNumber rhs)
         {
-            if (lhs.numBase != rhs.numBase && lhs.accuracy != rhs.accuracy)
-            {
-                throw new Exception("Base and accuracy must be equals");
-            }
-
-            return new PNumber(lhs.num * rhs.num, lhs.numBase, lhs.accuracy);
+            CheckBaseAccuracyEquals(lhs, rhs);
+            return new PNumber(lhs._number * rhs._number, lhs._base, lhs._accuracy);
         }
 
         public static PNumber operator /(PNumber lhs, PNumber rhs)
         {
-            if (lhs.numBase != rhs.numBase && lhs.accuracy != rhs.accuracy)
-            {
-                throw new Exception("Base and accuracy must be equals");
-            }
-
-            return new PNumber(lhs.num / rhs.num, lhs.numBase, lhs.accuracy);
+            CheckBaseAccuracyEquals(lhs, rhs);
+            return new PNumber(lhs._number / rhs._number, lhs._base, lhs._accuracy);
         }
 
         public static bool operator ==(PNumber lhs, PNumber rhs)
         {
-            return lhs.num == rhs.num && lhs.numBase == rhs.numBase && lhs.accuracy == rhs.accuracy;
+            return lhs._number == rhs._number && lhs._base == rhs._base && lhs._accuracy == rhs._accuracy;
         }
 
         public static bool operator !=(PNumber lhs, PNumber rhs)
         {
-            return lhs.num != rhs.num || lhs.numBase != rhs.numBase || lhs.accuracy != rhs.accuracy;
+            return lhs._number != rhs._number || lhs._base != rhs._base || lhs._accuracy != rhs._accuracy;
         }
 
         public static PNumber Revers(PNumber lhs)
         {
-            return new PNumber(1 / lhs.num, lhs.numBase, lhs.accuracy);
+            return new PNumber(1 / lhs._number, lhs._base, lhs._accuracy);
         }
 
         public static PNumber Pow(PNumber lhs, int degree = 2)
         {
-            return new PNumber(Math.Pow(lhs.num, degree), lhs.numBase, lhs.accuracy);
+            return new PNumber(Math.Pow(lhs._number, degree), lhs._base, lhs._accuracy);
         }
 
-        public static double GetNum(PNumber lhs)
+        public double GetNumber()
         {
-            return lhs.num;
+            return _number;
         }
 
-        public static string GetString(PNumber lhs)
+        public double GetBase()
         {
-            return $"{lhs.num}, {lhs.numBase}, {lhs.accuracy}";
+            return _base;
         }
 
-        public static double GetBase(PNumber lhs)
+        public string GetBaseString()
         {
-            return lhs.numBase;
+            return _base.ToString();
         }
 
-        public static string GetBaseString(PNumber lhs)
+        public void SetBase(int @base)
         {
-            return $"{lhs.numBase}";
+            CheckBaseRange(@base);
+            _base = @base;
         }
 
-        public static double GetAccuracy(PNumber lhs)
+        public void SetBase(string @base)
         {
-            return lhs.accuracy;
-        }
-
-        public static string GetAccuracyString(PNumber lhs)
-        {
-            return $"{lhs.accuracy}";
-        }
-
-        public void SetBase(double newBase)
-        {
-            if (newBase < 2 || newBase > 16)
-            {
-                throw new Exception("Base must be in range [2..16]");
-            }
+            _base = int.Parse(@base);
+            CheckBaseRange(_base);
 
             //if (newBase < numBase)
             //{
             //    throw new Exception("Base must be bigger");
             //}
-
-            numBase = newBase;
         }
 
-        public void SetBase(string newBase_)
+        public double GetAccuracy()
         {
-            int newBase = int.Parse(newBase_);
-
-            if (newBase < 2 || newBase > 16)
-            {
-                throw new Exception("Base must be in range [2..16]");
-            }
-
-            //if (newBase < numBase)
-            //{
-            //    throw new Exception("Base must be bigger");
-            //}
-
-            numBase = newBase;
+            return _accuracy;
+        }
+        public string GetAccuracyString()
+        {
+            return _accuracy.ToString();
         }
 
-        public void SetAccuracy(double newAccuracy)
+        public void SetAccuracy(int accuracy)
         {
-            if (newAccuracy < 0)
-            {
-                throw new Exception("Base must be higher than zero");
-            }
-
-            accuracy = newAccuracy;
+            CheckAccuracy(accuracy);
+            _accuracy = accuracy;
         }
 
-        public void setAccuracy(string accuracy_)
+        public void SetAccuracy(string accuracy)
         {
-            int newAccuracy = int.Parse(accuracy_);
-
-            if (newAccuracy < 0)
-            {
-                throw new Exception("Base must be higher than zero");
-            }
-
-            accuracy = newAccuracy;
+            _accuracy = int.Parse(accuracy);
+            CheckAccuracy(_accuracy);
         }
 
-        public void Show()
+        public string GetConvertedNumber()
         {
-            Console.WriteLine($"Number: {num}");
-            Console.WriteLine($"Number: {numBase}");
-            Console.WriteLine($"Number: {accuracy}");
+            return Convert.ToString((int)_number, _base);
         }
 
-        public string GetNumber()
+        public static string ToString(PNumber lhs)
         {
-            return Convert.ToString((int)num, (int)numBase);
+            return $"{lhs._number}, {lhs._base}, {lhs._accuracy}";
+        }
+
+        public override int GetHashCode()
+        {
+            return string.GetHashCode(ToString());
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return GetHashCode() == obj?.GetHashCode();
         }
     }
 }

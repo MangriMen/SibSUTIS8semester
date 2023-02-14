@@ -73,6 +73,7 @@ namespace lab5
                     _nominator = integer;
                     _denominator = 1;
 
+                    Reduce();
                     return;
                 }
 
@@ -84,23 +85,20 @@ namespace lab5
                 _denominator = BigInteger.Parse($"1{new string('0', trimmedFractional.Length)}");
                 _nominator = BigInteger.Parse(integerPart) * _denominator + (BigInteger)double.Parse(fractionalPart);
 
+                Reduce();
                 return;
             }
 
             _nominator = BigInteger.Parse(fractionString[..delimeterPosition]);
             _denominator = BigInteger.Parse(fractionString[(delimeterPosition + 1)..]);
+
+            Reduce();
         }
 
         public Fraction(Fraction x)
         {
             _nominator = x._nominator;
             _denominator = x._denominator;
-        }
-
-        public void Show()
-        {
-            Console.WriteLine($"Nominator {_nominator}");
-            Console.WriteLine($"Denominator {_denominator}");
         }
 
         public static Fraction operator +(Fraction a, Fraction b)
@@ -158,10 +156,10 @@ namespace lab5
         {
             var nominator = Math.Pow((double)a._nominator, n);
             var denominator = Math.Pow((double)a._denominator, n);
+
             if (n < 1)
             {
-                var res = (nominator / denominator).ToString();
-                return new(res);
+                return new((nominator / denominator).ToString());
             }
 
             var result = new Fraction((BigInteger)nominator, (BigInteger)denominator);
@@ -191,12 +189,12 @@ namespace lab5
             return a._nominator != b._nominator && a._denominator != b._denominator;
         }
 
-        public BigInteger GetNominatorInt()
+        public BigInteger GetNominator()
         {
             return _nominator;
         }
 
-        public BigInteger GetDenominatorInt()
+        public BigInteger GetDenominator()
         {
             return _denominator;
         }
@@ -213,17 +211,12 @@ namespace lab5
 
         new public string ToString()
         {
-            var nominator = GetNominatorString();
-            var denominator = GetDenominatorString();
-
-            string sout = nominator + "/" + denominator;
-
-            return sout;
+            return $"{GetNominatorString()}/{GetDenominatorString}";
         }
 
         public string ToFloatString()
         {
-            var floatNumber = (double)GetNominatorInt() / (double)GetDenominatorInt();
+            var floatNumber = (double)GetNominator() / (double)GetDenominator();
 
             var floatStr = floatNumber.ToString();
 

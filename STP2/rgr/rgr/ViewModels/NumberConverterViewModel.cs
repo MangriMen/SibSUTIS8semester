@@ -2,28 +2,24 @@
 using lab7;
 using lab8;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
 using rgr.Controls;
-using rgr.Helpers;
 
 namespace rgr.ViewModels;
 
 public class NumberConverterViewModel : ObservableRecipient
 {
-    public readonly PNumberEditor Editor = new();
+    private const int MAX_NUMBER_LENGTH = 10;
 
-    public string SourceInput => Editor.CurrentNumber;
+    private readonly PNumberEditor Editor = new();
+    public string NumberInput => Editor.CurrentNumber;
 
-    private string _destinationText = "0";
-    public string DestinationText
-    {
-        get => _destinationText;
-        set => SetProperty(ref _destinationText, value);
-    }
+    
+    private PNumber _number = new();
 
-    public readonly short[] Notations = new short[] { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
-
+    
+    public readonly int[] Notations = new int[15] { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
     public int SourceNotation => Notations[_sourceNotationIndex];
+
 
     private int _sourceNotationIndex = 8;
     public int SourceNotationIndex
@@ -32,13 +28,8 @@ public class NumberConverterViewModel : ObservableRecipient
         set
         {
             SetProperty(ref _sourceNotationIndex, value);
-
-            Editor.Clear();
-            OnPropertyChanged(nameof(SourceInput));
-
             OnPropertyChanged(nameof(SourceNotation));
-
-            DestinationText = "0";
+            ClearAll();
         }
     }
 
@@ -48,21 +39,36 @@ public class NumberConverterViewModel : ObservableRecipient
         get => _destinationNotationIndex;
         set
         {
-            Editor.Clear();
-            OnPropertyChanged(nameof(SourceInput));
             SetProperty(ref _destinationNotationIndex, value);
-
-            OnPropertyChanged(nameof(SourceNotation));
-
-            DestinationText = "0";
+            ConvertAndShowNumber();
         }
     }
 
-    private PNumber _firstOperand = new();
+    
+    private string _destinationText = string.Empty;
+    public string DestinationText
+    {
+        get => _destinationText;
+        set => SetProperty(ref _destinationText, value);
+    }
 
     public NumberConverterViewModel()
     {
+        ClearAll();
+    }
 
+    private void ClearAll()
+    {
+        Editor.Clear();
+        OnPropertyChanged(nameof(NumberInput));
+        DestinationText = new PNumber().GetConvertedNumber();
+    }
+
+    private void ConvertAndShowNumber()
+    {
+        _number = new(Convert.ToInt64(Editor.CurrentNumber, SourceNotation), SourceNotation, 0);
+        _number.SetBase(Notations[DestinationNotationIndex]);
+        DestinationText = _number.GetConvertedNumber().ToUpper();
     }
 
     public void ProcessCalculatorButton(CalculatorButton.Actions action)
@@ -85,39 +91,35 @@ public class NumberConverterViewModel : ObservableRecipient
             case CalculatorButton.Actions.Thirteen:
             case CalculatorButton.Actions.Fourteen:
             case CalculatorButton.Actions.Fifteen:
-                Editor.AppendNumber(CalculatorButton.ActionSymbols[action]);
-                OnPropertyChanged(nameof(SourceInput));
+                if (Editor.CurrentNumber.Length >= MAX_NUMBER_LENGTH)
+                {
+                    return;
+                }
 
-                _firstOperand = new(Convert.ToInt32(Editor.CurrentNumber, SourceNotation), SourceNotation, 0);
-                _firstOperand.SetBase(Notations[DestinationNotationIndex]);
-                DestinationText = _firstOperand.GetNumber();
-                OnPropertyChanged(nameof(DestinationText));
+                Editor.AppendNumber(CalculatorButton.ActionSymbols[action]);
+                OnPropertyChanged(nameof(NumberInput));
+                ConvertAndShowNumber();
                 break;
             case CalculatorButton.Actions.Delimiter:
+                if (Editor.CurrentNumber.Length >= MAX_NUMBER_LENGTH)
+                {
+                    return;
+                }
+
                 var symbol = CalculatorButton.ActionSymbols[action];
                 if (!Editor.CurrentNumber.Contains(symbol))
                 {
                     Editor.CurrentNumber += symbol;
-                    OnPropertyChanged(nameof(SourceInput));
+                    OnPropertyChanged(nameof(NumberInput));
                 }
                 break;
             case CalculatorButton.Actions.Backspace:
                 Editor.PopNumber();
-                OnPropertyChanged(nameof(SourceInput));
-
-                _firstOperand = new(Convert.ToInt32(Editor.CurrentNumber, SourceNotation), SourceNotation, 0);
-                _firstOperand.SetBase(Notations[DestinationNotationIndex]);
-                DestinationText = _firstOperand.GetNumber();
-                OnPropertyChanged(nameof(DestinationText));
+                OnPropertyChanged(nameof(NumberInput));
+                ConvertAndShowNumber();
                 break;
             case CalculatorButton.Actions.ClearEntry:
-                Editor.Clear();
-                OnPropertyChanged(nameof(SourceInput));
-
-                _firstOperand = new(Convert.ToInt32(Editor.CurrentNumber, SourceNotation), SourceNotation, 0);
-                _firstOperand.SetBase(Notations[DestinationNotationIndex]);
-                DestinationText = _firstOperand.GetNumber();
-                OnPropertyChanged(nameof(DestinationText));
+                ClearAll();
                 break;
         }
     }

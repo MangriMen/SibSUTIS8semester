@@ -8,6 +8,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <x:Double x:Key="TextBlockFontSize">48</x:Double>
+        <VerticalAlignment x:Key="TextBlockAlignment">Bottom</VerticalAlignment>
+    </Page.Resources>
+
     <Grid x:Name="ContentArea">
         <Grid>
             <Grid.RowDefinitions>
@@ -25,9 +30,9 @@
 
                 <TextBlock
                     Grid.Row="0"
-                    VerticalAlignment="Bottom"
-                    FontSize="48"
-                    Text="{x:Bind ViewModel.SourceInput, Mode=OneWay}" />
+                    VerticalAlignment="{StaticResource TextBlockAlignment}"
+                    FontSize="{StaticResource TextBlockFontSize}"
+                    Text="{x:Bind ViewModel.NumberInput, Mode=OneWay}" />
 
                 <ComboBox
                     Grid.Row="1"
@@ -36,14 +41,14 @@
 
                 <TextBlock
                     Grid.Row="2"
-                    VerticalAlignment="Bottom"
-                    FontSize="48"
+                    VerticalAlignment="{StaticResource TextBlockAlignment}"
+                    FontSize="{StaticResource TextBlockFontSize}"
                     Text="{x:Bind ViewModel.DestinationText, Mode=OneWay}" />
 
                 <ComboBox
                     Grid.Row="3"
                     ItemsSource="{x:Bind ViewModel.Notations}"
-                    SelectedIndex="{x:Bind ViewModel.DestinationNotationIndex, Mode=OneWay}" />
+                    SelectedIndex="{x:Bind ViewModel.DestinationNotationIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
 
             <Grid
