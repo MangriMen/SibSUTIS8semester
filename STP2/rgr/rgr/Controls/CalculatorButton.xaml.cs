@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Reflection.Emit;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -41,6 +40,7 @@ public sealed partial class CalculatorButton : UserControl, INotifyPropertyChang
         Backspace,
         Clear,
         ClearEntry,
+        ComplexI,
     }
 
     public static readonly Dictionary<Actions, string> ActionSymbols = new()
@@ -76,6 +76,7 @@ public sealed partial class CalculatorButton : UserControl, INotifyPropertyChang
         { Actions.Backspace, "⌫"},
         { Actions.Clear, "C"},
         { Actions.ClearEntry, "CE"},
+        { Actions.ComplexI, "i" },
     };
 
     private Actions _action = Actions.None;

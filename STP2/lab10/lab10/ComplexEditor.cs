@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace lab9;
+namespace lab10;
 
-public class FractionEditor
+public class ComplexEditor
 {
     private bool _isError = false;
     public bool IsError
@@ -20,7 +20,7 @@ public class FractionEditor
         get => _currentNumber;
         set
         {
-            bool isValid = Regex.Match(value, "[0-9]+").Success;
+            bool isValid = Regex.Match(value, @"-?[0-9]+\+i\*([0-9]+|\(.?-?[0-9]+(\.?[0-9]+)?\))").Success;
             if (!isValid)
             {
                 throw new Exception("Invalid number");
@@ -30,14 +30,14 @@ public class FractionEditor
         }
     }
 
-    public FractionEditor()
+    public ComplexEditor()
     {
         Clear();
     }
 
     public bool IsNull()
     {
-        return _currentNumber.Length == 1 && _currentNumber[0] == '0';
+        return _currentNumber.Split(" ")[0] == "0+i*0";
     }
 
     public void ToggleNegative()
@@ -79,8 +79,9 @@ public class FractionEditor
         _currentNumber = _currentNumber[..^1];
     }
 
-    public void Clear()
+    public string Clear()
     {
-        _currentNumber = "0";
+        _currentNumber = "0+i*0";
+        return _currentNumber;
     }
 }

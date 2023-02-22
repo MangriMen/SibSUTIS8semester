@@ -28,10 +28,17 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
                 <TextBlock
                     Grid.Row="0"
+                    MaxHeight="64"
+                    HorizontalAlignment="Stretch"
                     VerticalAlignment="{StaticResource TextBlockAlignment}"
                     FontSize="{StaticResource TextBlockFontSize}"
+                    Loaded="{x:Bind ViewModel.NumberInputLoaded}"
                     Text="{x:Bind ViewModel.NumberInput, Mode=OneWay}" />
 
                 <ComboBox
@@ -41,8 +48,11 @@
 
                 <TextBlock
                     Grid.Row="2"
+                    MaxHeight="64"
+                    HorizontalAlignment="Stretch"
                     VerticalAlignment="{StaticResource TextBlockAlignment}"
                     FontSize="{StaticResource TextBlockFontSize}"
+                    Loaded="{x:Bind ViewModel.DestinationTextLoaded}"
                     Text="{x:Bind ViewModel.DestinationText, Mode=OneWay}" />
 
                 <ComboBox

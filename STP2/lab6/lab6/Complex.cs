@@ -1,22 +1,40 @@
-﻿namespace lab6;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
+
+namespace lab6;
 
 public class Complex
 {
     private double _real;
     private double _imag;
 
+    public Complex()
+    {
+        Init();
+    }
+
     public Complex(double a = 0, double b = 0)
     {
-        _real = a;
-        _imag = b;
+        Init(a, b);
     }
 
     public Complex(string str)
     {
-        var splitter = str.Split(' ');
+        var splitter = str.Split('+');
+        var a = double.Parse(splitter[0]);
+        var b = 0.0;
+        
+        if (splitter.Length > 2)
+        {
+            b = double.Parse(Regex.Replace(splitter[1][2..], @"\(|\)", ""));
+        }
 
-        _real = double.Parse(splitter[0]);
-        _imag = double.Parse(splitter[1]);
+        Init(a, b);
+    }
+
+    private void Init(double a = 0, double b = 0) {
+        _real = a;
+        _imag = b;
     }
 
     static public Complex operator +(Complex rhs, Complex lhs)
@@ -44,7 +62,7 @@ public class Complex
 
     static public bool operator ==(Complex lhs, Complex rhs)
     {
-        return lhs._real == rhs._real && lhs._imag == rhs._imag;
+        return lhs?._real == rhs?._real && lhs?._imag == rhs?._imag;
     }
 
     static public bool operator !=(Complex lhs, Complex rhs)
@@ -52,10 +70,10 @@ public class Complex
         return lhs._real != rhs._real || lhs._imag != rhs._imag;
     }
 
-    public Complex Pow(int n = 2)
+    static public Complex Pow(Complex number, double n = 2)
     {
-        double phi = Math.Atan2(_imag, _real);
-        double r = Math.Sqrt(_real * _real + _imag * _imag);
+        double phi = Math.Atan2(number._imag, number._real);
+        double r = Math.Sqrt(number._real * number._real + number._imag * number._imag);
 
         double R = Math.Pow(r, n);
         double Phi = n * phi;
@@ -63,31 +81,31 @@ public class Complex
         double X = Math.Round(R * Math.Cos(Phi));
         double Y = Math.Round(R * Math.Sin(Phi));
 
-        Complex complex = new Complex(X, Y);
+        var complex = new Complex(X, Y);
 
         return complex;
     }
 
-    public double Abs()
+    public static double Abs(Complex complex)
     {
-        return Math.Sqrt(_real * _real + _imag * _imag);
+        return Math.Sqrt(complex._real * complex._real + complex._imag * complex._imag);
     }
 
-    public double AngleRadians()
+    public static double AngleRadians(Complex complex)
     {
-        if (_real > 0)
+        if (complex._real > 0)
         {
-            return Math.Atan(_imag / _real);
+            return Math.Atan(complex._imag / complex._real);
         }
-        else if (_real < 0)
+        else if (complex._real < 0)
         {
-            return Math.Atan(_imag / _real) + Math.PI;
+            return Math.Atan(complex._imag / complex._real) + Math.PI;
         }
-        else if (_real == 0 && _imag < 0)
+        else if (complex._real == 0 && complex._imag < 0)
         {
             return -Math.PI / 2;
         }
-        else if (_real == 0 && _imag > 0)
+        else if (complex._real == 0 && complex._imag > 0)
         {
             return Math.PI / 2;
         }
@@ -97,15 +115,17 @@ public class Complex
         }
     }
 
-    public Complex Root(int n, int i)
+    public static Complex Root(Complex complex, int n, int i)
     {
-        List<Complex> roots = new List<Complex>();
-        double phi = Math.Pow(Abs(), 1 / (double)n);
+        var roots = new List<Complex>();
+        double phi = Math.Pow(Abs(complex), 1 / (double)n);
+
+        Debug.WriteLine(Abs(complex));
+
         for (int k = 0; k < n; k++)
         {
             double coeff = 2 * Math.PI * k;
-            //roots[k] = new Complex(phi, 0) * new Complex(Math.Cos((AngleRadians() + coeff) / n), Math.Sin((AngleRadians() + coeff) / n));
-            roots.Add(new Complex(phi, 0) * new Complex(Math.Cos((AngleRadians() + coeff) / n), Math.Sin((AngleRadians() + coeff) / n)));
+            roots.Add(new Complex(phi, 0) * new Complex(Math.Cos((AngleRadians(complex) + coeff) / n), Math.Sin((AngleRadians(complex) + coeff) / n)));
         }
 
         return roots[i];
@@ -131,14 +151,24 @@ public class Complex
         return _imag.ToString();
     }
 
-    public string ToString()
+    new public string ToString()
     {
         string img = _imag >= 0 ? ImagString() : "(" + ImagString() + ")";
-        return RealString() + "+i" + img;
+        return RealString() + "+i*" + img;
     }
 
     public void Show()
     {
         Console.WriteLine($"real: {_real}, imag: {_imag}");
+    }
+
+    public override int GetHashCode()
+    {
+        return string.GetHashCode(ToString());
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return GetHashCode() == obj?.GetHashCode();
     }
 }

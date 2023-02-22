@@ -2,7 +2,9 @@
 using lab7;
 using lab8;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using rgr.Controls;
+using rgr.Helpers;
 
 namespace rgr.ViewModels;
 
@@ -13,10 +15,14 @@ public class NumberConverterViewModel : ObservableRecipient
     private readonly PNumberEditor Editor = new();
     public string NumberInput => Editor.CurrentNumber;
 
-    
+
+    public TextBlock? _numberInputObject;
+
+    public TextBlock? _destinationTextObject;
+
+
     private PNumber _number = new();
 
-    
     public readonly int[] Notations = new int[15] { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
     public int SourceNotation => Notations[_sourceNotationIndex];
 
@@ -66,9 +72,12 @@ public class NumberConverterViewModel : ObservableRecipient
 
     private void ConvertAndShowNumber()
     {
-        _number = new(Convert.ToInt64(Editor.CurrentNumber, SourceNotation), SourceNotation, 0);
+        _number = new(PNumber.ArbitraryToDecimalSystem(Editor.CurrentNumber, SourceNotation), SourceNotation, 0);
         _number.SetBase(Notations[DestinationNotationIndex]);
         DestinationText = _number.GetConvertedNumber().ToUpper();
+
+        XamlHelper.CalculateFontSize(_numberInputObject);
+        XamlHelper.CalculateFontSize(_destinationTextObject);
     }
 
     public void ProcessCalculatorButton(CalculatorButton.Actions action)
@@ -133,5 +142,15 @@ public class NumberConverterViewModel : ObservableRecipient
         }
 
         ProcessCalculatorButton(button.Action);
+    }
+
+    public void NumberInputLoaded(object sender, RoutedEventArgs e)
+    {
+        _numberInputObject = (TextBlock)sender;
+    }
+
+    public void DestinationTextLoaded(object sender, RoutedEventArgs e)
+    {
+        _destinationTextObject = (TextBlock)sender;
     }
 }

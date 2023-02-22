@@ -7,17 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <UserControl.Resources>
-        <Style x:Key="NumberButton" TargetType="Button">
-            <Setter Property="HorizontalAlignment" Value=" Stretch" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-        </Style>
-    </UserControl.Resources>
-
-    <Button Click="Button_Click" Style="{ThemeResource NumberButton}">
+    <Button
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        Click="Button_Click"
+        FontSize="18"
+        FontWeight="SemiBold">
         <TextBlock Text="{x:Bind Content}" />
     </Button>
 </UserControl>

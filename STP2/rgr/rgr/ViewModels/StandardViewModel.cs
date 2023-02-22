@@ -4,6 +4,7 @@ using lab9;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using rgr.Controls;
+using rgr.Helpers;
 using rgr.Models;
 
 namespace rgr.ViewModels;
@@ -13,11 +14,6 @@ public class StandardViewModel : ObservableRecipient
     public readonly Calculator<FractionEditor, Fraction> Calculator = new();
 
     public TextBlock? _mainInputObject;
-    public TextBlock? MainInputObject
-    {
-        get => _mainInputObject;
-        set => SetProperty(ref _mainInputObject, value);
-    }
 
     public StandardViewModel()
     {
@@ -32,7 +28,7 @@ public class StandardViewModel : ObservableRecipient
         }
 
         Calculator.ProcessCalculatorButton(button.Action, button.Content);
-        CalculateFontSize();
+        XamlHelper.CalculateFontSize(_mainInputObject);
     }
 
     public void MemoryButtonClick(object sender, RoutedEventArgs e)
@@ -44,25 +40,11 @@ public class StandardViewModel : ObservableRecipient
         }
 
         Calculator.ProcessMemoryButton(button.Action, button.Content);
-        CalculateFontSize();
-    }
-
-    public void CalculateFontSize()
-    {
-        if (MainInputObject == null)
-        {
-            return;
-        }
-
-        var desiredHeight = 60;
-
-        var fontsizeMultiplier = Math.Sqrt(desiredHeight / MainInputObject.ActualHeight);
-
-        MainInputObject.FontSize = Math.Floor(MainInputObject.FontSize * fontsizeMultiplier);
+        XamlHelper.CalculateFontSize(_mainInputObject);
     }
 
     public void MainInput_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        MainInputObject = (TextBlock)sender;
+        _mainInputObject = (TextBlock)sender;
     }
 }

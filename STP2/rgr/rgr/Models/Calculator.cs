@@ -4,6 +4,7 @@ using lab5;
 using lab6;
 using lab9;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using rgr.Controls;
 
 namespace rgr.Models;
@@ -45,13 +46,20 @@ public class Calculator<T, U> : ObservableObject where U : new()
 
     public void AppendSymbolToInput(string symbol)
     {
-        if (symbol == ",")
+        if (symbol == "," || symbol == "i")
         {
             if (Editor.CurrentNumber.Contains(symbol))
             {
                 return;
             }
-            Editor.CurrentNumber += symbol;
+            if (symbol == "i")
+            {
+                Editor.AppendNumber("+i*");
+            }
+            else
+            {
+                Editor.CurrentNumber += symbol;
+            }
         }
         else
         {
@@ -72,7 +80,7 @@ public class Calculator<T, U> : ObservableObject where U : new()
                 return;
             }
 
-            Editor.AppendNumber(int.Parse(symbol));
+            Editor.AppendNumber(symbol);
         }
 
         OnPropertyChanged(nameof(Input));
@@ -133,8 +141,8 @@ public class Calculator<T, U> : ObservableObject where U : new()
         var secondOperand = string.Empty;
         try
         {
-            firstOperand = _firstOperand?.ToFloatString() ?? "";
-            secondOperand = _secondOperand?.ToFloatString() ?? "";
+            firstOperand = _firstOperand?.ToString() ?? "";
+            secondOperand = _secondOperand?.ToString() ?? "";
         }
         catch
         {
@@ -166,7 +174,7 @@ public class Calculator<T, U> : ObservableObject where U : new()
 
         try
         {
-            Editor.CurrentNumber = _firstOperand?.ToFloatString();
+            Editor.CurrentNumber = _firstOperand?.ToString();
         }
         catch
         {
@@ -230,48 +238,51 @@ public class Calculator<T, U> : ObservableObject where U : new()
             Buffer += $"{operand} =";
         }
 
+        var methodPow = typeof(U).GetMethod("Pow");
+
+        System.Reflection.MethodInfo? methodSqrt = null;
+        object[]? sqrtArguments = null;
+
+        dynamic? result = _firstOperand;
+
+        if (!_isOperationDone)
+        {
+            result = _secondOperand;
+        }
+
+        if (result == null)
+        {
+            return;
+        }
+
+        dynamic? oneHundred = null;
+
+        if (typeof(U) == typeof(Fraction))
+        {
+            sqrtArguments = new object[] { result, 0.5 };
+            methodSqrt = typeof(U).GetMethod("Pow");
+            oneHundred = Activator.CreateInstance(typeof(U), "100/1");
+        }
+        else if (typeof(U) == typeof(Complex))
+        {
+            sqrtArguments = new object[] { result, 2, 0 };
+            methodSqrt = typeof(U).GetMethod("Root");
+            oneHundred = Activator.CreateInstance(typeof(U), "100");
+        }
+
         switch (action)
         {
             case CalculatorButton.Actions.Module:
-                dynamic? oneHundred = Activator.CreateInstance(typeof(U), "100/1");
-                if (!_isOperationDone)
-                {
-                    _secondOperand /= oneHundred;
-                }
-                else
-                {
-                    _firstOperand /= oneHundred;
-                }
+                result /= oneHundred;
                 break;
             case CalculatorButton.Actions.Reciprocal:
-                if (!_isOperationDone)
-                {
-                    _secondOperand = Fraction.Revers(_secondOperand);
-                }
-                else
-                {
-                    _firstOperand = Fraction.Revers(_firstOperand);
-                }
+                result = Fraction.Reverse(result);
                 break;
             case CalculatorButton.Actions.Sqr:
-                if (!_isOperationDone)
-                {
-                    _secondOperand = Fraction.Pow(_secondOperand, 2);
-                }
-                else
-                {
-                    _firstOperand = Fraction.Pow(_firstOperand, 2);
-                }
+                result = methodPow?.Invoke(null, new object?[] { result, 2 });
                 break;
             case CalculatorButton.Actions.Sqrt:
-                if (!_isOperationDone)
-                {
-                    _secondOperand = Fraction.Pow(_secondOperand, 0.5);
-                }
-                else
-                {
-                    _firstOperand = Fraction.Pow(_firstOperand, 0.5);
-                }
+                result = methodSqrt?.Invoke(null, sqrtArguments);
                 break;
         }
 
@@ -279,11 +290,13 @@ public class Calculator<T, U> : ObservableObject where U : new()
         {
             if (_isOperationDone)
             {
-                Editor.CurrentNumber = _firstOperand?.ToFloatString();
+                _firstOperand = result;
+                Editor.CurrentNumber = _firstOperand?.ToString();
             }
             else
             {
-                Editor.CurrentNumber = _secondOperand?.ToFloatString();
+                _secondOperand = result;
+                Editor.CurrentNumber = _secondOperand?.ToString();
             }
         }
         catch
@@ -297,50 +310,71 @@ public class Calculator<T, U> : ObservableObject where U : new()
 
     public void ProcessCalculatorButton(CalculatorButton.Actions action, string content)
     {
-        switch (action)
+        try
         {
-            case CalculatorButton.Actions.Zero:
-            case CalculatorButton.Actions.One:
-            case CalculatorButton.Actions.Two:
-            case CalculatorButton.Actions.Three:
-            case CalculatorButton.Actions.Four:
-            case CalculatorButton.Actions.Five:
-            case CalculatorButton.Actions.Six:
-            case CalculatorButton.Actions.Seven:
-            case CalculatorButton.Actions.Eight:
-            case CalculatorButton.Actions.Nine:
-                AppendSymbolToInput(content);
-                break;
-            case CalculatorButton.Actions.Delimiter:
-                AppendSymbolToInput(content);
-                break;
-            case CalculatorButton.Actions.Plus:
-            case CalculatorButton.Actions.Minus:
-            case CalculatorButton.Actions.Multiply:
-            case CalculatorButton.Actions.Divide:
-                OperationPerformed(action);
-                break;
-            case CalculatorButton.Actions.Module:
-            case CalculatorButton.Actions.Reciprocal:
-            case CalculatorButton.Actions.Sqr:
-            case CalculatorButton.Actions.Sqrt:
-                OneOperandOperationPerformed(action);
-                break;
-            case CalculatorButton.Actions.Equal:
-                EqualPerformed();
-                break;
-            case CalculatorButton.Actions.ChangeSign:
-                ToggleNegative();
-                break;
-            case CalculatorButton.Actions.Backspace:
-                EraseNumberFromInput();
-                break;
-            case CalculatorButton.Actions.Clear:
-                ClearInput();
-                break;
-            case CalculatorButton.Actions.ClearEntry:
-                ClearAll();
-                break;
+            switch (action)
+            {
+                case CalculatorButton.Actions.Zero:
+                case CalculatorButton.Actions.One:
+                case CalculatorButton.Actions.Two:
+                case CalculatorButton.Actions.Three:
+                case CalculatorButton.Actions.Four:
+                case CalculatorButton.Actions.Five:
+                case CalculatorButton.Actions.Six:
+                case CalculatorButton.Actions.Seven:
+                case CalculatorButton.Actions.Eight:
+                case CalculatorButton.Actions.Nine:
+                    AppendSymbolToInput(content);
+                    break;
+                case CalculatorButton.Actions.Delimiter:
+                case CalculatorButton.Actions.ComplexI:
+                    AppendSymbolToInput(content);
+                    break;
+                case CalculatorButton.Actions.Plus:
+                case CalculatorButton.Actions.Minus:
+                case CalculatorButton.Actions.Multiply:
+                case CalculatorButton.Actions.Divide:
+                    OperationPerformed(action);
+                    break;
+                case CalculatorButton.Actions.Module:
+                case CalculatorButton.Actions.Reciprocal:
+                case CalculatorButton.Actions.Sqr:
+                case CalculatorButton.Actions.Sqrt:
+                    OneOperandOperationPerformed(action);
+                    break;
+                case CalculatorButton.Actions.Equal:
+                    EqualPerformed();
+                    break;
+                case CalculatorButton.Actions.ChangeSign:
+                    ToggleNegative();
+                    break;
+                case CalculatorButton.Actions.Backspace:
+                    EraseNumberFromInput();
+                    break;
+                case CalculatorButton.Actions.Clear:
+                    ClearInput();
+                    break;
+                case CalculatorButton.Actions.ClearEntry:
+                    ClearAll();
+                    break;
+            }
+        }
+        catch
+        {
+            try
+            {
+                _ = new ContentDialog()
+                {
+                    Title = "Ошибка",
+                    Content = "Неизвестная ошибка",
+                    CloseButtonText = "Ок",
+                    XamlRoot = App.MainWindow.Content.XamlRoot,
+                }.ShowAsync();
+            }
+            catch
+            {
+
+            }
         }
     }
 
@@ -355,7 +389,7 @@ public class Calculator<T, U> : ObservableObject where U : new()
             case MemoryButton.Actions.Read:
                 try
                 {
-                    Editor.CurrentNumber = ((dynamic?)Memory.Read())?.ToFloatString();
+                    Editor.CurrentNumber = ((dynamic?)Memory.Read())?.ToString();
                     OnPropertyChanged(nameof(Input));
                 }
                 catch

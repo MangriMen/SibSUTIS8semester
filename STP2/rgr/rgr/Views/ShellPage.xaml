@@ -59,17 +59,17 @@
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe8ef;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                <NavigationViewItem x:Uid="Shell_Complex" helpers:NavigationHelper.NavigateTo="rgr.ViewModels.ComplexViewModel">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xea1f;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
 
                 <NavigationViewItemHeader Content="Converter" />
 
                 <NavigationViewItem x:Uid="Shell_NumberConverter" helpers:NavigationHelper.NavigateTo="rgr.ViewModels.NumberConverterViewModel">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe7fd;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem x:Uid="Shell_Complex" helpers:NavigationHelper.NavigateTo="rgr.ViewModels.ComplexViewModel">
-                    <NavigationViewItem.Icon>
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xea1f;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
             </NavigationView.MenuItems>

@@ -11,25 +11,28 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" MaxHeight="24" />
-                <RowDefinition Height="*" MaxHeight="170" />
+                <RowDefinition Height="*" MaxHeight="96" />
                 <RowDefinition Height="*" MaxHeight="64" />
                 <RowDefinition Height="*" MinHeight="252" />
             </Grid.RowDefinitions>
 
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
             <TextBlock
                 Grid.Row="0"
                 Text="{x:Bind ViewModel.Calculator.Buffer, Mode=OneWay}"
-                TextAlignment="Right"
-                TextWrapping="Wrap" />
+                TextAlignment="Right" />
 
             <TextBlock
                 Grid.Row="1"
+                MaxHeight="96"
                 FontSize="36"
                 FontWeight="SemiBold"
                 Loaded="{x:Bind ViewModel.MainInput_Loaded}"
                 Text="{x:Bind ViewModel.Calculator.Input, Mode=OneWay}"
-                TextAlignment="Right"
-                TextWrapping="Wrap" />
+                TextAlignment="Right" />
 
             <Grid
                 Grid.Row="2"
@@ -45,7 +48,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" MinHeight="32" />
                 </Grid.RowDefinitions>
 
                 <controls:MemoryButton
@@ -222,9 +225,7 @@
                     Grid.Row="5"
                     Grid.Column="3"
                     Action="Equal"
-                    Background="#29f7ff"
-                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Foreground="Black" />
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}" />
             </Grid>
         </Grid>
     </Grid>
