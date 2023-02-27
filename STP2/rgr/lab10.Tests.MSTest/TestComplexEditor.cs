@@ -58,7 +58,6 @@ public class TestComplexEditor
         Assert.IsTrue(ExpectedValue == AssertValue);
     }
 
-
     [TestMethod]
     public void TestPNumberToggleNegative()
     {

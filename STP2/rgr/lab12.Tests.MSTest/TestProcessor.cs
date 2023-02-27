@@ -16,7 +16,7 @@ public class TestProcessor
 
         var expectedLeftOperand = new Fraction();
         var expectedRightOperand = new Fraction();
-        var expectedOperation = Processor<Fraction>.Operation.None;
+        var expectedOperation = Processor.Operation.None;
 
         Assert.AreEqual(expectedLeftOperand, actualLeftOperand);
         Assert.AreEqual(expectedRightOperand, actualRightOperand);
@@ -33,7 +33,7 @@ public class TestProcessor
 
         processor.LeftOperand = leftOperand;
         processor.RightOperand = rightOperand;
-        processor.LastOperation = Processor<Fraction>.Operation.Plus;
+        processor.LastOperation = Processor.Operation.Plus;
 
         processor.PerformOperation();
 
@@ -53,7 +53,7 @@ public class TestProcessor
 
         processor.LeftOperand = leftOperand;
         processor.RightOperand = rightOperand;
-        processor.LastOperation = Processor<Fraction>.Operation.Minus;
+        processor.LastOperation = Processor.Operation.Minus;
 
         processor.PerformOperation();
 
@@ -73,7 +73,7 @@ public class TestProcessor
 
         processor.LeftOperand = leftOperand;
         processor.RightOperand = rightOperand;
-        processor.LastOperation = Processor<Fraction>.Operation.Multiply;
+        processor.LastOperation = Processor.Operation.Multiply;
 
         processor.PerformOperation();
 
@@ -93,7 +93,7 @@ public class TestProcessor
 
         processor.LeftOperand = leftOperand;
         processor.RightOperand = rightOperand;
-        processor.LastOperation = Processor<Fraction>.Operation.Divide;
+        processor.LastOperation = Processor.Operation.Divide;
 
         processor.PerformOperation();
 
@@ -114,7 +114,7 @@ public class TestProcessor
         processor.LeftOperand = leftOperand;
         processor.RightOperand = rightOperand;
 
-        processor.PerformFunction(Processor<Fraction>.Function.Module);
+        processor.PerformFunction(Processor.Function.Module);
 
         var expected = new Fraction("1/25");
         var actual = processor.LeftOperand;
@@ -133,7 +133,7 @@ public class TestProcessor
         processor.LeftOperand = leftOperand;
         processor.RightOperand = rightOperand;
 
-        processor.PerformFunction(Processor<Fraction>.Function.Reciprocal);
+        processor.PerformFunction(Processor.Function.Reciprocal);
 
         var expected = new Fraction("1/4");
         var actual = processor.LeftOperand;
@@ -152,7 +152,7 @@ public class TestProcessor
         processor.LeftOperand = leftOperand;
         processor.RightOperand = rightOperand;
 
-        processor.PerformFunction(Processor<Fraction>.Function.Sqr);
+        processor.PerformFunction(Processor.Function.Sqr);
 
         var expected = new Fraction("16");
         var actual = processor.LeftOperand;
@@ -171,7 +171,7 @@ public class TestProcessor
         processor.LeftOperand = leftOperand;
         processor.RightOperand = rightOperand;
 
-        processor.PerformFunction(Processor<Fraction>.Function.Sqrt);
+        processor.PerformFunction(Processor.Function.Sqrt);
 
         var expected = new Fraction("2");
         var actual = processor.LeftOperand;

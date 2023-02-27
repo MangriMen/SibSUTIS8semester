@@ -58,7 +58,6 @@ public class TestFractionEditor
         Assert.IsTrue(ExpectedValue == AssertValue);
     }
 
-
     [TestMethod]
     public void TestPNumberToggleNegative()
     {

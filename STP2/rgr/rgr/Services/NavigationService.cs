@@ -31,7 +31,6 @@ public class NavigationService : INavigationService
 
             return _frame;
         }
-
         set
         {
             UnregisterFrameEvents();
@@ -85,7 +84,13 @@ public class NavigationService : INavigationService
     {
         var pageType = _pageService.GetPageType(pageKey);
 
-        if (_frame != null && (_frame.Content?.GetType() != pageType || (parameter != null && !parameter.Equals(_lastParameterUsed))))
+        if (
+            _frame != null
+            && (
+                _frame.Content?.GetType() != pageType
+                || (parameter != null && !parameter.Equals(_lastParameterUsed))
+            )
+        )
         {
             _frame.Tag = clearNavigation;
             var vmBeforeNavigation = _frame.GetPageViewModel();

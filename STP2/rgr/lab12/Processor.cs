@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
+﻿using System.Reflection;
 using lab5;
 using static lab12.Processor;
 
@@ -117,18 +116,18 @@ public class Processor<T>
             return;
         }
 
-        var sqrParameters = (object?[])
-            new object?[] { result }.Append(GetDefaultParametersForMethod(_methodPow));
+        var sqrParameters = new List<object?> { result };
+        sqrParameters.AddRange(GetDefaultParametersForMethod(_methodPow));
 
-        var sqrtParameters = (object?[])
-            new object?[] { result }.Append(GetDefaultParametersForMethod(_methodSqrt));
+        var sqrtParameters = new List<object?> { result };
+        sqrtParameters.AddRange(GetDefaultParametersForMethod(_methodSqrt));
 
         result = function switch
         {
             Function.Module => result / _oneHundred,
             Function.Reciprocal => Fraction.Reverse(result),
-            Function.Sqr => _methodPow?.Invoke(null, sqrParameters),
-            Function.Sqrt => _methodSqrt?.Invoke(null, sqrtParameters),
+            Function.Sqr => (T?)_methodPow?.Invoke(null, sqrParameters.ToArray()),
+            Function.Sqrt => (T?)_methodSqrt?.Invoke(null, sqrtParameters.ToArray()),
             _ => throw new ArgumentException("Invalid enum value for function", nameof(function))
         };
 
@@ -141,7 +140,10 @@ public class Processor<T>
 
     private static object?[] GetDefaultParametersForMethod(MethodInfo? method)
     {
-        return method?.GetParameters().Where(param => param.DefaultValue is not DBNull).ToArray()
-            ?? Array.Empty<object>();
+        return method
+                ?.GetParameters()
+                .Where(param => param.HasDefaultValue)
+                .Select(param => param.DefaultValue)
+                .ToArray() ?? Array.Empty<object>();
     }
 }

@@ -18,7 +18,6 @@ public class TestFraction
         Assert.AreEqual(ExpectedValue2, AssertValue2);
     }
 
-
     [TestMethod]
     public void TestFractionFromString()
     {
@@ -65,7 +64,6 @@ public class TestFraction
         Assert.AreEqual(ExpectedValue1, AssertValue1);
         Assert.AreEqual(ExpectedValue2, AssertValue2);
     }
-
 
     [TestMethod]
     public void TestFractionOperatorMinus()

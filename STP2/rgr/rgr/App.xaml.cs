@@ -6,7 +6,6 @@ using rgr.Activation;
 using rgr.Contracts.Services;
 using rgr.Core.Contracts.Services;
 using rgr.Core.Services;
-using rgr.Helpers;
 using rgr.Models;
 using rgr.Services;
 using rgr.ViewModels;

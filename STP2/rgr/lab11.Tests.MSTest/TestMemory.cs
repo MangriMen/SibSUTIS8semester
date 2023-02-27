@@ -7,7 +7,7 @@ public class TestMemory
     public void TestConstructor()
     {
         var memory = new Memory<int>();
-        
+
         var expected = 0;
         var actual = memory.Number;
 
@@ -47,7 +47,7 @@ public class TestMemory
     {
         var memory = new Memory<int>();
         memory.Store(2);
-        
+
         var expected = 2;
         var actual = memory.Read();
 
@@ -86,7 +86,7 @@ public class TestMemory
         var memory = new Memory<int>();
         memory.Store(2);
         memory.Clear();
-        
+
         var expected = 0;
         var actual = memory.Number;
 

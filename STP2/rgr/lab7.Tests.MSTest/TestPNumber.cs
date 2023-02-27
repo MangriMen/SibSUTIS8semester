@@ -3,7 +3,6 @@ namespace lab7.Tests.MSTest;
 [TestClass]
 public class TestPNumber
 {
-
     [TestMethod]
     public void TestPNumberConstructor()
     {

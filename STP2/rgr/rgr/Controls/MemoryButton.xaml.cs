@@ -1,6 +1,6 @@
-﻿using Microsoft.UI.Xaml;
+﻿using lab11;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using lab11;
 
 namespace rgr.Controls;
 

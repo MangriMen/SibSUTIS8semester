@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace lab8.Tests.MSTest;
 
 [TestClass]
@@ -59,7 +57,6 @@ public class TestPNumberEditor
 
         Assert.IsTrue(ExpectedValue == AssertValue);
     }
-
 
     [TestMethod]
     public void TestPNumberToggleNegative()

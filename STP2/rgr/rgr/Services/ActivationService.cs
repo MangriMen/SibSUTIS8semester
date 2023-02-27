@@ -14,7 +14,11 @@ public class ActivationService : IActivationService
     private readonly IThemeSelectorService _themeSelectorService;
     private UIElement? _shell = null;
 
-    public ActivationService(ActivationHandler<LaunchActivatedEventArgs> defaultHandler, IEnumerable<IActivationHandler> activationHandlers, IThemeSelectorService themeSelectorService)
+    public ActivationService(
+        ActivationHandler<LaunchActivatedEventArgs> defaultHandler,
+        IEnumerable<IActivationHandler> activationHandlers,
+        IThemeSelectorService themeSelectorService
+    )
     {
         _defaultHandler = defaultHandler;
         _activationHandlers = activationHandlers;
@@ -45,7 +49,9 @@ public class ActivationService : IActivationService
 
     private async Task HandleActivationAsync(object activationArgs)
     {
-        var activationHandler = _activationHandlers.FirstOrDefault(h => h.CanHandle(activationArgs));
+        var activationHandler = _activationHandlers.FirstOrDefault(
+            h => h.CanHandle(activationArgs)
+        );
 
         if (activationHandler != null)
         {

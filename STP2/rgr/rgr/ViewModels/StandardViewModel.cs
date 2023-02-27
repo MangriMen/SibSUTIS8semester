@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using lab5;
+using lab9;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using rgr.Controls;
 using rgr.Helpers;
 using rgr.Models;
-using lab5;
-using lab9;
 
 namespace rgr.ViewModels;
 
