@@ -22,7 +22,7 @@ public class TestMemory
     public void TestGetNumber()
     {
         var memory = new Memory<int>();
-        memory.Storage(2);
+        memory.Store(2);
 
         var expected = 2;
         var actual = memory.Number;
@@ -34,7 +34,7 @@ public class TestMemory
     public void TestStore()
     {
         var memory = new Memory<int>();
-        memory.Storage(2);
+        memory.Store(2);
 
         var expected = 2;
         var actual = memory.Number;
@@ -46,7 +46,7 @@ public class TestMemory
     public void TestRead()
     {
         var memory = new Memory<int>();
-        memory.Storage(2);
+        memory.Store(2);
         
         var expected = 2;
         var actual = memory.Read();
@@ -58,7 +58,7 @@ public class TestMemory
     public void TestAdd()
     {
         var memory = new Memory<int>();
-        memory.Storage(2);
+        memory.Store(2);
         memory.Add(2);
 
         var expected = 4;
@@ -71,7 +71,7 @@ public class TestMemory
     public void TestSubtract()
     {
         var memory = new Memory<int>();
-        memory.Storage(2);
+        memory.Store(2);
         memory.Subtract(2);
 
         var expected = 0;
@@ -84,7 +84,7 @@ public class TestMemory
     public void TestClear()
     {
         var memory = new Memory<int>();
-        memory.Storage(2);
+        memory.Store(2);
         memory.Clear();
         
         var expected = 0;
@@ -97,7 +97,7 @@ public class TestMemory
     public void TestGetStateOn()
     {
         var memory = new Memory<int>();
-        memory.Storage(2);
+        memory.Store(2);
 
         var expected = true;
         var actual = memory.IsOn;
@@ -109,7 +109,7 @@ public class TestMemory
     public void TestGetStateOff()
     {
         var memory = new Memory<int>();
-        memory.Storage(2);
+        memory.Store(2);
         memory.Clear();
 
         var expected = false;

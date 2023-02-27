@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using rgr.Controls;
 using rgr.Helpers;
 using rgr.Models;
-using lab10;
 using lab6;
+using lab10;
 
 namespace rgr.ViewModels;
 
@@ -15,9 +15,7 @@ public class ComplexViewModel : ObservableRecipient
 
     public TextBlock? _mainInputObject;
 
-    public ComplexViewModel()
-    {
-    }
+    public ComplexViewModel() { }
 
     public void CalculatorButtonClick(object sender, RoutedEventArgs e)
     {
@@ -34,7 +32,7 @@ public class ComplexViewModel : ObservableRecipient
     public void MemoryButtonClick(object sender, RoutedEventArgs e)
     {
         var button = (MemoryButton)sender;
-        if (button == null || button.Action == MemoryButton.Actions.None)
+        if (button == null)
         {
             return;
         }

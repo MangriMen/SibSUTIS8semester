@@ -1,10 +1,24 @@
 ﻿namespace lab11;
-public class Memory<T> where T : new()
-{
-    private T FNumber = new();
-    public T Number => FNumber;
 
-    private bool _isOn;
+public static class Memory
+{
+    public enum Actions
+    {
+        Store,
+        Read,
+        Add,
+        Subtract,
+        Clear,
+    }
+}
+
+public class Memory<T>
+    where T : new()
+{
+    private T _number = new();
+    private bool _isOn = true;
+
+    public T Number => _number;
     public bool IsOn => _isOn;
 
     public Memory()
@@ -12,33 +26,33 @@ public class Memory<T> where T : new()
         Clear();
     }
 
-    public void Storage(T obj)
+    public void Store(T obj)
     {
         _isOn = true;
-        FNumber = obj;
+        _number = obj;
     }
 
     public T Read()
     {
         _isOn = true;
-        return FNumber;
+        return _number;
     }
 
     public void Add(T obj)
     {
         _isOn = true;
-        FNumber = (dynamic?)FNumber + (dynamic?)obj;
+        _number = (dynamic?)_number + (dynamic?)obj;
     }
 
     public void Subtract(T obj)
     {
         _isOn = true;
-        FNumber = (dynamic?)FNumber - (dynamic?)obj;
+        _number = (dynamic?)_number - (dynamic?)obj;
     }
 
     public void Clear()
     {
         _isOn = false;
-        FNumber = new();
+        _number = new();
     }
 }

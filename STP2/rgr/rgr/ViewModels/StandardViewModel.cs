@@ -1,11 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using lab5;
-using lab9;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using rgr.Controls;
 using rgr.Helpers;
 using rgr.Models;
+using lab5;
+using lab9;
 
 namespace rgr.ViewModels;
 
@@ -15,9 +15,7 @@ public class StandardViewModel : ObservableRecipient
 
     public TextBlock? _mainInputObject;
 
-    public StandardViewModel()
-    {
-    }
+    public StandardViewModel() { }
 
     public void CalculatorButtonClick(object sender, RoutedEventArgs e)
     {
@@ -34,7 +32,7 @@ public class StandardViewModel : ObservableRecipient
     public void MemoryButtonClick(object sender, RoutedEventArgs e)
     {
         var button = (MemoryButton)sender;
-        if (button == null || button.Action == MemoryButton.Actions.None)
+        if (button == null)
         {
             return;
         }
@@ -43,7 +41,7 @@ public class StandardViewModel : ObservableRecipient
         XamlHelper.CalculateFontSize(_mainInputObject);
     }
 
-    public void MainInput_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    public void MainInput_Loaded(object sender, RoutedEventArgs e)
     {
         _mainInputObject = (TextBlock)sender;
     }

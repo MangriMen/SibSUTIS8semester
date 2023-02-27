@@ -6,10 +6,7 @@ namespace rgr.Views;
 
 public sealed partial class ComplexPage : Page
 {
-    public ComplexViewModel ViewModel
-    {
-        get;
-    }
+    public ComplexViewModel ViewModel { get; }
 
     public ComplexPage()
     {

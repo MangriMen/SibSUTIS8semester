@@ -82,12 +82,16 @@ namespace lab7
 
         public static bool operator ==(PNumber lhs, PNumber rhs)
         {
-            return lhs._number == rhs._number && lhs._base == rhs._base && lhs._accuracy == rhs._accuracy;
+            return lhs._number == rhs._number
+                && lhs._base == rhs._base
+                && lhs._accuracy == rhs._accuracy;
         }
 
         public static bool operator !=(PNumber lhs, PNumber rhs)
         {
-            return lhs._number != rhs._number || lhs._base != rhs._base || lhs._accuracy != rhs._accuracy;
+            return lhs._number != rhs._number
+                || lhs._base != rhs._base
+                || lhs._accuracy != rhs._accuracy;
         }
 
         public static PNumber Revers(PNumber lhs)
@@ -131,6 +135,7 @@ namespace lab7
         {
             return _accuracy;
         }
+
         public string GetAccuracyString()
         {
             return _accuracy.ToString();
@@ -173,7 +178,9 @@ namespace lab7
         public static string DecimalToArbitrarySystem(double decimalNumber, int radix)
         {
             if (radix < 2 || radix > Digits.Length)
-                throw new ArgumentException("The radix must be >= 2 and <= " + Digits.Length.ToString());
+                throw new ArgumentException(
+                    "The radix must be >= 2 and <= " + Digits.Length.ToString()
+                );
 
             if (decimalNumber == 0)
                 return "0";
@@ -183,7 +190,6 @@ namespace lab7
 
             var integerStr = DecimalToArbitrarySystemInt(integerPart, radix);
             var floatStr = DecimalToArbitrarySystemDouble(fractionalPart, radix);
-
 
             var delimiter = NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
 
@@ -254,13 +260,6 @@ namespace lab7
                 currentNumber -= num;
             } while (currentNumber > precision && index < PrecisionBits);
 
-            //while (currentNumber != 0)
-            //{
-            //    int remainder = (int)(currentNumber % radix);
-            //    charArray[index--] = Digits[remainder];
-            //    currentNumber = currentNumber / radix;
-            //}
-
             var result = new string(charArray, 0, index);
             return result;
         }
@@ -268,8 +267,9 @@ namespace lab7
         public static double ArbitraryToDecimalSystem(string number, int radix)
         {
             if (radix < 2 || radix > Digits.Length)
-                throw new ArgumentException("The radix must be >= 2 and <= " +
-                    Digits.Length.ToString());
+                throw new ArgumentException(
+                    "The radix must be >= 2 and <= " + Digits.Length.ToString()
+                );
 
             if (string.IsNullOrEmpty(number))
                 return 0;
@@ -319,7 +319,8 @@ namespace lab7
                 if (digit == -1)
                     throw new ArgumentException(
                         "Invalid character in the arbitrary numeral system number",
-                        "number");
+                        "number"
+                    );
 
                 result += digit * multiplier;
                 multiplier *= radix;
@@ -351,7 +352,10 @@ namespace lab7
 
                 int digit = Digits.IndexOf(c);
                 if (digit == -1)
-                    throw new ArgumentException("Invalid character in the arbitrary numeral system number", nameof(number));
+                    throw new ArgumentException(
+                        "Invalid character in the arbitrary numeral system number",
+                        nameof(number)
+                    );
 
                 result += digit * multiplier;
                 multiplier /= radixDouble;

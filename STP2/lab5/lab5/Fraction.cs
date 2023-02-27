@@ -78,7 +78,9 @@ public class Fraction
             var trimmedFractional = fractionalPart.TrimEnd('0');
 
             _denominator = BigInteger.Parse($"1{new string('0', trimmedFractional.Length)}");
-            _nominator = BigInteger.Parse(integerPart) * _denominator + (BigInteger)double.Parse(fractionalPart);
+            _nominator =
+                BigInteger.Parse(integerPart) * _denominator
+                + (BigInteger)double.Parse(fractionalPart);
 
             Reduce();
             return;

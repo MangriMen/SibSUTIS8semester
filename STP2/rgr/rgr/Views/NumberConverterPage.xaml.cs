@@ -6,10 +6,7 @@ namespace rgr.Views;
 
 public sealed partial class NumberConverterPage : Page
 {
-    public NumberConverterViewModel ViewModel
-    {
-        get;
-    }
+    public NumberConverterViewModel ViewModel { get; }
 
     public NumberConverterPage()
     {

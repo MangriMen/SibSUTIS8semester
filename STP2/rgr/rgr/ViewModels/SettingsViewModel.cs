@@ -31,10 +31,7 @@ public class SettingsViewModel : ObservableRecipient
         set => SetProperty(ref _versionDescription, value);
     }
 
-    public ICommand SwitchThemeCommand
-    {
-        get;
-    }
+    public ICommand SwitchThemeCommand { get; }
 
     public SettingsViewModel(IThemeSelectorService themeSelectorService)
     {
@@ -50,7 +47,8 @@ public class SettingsViewModel : ObservableRecipient
                     ElementTheme = param;
                     await _themeSelectorService.SetThemeAsync(param);
                 }
-            });
+            }
+        );
     }
 
     private static string GetVersionDescription()
@@ -61,7 +59,12 @@ public class SettingsViewModel : ObservableRecipient
         {
             var packageVersion = Package.Current.Id.Version;
 
-            version = new(packageVersion.Major, packageVersion.Minor, packageVersion.Build, packageVersion.Revision);
+            version = new(
+                packageVersion.Major,
+                packageVersion.Minor,
+                packageVersion.Build,
+                packageVersion.Revision
+            );
         }
         else
         {

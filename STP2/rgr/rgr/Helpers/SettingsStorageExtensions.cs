@@ -18,7 +18,10 @@ public static class SettingsStorageExtensions
 
     public static async Task SaveAsync<T>(this StorageFolder folder, string name, T content)
     {
-        var file = await folder.CreateFileAsync(GetFileName(name), CreationCollisionOption.ReplaceExisting);
+        var file = await folder.CreateFileAsync(
+            GetFileName(name),
+            CreationCollisionOption.ReplaceExisting
+        );
         var fileContent = await Json.StringifyAsync(content);
 
         await FileIO.WriteTextAsync(file, fileContent);
@@ -37,7 +40,11 @@ public static class SettingsStorageExtensions
         return await Json.ToObjectAsync<T>(fileContent);
     }
 
-    public static async Task SaveAsync<T>(this ApplicationDataContainer settings, string key, T value)
+    public static async Task SaveAsync<T>(
+        this ApplicationDataContainer settings,
+        string key,
+        T value
+    )
     {
         settings.SaveString(key, await Json.StringifyAsync(value));
     }
@@ -59,7 +66,12 @@ public static class SettingsStorageExtensions
         return default;
     }
 
-    public static async Task<StorageFile> SaveFileAsync(this StorageFolder folder, byte[] content, string fileName, CreationCollisionOption options = CreationCollisionOption.ReplaceExisting)
+    public static async Task<StorageFile> SaveFileAsync(
+        this StorageFolder folder,
+        byte[] content,
+        string fileName,
+        CreationCollisionOption options = CreationCollisionOption.ReplaceExisting
+    )
     {
         if (content == null)
         {
@@ -68,7 +80,10 @@ public static class SettingsStorageExtensions
 
         if (string.IsNullOrEmpty(fileName))
         {
-            throw new ArgumentException("File name is null or empty. Specify a valid file name", nameof(fileName));
+            throw new ArgumentException(
+                "File name is null or empty. Specify a valid file name",
+                nameof(fileName)
+            );
         }
 
         var storageFile = await folder.CreateFileAsync(fileName, options);

@@ -7,7 +7,8 @@ public class ComplexEditor
     private bool _isError = false;
     public bool IsError
     {
-        get => _isError; set
+        get => _isError;
+        set
         {
             _isError = value;
             _currentNumber = "Error";
@@ -20,7 +21,9 @@ public class ComplexEditor
         get => _currentNumber;
         set
         {
-            bool isValid = Regex.Match(value, @"-?[0-9]+\+i\*([0-9]+|\(.?-?[0-9]+(\.?[0-9]+)?\))").Success;
+            bool isValid = Regex
+                .Match(value, @"-?[0-9]+\+i\*([0-9]+|\(.?-?[0-9]+(\.?[0-9]+)?\))")
+                .Success;
             if (!isValid)
             {
                 throw new Exception("Invalid number");

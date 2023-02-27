@@ -1,42 +1,52 @@
-﻿using System.Reflection.Emit;
-using Microsoft.UI.Xaml;
+﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using lab11;
 
 namespace rgr.Controls;
-public sealed partial class MemoryButton: UserControl
+
+public sealed partial class MemoryButton : UserControl
 {
-    public enum Actions
-    {
-        None,
-        Clear,
-        Read,
-        Add,
-        Subtract,
-        Store,
-    }
-
-    public static readonly Dictionary<Actions, string> ActionSymbols = new()
-    {
-        { Actions.None, "" },
-        { Actions.Clear, "MC"},
-        { Actions.Read, "MR"},
-        { Actions.Add, "M+"},
-        { Actions.Subtract, "M-"},
-        { Actions.Store, "MS" },
-    };
-
-    private Actions _action = Actions.None;
-    public Actions Action
-    {
-        get => _action;
-        set
+    private static readonly Dictionary<Memory.Actions, string> ActionsSymbols =
+        new()
         {
-            _action = value;
-            Content = ActionSymbols[_action];
-        }
+            { Memory.Actions.Clear, "MC" },
+            { Memory.Actions.Read, "MR" },
+            { Memory.Actions.Add, "M+" },
+            { Memory.Actions.Subtract, "M-" },
+            { Memory.Actions.Store, "MS" },
+        };
+
+    public Memory.Actions Action
+    {
+        get => (Memory.Actions)GetValue(ActionProperty);
+        set => SetValue(ActionProperty, value);
     }
 
-    public event RoutedEventHandler? Click;
+    private readonly DependencyProperty ActionProperty = DependencyProperty.Register(
+        nameof(Action),
+        typeof(Memory.Actions),
+        typeof(MemoryButton),
+        new PropertyMetadata(
+            default(Memory.Actions),
+            new PropertyChangedCallback(
+                (DependencyObject d, DependencyPropertyChangedEventArgs e) =>
+                {
+                    var sender = d as MemoryButton;
+                    if (sender == null)
+                    {
+                        return;
+                    }
+
+                    if (e.NewValue == null)
+                    {
+                        return;
+                    }
+
+                    sender.Content = ActionsSymbols[(Memory.Actions)e.NewValue];
+                }
+            )
+        )
+    );
 
     public new string Content
     {
@@ -45,10 +55,13 @@ public sealed partial class MemoryButton: UserControl
     }
 
     private readonly new DependencyProperty ContentProperty = DependencyProperty.Register(
-    nameof(Label),
-    typeof(string),
-    typeof(CalculatorButton),
-    new PropertyMetadata(null));
+        nameof(Content),
+        typeof(string),
+        typeof(MemoryButton),
+        new PropertyMetadata(default(string))
+    );
+
+    public event RoutedEventHandler? Click;
 
     public MemoryButton()
     {

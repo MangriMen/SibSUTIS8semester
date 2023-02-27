@@ -7,7 +7,8 @@ public class FractionEditor
     private bool _isError = false;
     public bool IsError
     {
-        get => _isError; set
+        get => _isError;
+        set
         {
             _isError = value;
             _currentNumber = "Error";

@@ -39,12 +39,12 @@
                     VerticalAlignment="{StaticResource TextBlockAlignment}"
                     FontSize="{StaticResource TextBlockFontSize}"
                     Loaded="{x:Bind ViewModel.NumberInputLoaded}"
-                    Text="{x:Bind ViewModel.NumberInput, Mode=OneWay}" />
+                    Text="{x:Bind ViewModel.Converter.NumberInput, Mode=OneWay}" />
 
                 <ComboBox
                     Grid.Row="1"
-                    ItemsSource="{x:Bind ViewModel.Notations}"
-                    SelectedIndex="{x:Bind ViewModel.SourceNotationIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    ItemsSource="{x:Bind ViewModel.Converter.Notations}"
+                    SelectedIndex="{x:Bind ViewModel.Converter.SourceNotationIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <TextBlock
                     Grid.Row="2"
@@ -53,12 +53,12 @@
                     VerticalAlignment="{StaticResource TextBlockAlignment}"
                     FontSize="{StaticResource TextBlockFontSize}"
                     Loaded="{x:Bind ViewModel.DestinationTextLoaded}"
-                    Text="{x:Bind ViewModel.DestinationText, Mode=OneWay}" />
+                    Text="{x:Bind ViewModel.Converter.DestinationText, Mode=OneWay}" />
 
                 <ComboBox
                     Grid.Row="3"
-                    ItemsSource="{x:Bind ViewModel.Notations}"
-                    SelectedIndex="{x:Bind ViewModel.DestinationNotationIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    ItemsSource="{x:Bind ViewModel.Converter.Notations}"
+                    SelectedIndex="{x:Bind ViewModel.Converter.DestinationNotationIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
 
             <Grid
@@ -99,37 +99,37 @@
                         Grid.Row="0"
                         Grid.Column="0"
                         Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                        Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                         Type="Ten" />
                     <controls:CalculatorButton
                         Grid.Row="1"
                         Grid.Column="0"
                         Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                        Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                         Type="Eleven" />
                     <controls:CalculatorButton
                         Grid.Row="2"
                         Grid.Column="0"
                         Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                        Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                         Type="Twelve" />
                     <controls:CalculatorButton
                         Grid.Row="3"
                         Grid.Column="0"
                         Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                        Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                         Type="Thirteen" />
                     <controls:CalculatorButton
                         Grid.Row="4"
                         Grid.Column="0"
                         Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                        Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                         Type="Fourteen" />
                     <controls:CalculatorButton
                         Grid.Row="5"
                         Grid.Column="0"
                         Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                        Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                         Type="Fifteen" />
                 </Grid>
 
@@ -149,62 +149,62 @@
                     Grid.Row="1"
                     Grid.Column="1"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                     Type="Seven" />
                 <controls:CalculatorButton
                     Grid.Row="1"
                     Grid.Column="2"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                     Type="Eight" />
                 <controls:CalculatorButton
                     Grid.Row="1"
                     Grid.Column="3"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                     Type="Nine" />
                 <controls:CalculatorButton
                     Grid.Row="2"
                     Grid.Column="1"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                     Type="Four" />
                 <controls:CalculatorButton
                     Grid.Row="2"
                     Grid.Column="2"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                     Type="Five" />
                 <controls:CalculatorButton
                     Grid.Row="2"
                     Grid.Column="3"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                     Type="Six" />
                 <controls:CalculatorButton
                     Grid.Row="3"
                     Grid.Column="1"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                     Type="One" />
                 <controls:CalculatorButton
                     Grid.Row="3"
                     Grid.Column="2"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                     Type="Two" />
                 <controls:CalculatorButton
                     Grid.Row="3"
                     Grid.Column="3"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                     Type="Three" />
                 <controls:CalculatorButton
                     Grid.Row="4"
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Notation="{x:Bind ViewModel.Converter.SourceNotation, Mode=OneWay}"
                     Type="Zero" />
                 <controls:CalculatorButton
                     Grid.Row="4"

@@ -1,9 +1,11 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using lab5;
+using static lab12.Processor;
 
 namespace lab12;
-public class Processor<T> where T : new()
+
+public static class Processor
 {
     public enum Operation
     {
@@ -22,7 +24,11 @@ public class Processor<T> where T : new()
         Sqr,
         Sqrt
     }
+}
 
+public class Processor<T>
+    where T : new()
+{
     private dynamic? _leftOperand;
     private dynamic? _rightOperand;
 
@@ -51,7 +57,8 @@ public class Processor<T> where T : new()
     public Operation LastOperation
     {
         get => _operation;
-        set {
+        set
+        {
             _operation = value;
             _isOperationDone = false;
         }
@@ -99,51 +106,42 @@ public class Processor<T> where T : new()
 
     public void PerformFunction(Function function)
     {
-        dynamic? result;
-        if (IsOperationDone)
+        dynamic? result = IsOperationDone switch
         {
-            result = LeftOperand;
-        }
-        else
-        {
-            result = RightOperand;
-        }
+            true => LeftOperand,
+            false => RightOperand
+        };
 
         if ((T?)result == null)
         {
             return;
         }
 
-        var sqrtArguments = new object[] { result, 2 };
-        if (typeof(T) == typeof(Complex))
-        {
-            sqrtArguments = (object[])sqrtArguments.Append(0);
-        }
+        var sqrParameters = (object?[])
+            new object?[] { result }.Append(GetDefaultParametersForMethod(_methodPow));
 
-        switch (function)
-        {
-            case Function.Module:
-                result /= _oneHundred;
-                break;
-            case Function.Reciprocal:
-                result = Fraction.Reverse(result);
-                break;
-            case Function.Sqr:
-                result = (T?)(_methodPow?.Invoke(null, new object?[] { result, 2 })) ?? result;
-                break;
-            case Function.Sqrt:
-                result = (T?)(_methodSqrt?.Invoke(null, sqrtArguments)) ?? result;
-                break;
-        }
+        var sqrtParameters = (object?[])
+            new object?[] { result }.Append(GetDefaultParametersForMethod(_methodSqrt));
 
-        if (IsOperationDone)
+        result = function switch
         {
-            LeftOperand = result;
-        }
-        else
+            Function.Module => result / _oneHundred,
+            Function.Reciprocal => Fraction.Reverse(result),
+            Function.Sqr => _methodPow?.Invoke(null, sqrParameters),
+            Function.Sqrt => _methodSqrt?.Invoke(null, sqrtParameters),
+            _ => throw new ArgumentException("Invalid enum value for function", nameof(function))
+        };
+
+        (LeftOperand, RightOperand) = IsOperationDone switch
         {
-            RightOperand = result;
-        }
+            true => (result, RightOperand),
+            false => (LeftOperand, result)
+        };
     }
 
+    private static object?[] GetDefaultParametersForMethod(MethodInfo? method)
+    {
+        return method?.GetParameters().Where(param => param.DefaultValue is not DBNull).ToArray()
+            ?? Array.Empty<object>();
+    }
 }

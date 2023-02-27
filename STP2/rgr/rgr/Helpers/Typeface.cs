@@ -1,5 +1,3 @@
 ﻿namespace rgr.Helpers;
 
-internal class Typeface
-{
-}
+internal class Typeface { }

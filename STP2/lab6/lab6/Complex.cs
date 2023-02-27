@@ -23,7 +23,7 @@ public class Complex
         var splitter = str.Split('+');
         var a = double.Parse(splitter[0]);
         var b = 0.0;
-        
+
         if (splitter.Length > 1)
         {
             b = double.Parse(Regex.Replace(splitter[1][2..], @"\(|\)", ""));
@@ -32,7 +32,8 @@ public class Complex
         Init(a, b);
     }
 
-    private void Init(double a = 0, double b = 0) {
+    private void Init(double a = 0, double b = 0)
+    {
         _real = a;
         _imag = b;
     }
@@ -49,8 +50,13 @@ public class Complex
 
     static public Complex operator *(Complex lhs, Complex rhs)
     {
-        return new Complex(rhs._real * lhs._real - rhs._imag * lhs._imag, rhs._real * lhs._imag + lhs._real * rhs._imag); ;
+        return new Complex(
+            rhs._real * lhs._real - rhs._imag * lhs._imag,
+            rhs._real * lhs._imag + lhs._real * rhs._imag
+        );
+        ;
     }
+
     static public Complex operator /(Complex lhs, Complex rhs)
     {
         double denomimator = rhs._real * rhs._real + rhs._imag * rhs._imag;
@@ -116,17 +122,21 @@ public class Complex
         }
     }
 
-    public static Complex Root(Complex complex, int n, int i)
+    public static Complex Root(Complex complex, int n = 2, int i = 0)
     {
         var roots = new List<Complex>();
         double phi = Math.Pow(Abs(complex), 1 / (double)n);
 
-        Debug.WriteLine(Abs(complex));
-
         for (int k = 0; k < n; k++)
         {
             double coeff = 2 * Math.PI * k;
-            roots.Add(new Complex(phi, 0) * new Complex(Math.Cos((AngleRadians(complex) + coeff) / n), Math.Sin((AngleRadians(complex) + coeff) / n)));
+            roots.Add(
+                new Complex(phi, 0)
+                    * new Complex(
+                        Math.Cos((AngleRadians(complex) + coeff) / n),
+                        Math.Sin((AngleRadians(complex) + coeff) / n)
+                    )
+            );
         }
 
         return roots[i];

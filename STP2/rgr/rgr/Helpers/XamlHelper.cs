@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
 
 namespace rgr.Helpers;
+
 public class XamlHelper
 {
     public static void CalculateFontSize(TextBlock? textBlock)

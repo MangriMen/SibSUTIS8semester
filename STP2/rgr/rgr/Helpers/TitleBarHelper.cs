@@ -38,22 +38,29 @@ internal class TitleBarHelper
 
                 Application.Current.Resources["WindowCaptionForegroundDisabled"] = theme switch
                 {
-                    ElementTheme.Dark => new SolidColorBrush(Color.FromArgb(0x66, 0xFF, 0xFF, 0xFF)),
-                    ElementTheme.Light => new SolidColorBrush(Color.FromArgb(0x66, 0x00, 0x00, 0x00)),
+                    ElementTheme.Dark
+                        => new SolidColorBrush(Color.FromArgb(0x66, 0xFF, 0xFF, 0xFF)),
+                    ElementTheme.Light
+                        => new SolidColorBrush(Color.FromArgb(0x66, 0x00, 0x00, 0x00)),
                     _ => new SolidColorBrush(Colors.Transparent)
                 };
 
-                Application.Current.Resources["WindowCaptionButtonBackgroundPointerOver"] = theme switch
-                {
-                    ElementTheme.Dark => new SolidColorBrush(Color.FromArgb(0x33, 0xFF, 0xFF, 0xFF)),
-                    ElementTheme.Light => new SolidColorBrush(Color.FromArgb(0x33, 0x00, 0x00, 0x00)),
-                    _ => new SolidColorBrush(Colors.Transparent)
-                };
+                Application.Current.Resources["WindowCaptionButtonBackgroundPointerOver"] =
+                    theme switch
+                    {
+                        ElementTheme.Dark
+                            => new SolidColorBrush(Color.FromArgb(0x33, 0xFF, 0xFF, 0xFF)),
+                        ElementTheme.Light
+                            => new SolidColorBrush(Color.FromArgb(0x33, 0x00, 0x00, 0x00)),
+                        _ => new SolidColorBrush(Colors.Transparent)
+                    };
 
                 Application.Current.Resources["WindowCaptionButtonBackgroundPressed"] = theme switch
                 {
-                    ElementTheme.Dark => new SolidColorBrush(Color.FromArgb(0x66, 0xFF, 0xFF, 0xFF)),
-                    ElementTheme.Light => new SolidColorBrush(Color.FromArgb(0x66, 0x00, 0x00, 0x00)),
+                    ElementTheme.Dark
+                        => new SolidColorBrush(Color.FromArgb(0x66, 0xFF, 0xFF, 0xFF)),
+                    ElementTheme.Light
+                        => new SolidColorBrush(Color.FromArgb(0x66, 0x00, 0x00, 0x00)),
                     _ => new SolidColorBrush(Colors.Transparent)
                 };
 
@@ -72,8 +79,12 @@ internal class TitleBarHelper
                 };
             }
 
-            Application.Current.Resources["WindowCaptionBackground"] = new SolidColorBrush(Colors.Transparent);
-            Application.Current.Resources["WindowCaptionBackgroundDisabled"] = new SolidColorBrush(Colors.Transparent);
+            Application.Current.Resources["WindowCaptionBackground"] = new SolidColorBrush(
+                Colors.Transparent
+            );
+            Application.Current.Resources["WindowCaptionBackgroundDisabled"] = new SolidColorBrush(
+                Colors.Transparent
+            );
 
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
             if (hwnd == GetActiveWindow())
