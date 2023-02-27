@@ -22,12 +22,12 @@ public class ComplexViewModel : ObservableRecipient
     public void CalculatorButtonClick(object sender, RoutedEventArgs e)
     {
         var button = (CalculatorButton)sender;
-        if (button == null || button.Action == CalculatorButton.Actions.None)
+        if (button == null || button.Type == CalculatorButton.Types.None)
         {
             return;
         }
 
-        Calculator.ProcessCalculatorButton(button.Action, button.Content);
+        Calculator.ProcessCalculatorButton(button.Type);
         XamlHelper.CalculateFontSize(_mainInputObject);
     }
 
@@ -39,7 +39,7 @@ public class ComplexViewModel : ObservableRecipient
             return;
         }
 
-        Calculator.ProcessMemoryButton(button.Action, button.Content);
+        Calculator.ProcessMemoryButton(button.Action);
         XamlHelper.CalculateFontSize(_mainInputObject);
     }
 

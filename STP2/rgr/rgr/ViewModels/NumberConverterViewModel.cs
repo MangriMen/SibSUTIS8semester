@@ -80,54 +80,54 @@ public class NumberConverterViewModel : ObservableRecipient
         XamlHelper.CalculateFontSize(_destinationTextObject);
     }
 
-    public void ProcessCalculatorButton(CalculatorButton.Actions action)
+    public void ProcessCalculatorButton(CalculatorButton.Types type)
     {
-        switch (action)
+        switch (type)
         {
-            case CalculatorButton.Actions.Zero:
-            case CalculatorButton.Actions.One:
-            case CalculatorButton.Actions.Two:
-            case CalculatorButton.Actions.Three:
-            case CalculatorButton.Actions.Four:
-            case CalculatorButton.Actions.Five:
-            case CalculatorButton.Actions.Six:
-            case CalculatorButton.Actions.Seven:
-            case CalculatorButton.Actions.Eight:
-            case CalculatorButton.Actions.Nine:
-            case CalculatorButton.Actions.Ten:
-            case CalculatorButton.Actions.Eleven:
-            case CalculatorButton.Actions.Twelve:
-            case CalculatorButton.Actions.Thirteen:
-            case CalculatorButton.Actions.Fourteen:
-            case CalculatorButton.Actions.Fifteen:
+            case CalculatorButton.Types.Zero:
+            case CalculatorButton.Types.One:
+            case CalculatorButton.Types.Two:
+            case CalculatorButton.Types.Three:
+            case CalculatorButton.Types.Four:
+            case CalculatorButton.Types.Five:
+            case CalculatorButton.Types.Six:
+            case CalculatorButton.Types.Seven:
+            case CalculatorButton.Types.Eight:
+            case CalculatorButton.Types.Nine:
+            case CalculatorButton.Types.Ten:
+            case CalculatorButton.Types.Eleven:
+            case CalculatorButton.Types.Twelve:
+            case CalculatorButton.Types.Thirteen:
+            case CalculatorButton.Types.Fourteen:
+            case CalculatorButton.Types.Fifteen:
                 if (Editor.CurrentNumber.Length >= MAX_NUMBER_LENGTH)
                 {
                     return;
                 }
 
-                Editor.AppendNumber(CalculatorButton.ActionSymbols[action]);
+                Editor.AppendNumber(CalculatorButton.ActionSymbols[type]);
                 OnPropertyChanged(nameof(NumberInput));
                 ConvertAndShowNumber();
                 break;
-            case CalculatorButton.Actions.Delimiter:
+            case CalculatorButton.Types.Delimiter:
                 if (Editor.CurrentNumber.Length >= MAX_NUMBER_LENGTH)
                 {
                     return;
                 }
 
-                var symbol = CalculatorButton.ActionSymbols[action];
+                var symbol = CalculatorButton.ActionSymbols[type];
                 if (!Editor.CurrentNumber.Contains(symbol))
                 {
                     Editor.CurrentNumber += symbol;
                     OnPropertyChanged(nameof(NumberInput));
                 }
                 break;
-            case CalculatorButton.Actions.Backspace:
+            case CalculatorButton.Types.Backspace:
                 Editor.PopNumber();
                 OnPropertyChanged(nameof(NumberInput));
                 ConvertAndShowNumber();
                 break;
-            case CalculatorButton.Actions.ClearEntry:
+            case CalculatorButton.Types.ClearEntry:
                 ClearAll();
                 break;
         }
@@ -136,12 +136,12 @@ public class NumberConverterViewModel : ObservableRecipient
     public void CalculatorButtonClick(object sender, RoutedEventArgs e)
     {
         var button = (CalculatorButton)sender;
-        if (button == null || button.Action == CalculatorButton.Actions.None)
+        if (button == null || button.Type == CalculatorButton.Types.None)
         {
             return;
         }
 
-        ProcessCalculatorButton(button.Action);
+        ProcessCalculatorButton(button.Type);
     }
 
     public void NumberInputLoaded(object sender, RoutedEventArgs e)

@@ -163,6 +163,11 @@ public class Fraction
         return result;
     }
 
+    public static Fraction Root(Fraction a, double n = 2)
+    {
+        return Pow(a, 1 / n);
+    }
+
     public static Fraction Reverse(Fraction a)
     {
         return new(a._denominator, a._nominator);
@@ -181,7 +186,7 @@ public class Fraction
 
     public static bool operator !=(Fraction a, Fraction b)
     {
-        return a._nominator != b._nominator && a._denominator != b._denominator;
+        return a._nominator != b._nominator || a._denominator != b._denominator;
     }
 
     public BigInteger GetNominator()
@@ -206,7 +211,7 @@ public class Fraction
 
     public string ToFractionString()
     {
-        return $"{GetNominatorString()}/{GetDenominatorString}";
+        return $"{GetNominatorString()}/{GetDenominatorString()}";
     }
 
     new public string ToString()

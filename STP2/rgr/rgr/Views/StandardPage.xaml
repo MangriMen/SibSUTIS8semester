@@ -99,132 +99,132 @@
                 <controls:CalculatorButton
                     Grid.Row="0"
                     Grid.Column="0"
-                    Action="Module"
+                    Type="Module"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
                     IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}" />
                 <controls:CalculatorButton
                     Grid.Row="0"
                     Grid.Column="1"
-                    Action="ClearEntry"
+                    Type="ClearEntry"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}" />
                 <controls:CalculatorButton
                     Grid.Row="0"
                     Grid.Column="2"
-                    Action="Clear"
+                    Type="Clear"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}" />
                 <controls:CalculatorButton
                     Grid.Row="0"
                     Grid.Column="3"
-                    Action="Backspace"
+                    Type="Backspace"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}" />
                 <controls:CalculatorButton
                     Grid.Row="1"
                     Grid.Column="0"
-                    Action="Reciprocal"
+                    Type="Reciprocal"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
                     IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}" />
                 <controls:CalculatorButton
                     Grid.Row="1"
                     Grid.Column="1"
-                    Action="Sqr"
+                    Type="Sqr"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
                     IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}" />
                 <controls:CalculatorButton
                     Grid.Row="1"
                     Grid.Column="2"
-                    Action="Sqrt"
+                    Type="Sqrt"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
                     IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}" />
                 <controls:CalculatorButton
                     Grid.Row="1"
                     Grid.Column="3"
-                    Action="Divide"
+                    Type="Divide"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
                     IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}" />
                 <controls:CalculatorButton
                     Grid.Row="2"
                     Grid.Column="0"
-                    Action="Seven"
+                    Type="Seven"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}" />
                 <controls:CalculatorButton
                     Grid.Row="2"
                     Grid.Column="1"
-                    Action="Eight"
+                    Type="Eight"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}" />
                 <controls:CalculatorButton
                     Grid.Row="2"
                     Grid.Column="2"
-                    Action="Nine"
+                    Type="Nine"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}" />
                 <controls:CalculatorButton
                     Grid.Row="2"
                     Grid.Column="3"
-                    Action="Multiply"
+                    Type="Multiply"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
                     IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}" />
                 <controls:CalculatorButton
                     Grid.Row="3"
                     Grid.Column="0"
-                    Action="Four"
+                    Type="Four"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}" />
                 <controls:CalculatorButton
                     Grid.Row="3"
                     Grid.Column="1"
-                    Action="Five"
+                    Type="Five"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}" />
                 <controls:CalculatorButton
                     Grid.Row="3"
                     Grid.Column="2"
-                    Action="Six"
+                    Type="Six"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}" />
                 <controls:CalculatorButton
                     Grid.Row="3"
                     Grid.Column="3"
-                    Action="Minus"
+                    Type="Minus"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
                     IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}" />
                 <controls:CalculatorButton
                     Grid.Row="4"
                     Grid.Column="0"
-                    Action="One"
+                    Type="One"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}" />
                 <controls:CalculatorButton
                     Grid.Row="4"
                     Grid.Column="1"
-                    Action="Two"
+                    Type="Two"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}" />
                 <controls:CalculatorButton
                     Grid.Row="4"
                     Grid.Column="2"
-                    Action="Three"
+                    Type="Three"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}" />
                 <controls:CalculatorButton
                     Grid.Row="4"
                     Grid.Column="3"
-                    Action="Plus"
+                    Type="Plus"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
                     IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}" />
                 <controls:CalculatorButton
                     Grid.Row="5"
                     Grid.Column="0"
-                    Action="ChangeSign"
+                    Type="ChangeSign"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
                     IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}" />
                 <controls:CalculatorButton
                     Grid.Row="5"
                     Grid.Column="1"
-                    Action="Zero"
+                    Type="Zero"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}" />
                 <controls:CalculatorButton
                     Grid.Row="5"
                     Grid.Column="2"
-                    Action="Delimiter"
+                    Type="Delimiter"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
                     IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}" />
                 <controls:CalculatorButton
                     Grid.Row="5"
                     Grid.Column="3"
-                    Action="Equal"
+                    Type="Equal"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}" />
             </Grid>
         </Grid>

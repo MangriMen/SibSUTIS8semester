@@ -1,11 +1,5 @@
-﻿using System;
-using System.Buffers.Text;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace lab7
 {
@@ -159,9 +153,9 @@ namespace lab7
             return DecimalToArbitrarySystem(_number, _base);
         }
 
-        public static string ToString(PNumber lhs)
+        new public string ToString()
         {
-            return $"{lhs._number}, {lhs._base}, {lhs._accuracy}";
+            return $"{_number}, {_base}, {_accuracy}";
         }
 
         public override int GetHashCode()

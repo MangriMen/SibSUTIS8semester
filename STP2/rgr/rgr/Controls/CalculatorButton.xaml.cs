@@ -7,7 +7,7 @@ public sealed partial class CalculatorButton : UserControl, INotifyPropertyChang
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public enum Actions
+    public enum Types
     {
         None,
         Zero,
@@ -43,50 +43,50 @@ public sealed partial class CalculatorButton : UserControl, INotifyPropertyChang
         ComplexI,
     }
 
-    public static readonly Dictionary<Actions, string> ActionSymbols = new()
+    public static readonly Dictionary<Types, string> ActionSymbols = new()
     {
-        { Actions.None, "" },
-        { Actions.Zero, "0"},
-        { Actions.One, "1"},
-        { Actions.Two, "2"},
-        { Actions.Three, "3"},
-        { Actions.Four, "4"},
-        { Actions.Five, "5"},
-        { Actions.Six, "6"},
-        { Actions.Seven, "7"},
-        { Actions.Eight, "8"},
-        { Actions.Nine, "9"},
-        { Actions.Ten, "A"},
-        { Actions.Eleven, "B"},
-        { Actions.Twelve, "C"},
-        { Actions.Thirteen, "D"},
-        { Actions.Fourteen, "E"},
-        { Actions.Fifteen, "F"},
-        { Actions.Plus, "+"},
-        { Actions.Minus, "-"},
-        { Actions.Multiply, "×"},
-        { Actions.Divide, "÷"},
-        { Actions.Equal, "="},
-        { Actions.Module, "%"},
-        { Actions.Reciprocal, "1/x"},
-        { Actions.Sqr, "x²"},
-        { Actions.Sqrt, "²√x"},
-        { Actions.ChangeSign, "+/-"},
-        { Actions.Delimiter, ","},
-        { Actions.Backspace, "⌫"},
-        { Actions.Clear, "C"},
-        { Actions.ClearEntry, "CE"},
-        { Actions.ComplexI, "i" },
+        { Types.None, "" },
+        { Types.Zero, "0"},
+        { Types.One, "1"},
+        { Types.Two, "2"},
+        { Types.Three, "3"},
+        { Types.Four, "4"},
+        { Types.Five, "5"},
+        { Types.Six, "6"},
+        { Types.Seven, "7"},
+        { Types.Eight, "8"},
+        { Types.Nine, "9"},
+        { Types.Ten, "A"},
+        { Types.Eleven, "B"},
+        { Types.Twelve, "C"},
+        { Types.Thirteen, "D"},
+        { Types.Fourteen, "E"},
+        { Types.Fifteen, "F"},
+        { Types.Plus, "+"},
+        { Types.Minus, "-"},
+        { Types.Multiply, "×"},
+        { Types.Divide, "÷"},
+        { Types.Equal, "="},
+        { Types.Module, "%"},
+        { Types.Reciprocal, "1/x"},
+        { Types.Sqr, "x²"},
+        { Types.Sqrt, "²√x"},
+        { Types.ChangeSign, "+/-"},
+        { Types.Delimiter, ","},
+        { Types.Backspace, "⌫"},
+        { Types.Clear, "C"},
+        { Types.ClearEntry, "CE"},
+        { Types.ComplexI, "i" },
     };
 
-    private Actions _action = Actions.None;
-    public Actions Action
+    private Types _type = Types.None;
+    public Types Type
     {
-        get => _action;
+        get => _type;
         set
         {
-            _action = value;
-            Content = ActionSymbols[_action];
+            _type = value;
+            Content = ActionSymbols[_type];
         }
     }
 

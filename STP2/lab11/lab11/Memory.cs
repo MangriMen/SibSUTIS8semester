@@ -1,11 +1,11 @@
 ﻿namespace lab11;
-
 public class Memory<T> where T : new()
 {
-    public T FNumber = new();
+    private T FNumber = new();
+    public T Number => FNumber;
 
-    bool _isOn;
-    public bool IsOn { get => _isOn; set => _isOn = value; }
+    private bool _isOn;
+    public bool IsOn => _isOn;
 
     public Memory()
     {
@@ -40,15 +40,5 @@ public class Memory<T> where T : new()
     {
         _isOn = false;
         FNumber = new();
-    }
-
-    public string GetState()
-    {
-        return _isOn ? "On" : "Off";
-    }
-
-    public T GetNumber()
-    {
-        return FNumber;
     }
 }

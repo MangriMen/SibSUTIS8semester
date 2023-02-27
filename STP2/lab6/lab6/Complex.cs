@@ -24,7 +24,7 @@ public class Complex
         var a = double.Parse(splitter[0]);
         var b = 0.0;
         
-        if (splitter.Length > 2)
+        if (splitter.Length > 1)
         {
             b = double.Parse(Regex.Replace(splitter[1][2..], @"\(|\)", ""));
         }
@@ -37,37 +37,38 @@ public class Complex
         _imag = b;
     }
 
-    static public Complex operator +(Complex rhs, Complex lhs)
+    static public Complex operator +(Complex lhs, Complex rhs)
     {
-        return new Complex(lhs._real + rhs._real, lhs._imag + rhs._imag);
+        return new Complex(rhs._real + lhs._real, rhs._imag + lhs._imag);
     }
 
-    static public Complex operator -(Complex rhs, Complex lhs)
+    static public Complex operator -(Complex lhs, Complex rhs)
     {
         return new Complex(lhs._real - rhs._real, lhs._imag - rhs._imag);
     }
 
-    static public Complex operator *(Complex rhs, Complex lhs)
+    static public Complex operator *(Complex lhs, Complex rhs)
     {
-        return new Complex(lhs._real * rhs._real - lhs._imag * rhs._imag, lhs._real * rhs._imag + rhs._real * lhs._imag); ;
+        return new Complex(rhs._real * lhs._real - rhs._imag * lhs._imag, rhs._real * lhs._imag + lhs._real * rhs._imag); ;
     }
-    static public Complex operator /(Complex rhs, Complex lhs)
+    static public Complex operator /(Complex lhs, Complex rhs)
     {
         double denomimator = rhs._real * rhs._real + rhs._imag * rhs._imag;
-        double nominatorLeft = lhs._real * rhs._real + lhs._imag * rhs._imag;
-        double nominatorRight = rhs._real * lhs._real - lhs._imag * rhs._imag;
 
-        return new Complex(nominatorLeft / denomimator, nominatorRight / denomimator);
+        double nominatorReal = lhs._real * rhs._real + lhs._imag * rhs._imag;
+        double nominatorImag = rhs._real * lhs._imag - lhs._real * rhs._imag;
+
+        return new Complex(nominatorReal / denomimator, nominatorImag / denomimator);
     }
 
-    static public bool operator ==(Complex lhs, Complex rhs)
+    static public bool operator ==(Complex rhs, Complex lhs)
     {
-        return lhs?._real == rhs?._real && lhs?._imag == rhs?._imag;
+        return rhs?._real == lhs?._real && rhs?._imag == lhs?._imag;
     }
 
-    static public bool operator !=(Complex lhs, Complex rhs)
+    static public bool operator !=(Complex rhs, Complex lhs)
     {
-        return lhs._real != rhs._real || lhs._imag != rhs._imag;
+        return rhs._real != lhs._real || rhs._imag != lhs._imag;
     }
 
     static public Complex Pow(Complex number, double n = 2)

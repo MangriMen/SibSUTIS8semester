@@ -98,119 +98,119 @@
                     <controls:CalculatorButton
                         Grid.Row="0"
                         Grid.Column="0"
-                        Action="Ten"
                         Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                        Type="Ten" />
                     <controls:CalculatorButton
                         Grid.Row="1"
                         Grid.Column="0"
-                        Action="Eleven"
                         Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                        Type="Eleven" />
                     <controls:CalculatorButton
                         Grid.Row="2"
                         Grid.Column="0"
-                        Action="Twelve"
                         Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                        Type="Twelve" />
                     <controls:CalculatorButton
                         Grid.Row="3"
                         Grid.Column="0"
-                        Action="Thirteen"
                         Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                        Type="Thirteen" />
                     <controls:CalculatorButton
                         Grid.Row="4"
                         Grid.Column="0"
-                        Action="Fourteen"
                         Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                        Type="Fourteen" />
                     <controls:CalculatorButton
                         Grid.Row="5"
                         Grid.Column="0"
-                        Action="Fifteen"
                         Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                        Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                        Type="Fifteen" />
                 </Grid>
 
                 <controls:CalculatorButton
                     Grid.Row="0"
                     Grid.Column="1"
                     Grid.ColumnSpan="1"
-                    Action="ClearEntry"
-                    Click="{x:Bind ViewModel.CalculatorButtonClick}" />
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="ClearEntry" />
                 <controls:CalculatorButton
                     Grid.Row="0"
                     Grid.Column="2"
                     Grid.ColumnSpan="2"
-                    Action="Backspace"
-                    Click="{x:Bind ViewModel.CalculatorButtonClick}" />
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="Backspace" />
                 <controls:CalculatorButton
                     Grid.Row="1"
                     Grid.Column="1"
-                    Action="Seven"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Type="Seven" />
                 <controls:CalculatorButton
                     Grid.Row="1"
                     Grid.Column="2"
-                    Action="Eight"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Type="Eight" />
                 <controls:CalculatorButton
                     Grid.Row="1"
                     Grid.Column="3"
-                    Action="Nine"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Type="Nine" />
                 <controls:CalculatorButton
                     Grid.Row="2"
                     Grid.Column="1"
-                    Action="Four"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Type="Four" />
                 <controls:CalculatorButton
                     Grid.Row="2"
                     Grid.Column="2"
-                    Action="Five"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Type="Five" />
                 <controls:CalculatorButton
                     Grid.Row="2"
                     Grid.Column="3"
-                    Action="Six"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Type="Six" />
                 <controls:CalculatorButton
                     Grid.Row="3"
                     Grid.Column="1"
-                    Action="One"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Type="One" />
                 <controls:CalculatorButton
                     Grid.Row="3"
                     Grid.Column="2"
-                    Action="Two"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Type="Two" />
                 <controls:CalculatorButton
                     Grid.Row="3"
                     Grid.Column="3"
-                    Action="Three"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Type="Three" />
                 <controls:CalculatorButton
                     Grid.Row="4"
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
-                    Action="Zero"
                     Click="{x:Bind ViewModel.CalculatorButtonClick}"
-                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}" />
+                    Notation="{x:Bind ViewModel.SourceNotation, Mode=OneWay}"
+                    Type="Zero" />
                 <controls:CalculatorButton
                     Grid.Row="4"
                     Grid.Column="4"
-                    Action="Delimiter"
-                    Click="{x:Bind ViewModel.CalculatorButtonClick}" />
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="Delimiter" />
             </Grid>
         </Grid>
     </Grid>
