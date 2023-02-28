@@ -1,0 +1,232 @@
+﻿<Page
+    x:Class="rgr.Views.ComplexPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:rgr.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="ContentArea">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" MaxHeight="24" />
+                <RowDefinition Height="*" MaxHeight="96" />
+                <RowDefinition Height="*" MaxHeight="64" />
+                <RowDefinition Height="*" MinHeight="252" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Text="{x:Bind ViewModel.Calculator.Buffer, Mode=OneWay}"
+                TextAlignment="Right" />
+
+            <TextBlock
+                Grid.Row="1"
+                MaxHeight="96"
+                FontSize="36"
+                FontWeight="SemiBold"
+                Loaded="{x:Bind ViewModel.MainInput_Loaded}"
+                Text="{x:Bind ViewModel.Calculator.Input, Mode=OneWay}"
+                TextAlignment="Right" />
+
+            <Grid
+                Grid.Row="2"
+                Padding="4,0,4,0"
+                HorizontalAlignment="Stretch"
+                ColumnSpacing="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="32" />
+                </Grid.RowDefinitions>
+
+                <controls:MemoryButton
+                    Grid.Column="0"
+                    Action="Clear"
+                    Click="{x:Bind ViewModel.MemoryButtonClick}"
+                    IsEnabled="{x:Bind ViewModel.Calculator.IsMemorySet, Mode=OneWay}" />
+                <controls:MemoryButton
+                    Grid.Column="1"
+                    Action="Read"
+                    Click="{x:Bind ViewModel.MemoryButtonClick}"
+                    IsEnabled="{x:Bind ViewModel.Calculator.IsMemorySet, Mode=OneWay}" />
+                <controls:MemoryButton
+                    Grid.Column="2"
+                    Action="Add"
+                    Click="{x:Bind ViewModel.MemoryButtonClick}" />
+                <controls:MemoryButton
+                    Grid.Column="3"
+                    Action="Subtract"
+                    Click="{x:Bind ViewModel.MemoryButtonClick}" />
+                <controls:MemoryButton
+                    Grid.Column="4"
+                    Action="Store"
+                    Click="{x:Bind ViewModel.MemoryButtonClick}" />
+            </Grid>
+
+            <Grid
+                Grid.Row="3"
+                Padding="4"
+                ColumnSpacing="2"
+                RowSpacing="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="32" />
+                    <RowDefinition Height="*" MinHeight="32" />
+                    <RowDefinition Height="*" MinHeight="32" />
+                    <RowDefinition Height="*" MinHeight="32" />
+                    <RowDefinition Height="*" MinHeight="32" />
+                    <RowDefinition Height="*" MinHeight="32" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <controls:CalculatorButton
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}"
+                    Type="Module" />
+                <controls:CalculatorButton
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="ClearEntry" />
+                <controls:CalculatorButton
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="Clear" />
+                <controls:CalculatorButton
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="Backspace" />
+                <controls:CalculatorButton
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}"
+                    Type="ComplexI" />
+                <controls:CalculatorButton
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}"
+                    Type="Sqr" />
+                <controls:CalculatorButton
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}"
+                    Type="Sqrt" />
+                <controls:CalculatorButton
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}"
+                    Type="Divide" />
+                <controls:CalculatorButton
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="Seven" />
+                <controls:CalculatorButton
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="Eight" />
+                <controls:CalculatorButton
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="Nine" />
+                <controls:CalculatorButton
+                    Grid.Row="2"
+                    Grid.Column="3"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}"
+                    Type="Multiply" />
+                <controls:CalculatorButton
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="Four" />
+                <controls:CalculatorButton
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="Five" />
+                <controls:CalculatorButton
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="Six" />
+                <controls:CalculatorButton
+                    Grid.Row="3"
+                    Grid.Column="3"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}"
+                    Type="Minus" />
+                <controls:CalculatorButton
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="One" />
+                <controls:CalculatorButton
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="Two" />
+                <controls:CalculatorButton
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="Three" />
+                <controls:CalculatorButton
+                    Grid.Row="4"
+                    Grid.Column="3"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}"
+                    Type="Plus" />
+                <controls:CalculatorButton
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}"
+                    Type="ChangeSign" />
+                <controls:CalculatorButton
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="Zero" />
+                <controls:CalculatorButton
+                    Grid.Row="5"
+                    Grid.Column="2"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    IsEnabled="{x:Bind ViewModel.Calculator.IsNoError, Mode=OneWay}"
+                    Type="Delimiter" />
+                <controls:CalculatorButton
+                    Grid.Row="5"
+                    Grid.Column="3"
+                    Click="{x:Bind ViewModel.CalculatorButtonClick}"
+                    Type="Equal" />
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
