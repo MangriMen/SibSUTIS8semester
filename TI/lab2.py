@@ -9,37 +9,40 @@ import utils
 def main():
     os.chdir('lab2')
 
-    symbol_count = 2
-
     text = utils.normalize_text('text.txt')
 
-    _, probabilities = formulas.getSymbolsAndProbabilities(text)
-    _, probabilities_multiple_characters = formulas.getSymbolsAndProbabilities(
-        text, symbol_count)
+    probabilities_list = [
+        formulas.getSymbolsAndProbabilities(text, symbol_count)[1]
+        for symbol_count in range(1, 6)
+    ]
+
+    entropy_list = [
+        formulas.calculateEntropy(probabilities) / (i + 1)
+        for i, probabilities in enumerate(probabilities_list)
+    ]
 
     alphabet_size = 32
 
-    entropy = formulas.calculateEntropy(probabilities)
-    entropy_multiple_characters = formulas.calculateEntropy(
-        probabilities_multiple_characters) / symbol_count
-
     rows: list[list[str]] = []
     rows.append([
-        'Мартин Иден',
+        'КиберЗолушка',
         str(alphabet_size),
         str(
             formulas.calculateEntropy(
                 [1 / alphabet_size for _ in range(0, alphabet_size)])),
-        str(entropy),
-        str(entropy_multiple_characters),
     ])
 
+    for entropy in entropy_list:
+        rows[0].append(str(entropy))
+
     csv_header = [
-        "Название файла", "Размер алфавита",
+        "Название файла",
+        "Размер алфавита",
         "Максимально возможное значение энтропии",
-        "Оценка энтропии (одиночные символы)",
-        "Оценка энтропии (частоты пар символов)"
     ]
+
+    for i, entropy in enumerate(entropy_list):
+        csv_header.append(f"Оценка энтропии H-{i+1}")
 
     with open('result.csv', 'w+', newline='') as csv_file:
         csv_writer = csv.writer(csv_file, delimiter=';')
