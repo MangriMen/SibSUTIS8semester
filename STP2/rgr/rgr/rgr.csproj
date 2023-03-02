@@ -36,14 +36,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\lab10\lab10\lab10.csproj" />
-    <ProjectReference Include="..\..\lab11\lab11\lab11.csproj" />
-    <ProjectReference Include="..\..\lab5\lab5\lab5.csproj" />
-    <ProjectReference Include="..\..\lab6\lab6\lab6.csproj" />
-    <ProjectReference Include="..\..\lab7\lab7\lab7.csproj" />
-    <ProjectReference Include="..\..\lab8\lab8\lab8.csproj" />
-    <ProjectReference Include="..\..\lab9\lab9\lab9.csproj" />
-    <ProjectReference Include="..\lab12\lab12.csproj" />
+    <ProjectReference Include="..\..\Calculator\Calculator\Calculator.csproj" />
+    <ProjectReference Include="..\..\Editors\Editors\Editors.csproj" />
+    <ProjectReference Include="..\..\Types\Types\Types.csproj" />
     <ProjectReference Include="..\rgr.Core\rgr.Core.csproj" />
   </ItemGroup>
   <ItemGroup>

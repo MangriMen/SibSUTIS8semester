@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using lab7;
-using lab8;
 using rgr.Controls;
+using Types;
+using Editors;
 
 namespace rgr.Models;
 

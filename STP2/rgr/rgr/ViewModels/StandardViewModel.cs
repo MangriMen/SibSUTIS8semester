@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using lab5;
-using lab9;
+using Types;
+using Editors;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using rgr.Controls;

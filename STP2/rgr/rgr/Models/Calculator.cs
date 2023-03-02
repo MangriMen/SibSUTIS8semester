@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using lab11;
-using lab12;
+using Calculator;
 using rgr.Controls;
 
 namespace rgr.Models;
@@ -16,10 +15,10 @@ public class Calculator<T, U> : ObservableObject
     > _typesToOperations =
         new()
         {
-            { CalculatorButton.Types.Plus, lab12.Processor.Operation.Plus },
-            { CalculatorButton.Types.Minus, lab12.Processor.Operation.Minus },
-            { CalculatorButton.Types.Multiply, lab12.Processor.Operation.Multiply },
-            { CalculatorButton.Types.Divide, lab12.Processor.Operation.Divide },
+            { CalculatorButton.Types.Plus, Calculator.Processor.Operation.Plus },
+            { CalculatorButton.Types.Minus, Calculator.Processor.Operation.Minus },
+            { CalculatorButton.Types.Multiply, Calculator.Processor.Operation.Multiply },
+            { CalculatorButton.Types.Divide, Calculator.Processor.Operation.Divide },
         };
 
     private static readonly Dictionary<
@@ -28,10 +27,10 @@ public class Calculator<T, U> : ObservableObject
     > _typesToFunctions =
         new()
         {
-            { CalculatorButton.Types.Module, lab12.Processor.Function.Module },
-            { CalculatorButton.Types.Reciprocal, lab12.Processor.Function.Reciprocal },
-            { CalculatorButton.Types.Sqr, lab12.Processor.Function.Sqr },
-            { CalculatorButton.Types.Sqrt, lab12.Processor.Function.Sqrt }
+            { CalculatorButton.Types.Module, Calculator.Processor.Function.Module },
+            { CalculatorButton.Types.Reciprocal, Calculator.Processor.Function.Reciprocal },
+            { CalculatorButton.Types.Sqr, Calculator.Processor.Function.Sqr },
+            { CalculatorButton.Types.Sqrt, Calculator.Processor.Function.Sqrt }
         };
 
     private static readonly Dictionary<
@@ -40,10 +39,10 @@ public class Calculator<T, U> : ObservableObject
     > _operationsToTypes =
         new()
         {
-            { lab12.Processor.Operation.Plus, CalculatorButton.Types.Plus },
-            { lab12.Processor.Operation.Minus, CalculatorButton.Types.Minus },
-            { lab12.Processor.Operation.Multiply, CalculatorButton.Types.Multiply },
-            { lab12.Processor.Operation.Divide, CalculatorButton.Types.Divide }
+            { Calculator.Processor.Operation.Plus, CalculatorButton.Types.Plus },
+            { Calculator.Processor.Operation.Minus, CalculatorButton.Types.Minus },
+            { Calculator.Processor.Operation.Multiply, CalculatorButton.Types.Multiply },
+            { Calculator.Processor.Operation.Divide, CalculatorButton.Types.Divide }
         };
 
     private static readonly Dictionary<
@@ -52,10 +51,10 @@ public class Calculator<T, U> : ObservableObject
     > _functionsToTypes =
         new()
         {
-            { lab12.Processor.Function.Module, CalculatorButton.Types.Module },
-            { lab12.Processor.Function.Reciprocal, CalculatorButton.Types.Reciprocal },
-            { lab12.Processor.Function.Sqr, CalculatorButton.Types.Sqr },
-            { lab12.Processor.Function.Sqrt, CalculatorButton.Types.Sqrt }
+            { Calculator.Processor.Function.Module, CalculatorButton.Types.Module },
+            { Calculator.Processor.Function.Reciprocal, CalculatorButton.Types.Reciprocal },
+            { Calculator.Processor.Function.Sqr, CalculatorButton.Types.Sqr },
+            { Calculator.Processor.Function.Sqrt, CalculatorButton.Types.Sqrt }
         };
 
     private static readonly Dictionary<CalculatorButton.Types, string> _functionFromatStrings =
@@ -67,7 +66,7 @@ public class Calculator<T, U> : ObservableObject
             { CalculatorButton.Types.Sqrt, "sqrt( {0} )" },
         };
 
-    private readonly lab11.Memory<U> Memory = new();
+    private readonly Calculator.Memory<U> Memory = new();
 
     private readonly dynamic Editor =
         Activator.CreateInstance(typeof(T)) ?? throw new Exception("Unable to create editor");
@@ -309,19 +308,19 @@ public class Calculator<T, U> : ObservableObject
     {
         switch (action)
         {
-            case lab11.Memory.Actions.Store:
+            case Calculator.Memory.Actions.Store:
                 Memory.Store(GetNumberFromInput());
                 break;
-            case lab11.Memory.Actions.Read:
+            case Calculator.Memory.Actions.Read:
                 SetNumberToInput(Memory.Read());
                 break;
-            case lab11.Memory.Actions.Add:
+            case Calculator.Memory.Actions.Add:
                 Memory.Add(GetNumberFromInput());
                 break;
-            case lab11.Memory.Actions.Subtract:
+            case Calculator.Memory.Actions.Subtract:
                 Memory.Subtract(GetNumberFromInput());
                 break;
-            case lab11.Memory.Actions.Clear:
+            case Calculator.Memory.Actions.Clear:
                 Memory.Clear();
                 break;
         }
