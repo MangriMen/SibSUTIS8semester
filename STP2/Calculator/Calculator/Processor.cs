@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Types;
 using static Calculator.Processor;
 
 namespace Calculator;
@@ -25,29 +26,34 @@ public static class Processor
 }
 
 public class Processor<T>
-    where T : new()
+    where T : Number, new()
 {
-    private dynamic? _leftOperand;
-    private dynamic? _rightOperand;
+    private readonly T _oneHundred = (
+        (Func<T>)(
+            () =>
+            {
+                var tmp = new T();
+                tmp.FromString("100");
+                return tmp;
+            }
+        )
+    )();
+
+    private T _leftOperand = new();
+    private T _rightOperand = new();
+
+    private Operation _operation;
 
     private bool _isOperationDone = true;
     public bool IsOperationDone => _isOperationDone;
 
-    private Operation _operation;
-
-    private readonly MethodInfo? _methodReverse = typeof(T).GetMethod("Reverse");
-    private readonly MethodInfo? _methodPow = typeof(T).GetMethod("Pow");
-    private readonly MethodInfo? _methodSqrt = typeof(T).GetMethod("Root");
-
-    private readonly dynamic? _oneHundred = (T?)Activator.CreateInstance(typeof(T), "100");
-
-    public dynamic? LeftOperand
+    public T LeftOperand
     {
         get => _leftOperand;
         set => _leftOperand = value;
     }
 
-    public dynamic? RightOperand
+    public T RightOperand
     {
         get => _rightOperand;
         set => _rightOperand = value;
@@ -70,8 +76,8 @@ public class Processor<T>
 
     public void Reset()
     {
-        _leftOperand = Activator.CreateInstance(typeof(T));
-        _rightOperand = Activator.CreateInstance(typeof(T));
+        _leftOperand = new();
+        _rightOperand = new();
         ResetOperation();
     }
 
@@ -82,21 +88,19 @@ public class Processor<T>
 
     public void PerformOperation()
     {
-        dynamic? rightOperand = RightOperand;
-
         switch (_operation)
         {
             case Operation.Plus:
-                _leftOperand += rightOperand;
+                _leftOperand = (T)(_leftOperand + _rightOperand);
                 break;
             case Operation.Minus:
-                _leftOperand -= rightOperand;
+                _leftOperand = (T)(_leftOperand - _rightOperand);
                 break;
             case Operation.Divide:
-                _leftOperand /= rightOperand;
+                _leftOperand = (T)(_leftOperand / _rightOperand);
                 break;
             case Operation.Multiply:
-                _leftOperand *= rightOperand;
+                _leftOperand = (T)(_leftOperand * _rightOperand);
                 break;
         }
 
@@ -105,31 +109,18 @@ public class Processor<T>
 
     public void PerformFunction(Function function)
     {
-        dynamic? result = IsOperationDone switch
+        T result = IsOperationDone switch
         {
-            true => LeftOperand,
-            false => RightOperand
+            true => _leftOperand,
+            false => _rightOperand
         };
-
-        if ((T?)result == null)
-        {
-            return;
-        }
-
-        var reverseParameters = new List<object> { result };
-
-        var sqrParameters = new List<object?> { result };
-        sqrParameters.AddRange(GetDefaultParametersForMethod(_methodPow));
-
-        var sqrtParameters = new List<object?> { result };
-        sqrtParameters.AddRange(GetDefaultParametersForMethod(_methodSqrt));
 
         result = function switch
         {
-            Function.Module => result / _oneHundred,
-            Function.Reciprocal => (T?)_methodReverse?.Invoke(null, reverseParameters.ToArray()),
-            Function.Sqr => (T?)_methodPow?.Invoke(null, sqrParameters.ToArray()),
-            Function.Sqrt => (T?)_methodSqrt?.Invoke(null, sqrtParameters.ToArray()),
+            Function.Module => (T)(result / _oneHundred),
+            Function.Reciprocal => (T)result.Reciprocal(),
+            Function.Sqr => (T)result.Pow(2),
+            Function.Sqrt => (T)result.Root(2),
             _ => throw new ArgumentException("Invalid enum value for function", nameof(function))
         };
 

@@ -1,50 +1,94 @@
 ﻿using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace Types;
 
-public class PNumber
+public class PNumber : Number
 {
-    const int MIN_BASE = 2;
-    const int MAX_BASE = 16;
+    private const string DEFAULT_NUMBER_STR = "0";
+    private const double DEFAULT_NUMBER = 0;
+    private const int DEFAULT_BASE = 10;
+    private const int DEFAULT_ACCURACY = 16;
 
-    double _number = 0.0;
-    int _base = 2;
-    int _accuracy = 0;
+    private const int MIN_BASE = 2;
+    private const int MAX_BASE = 16;
 
-    public PNumber(double number = 0, int @base = 2, int accuracy = 0)
+    private double _number = DEFAULT_NUMBER;
+    private int _base = DEFAULT_BASE;
+    private int _accuracy = DEFAULT_ACCURACY;
+
+    public double Number
     {
-        Init(number, @base, accuracy);
+        get => _number;
+        set => _number = value;
+    }
+    public int Base
+    {
+        get => _base;
+        set
+        {
+            ValidateBase(value);
+            _base = value;
+        }
+    }
+    public int Accuracy
+    {
+        get => _accuracy;
+        set
+        {
+            ValidateAccuracy(value);
+            _accuracy = value;
+        }
     }
 
-    public PNumber(string str)
+    public PNumber()
     {
-        var args = Regex.Replace(str, @"\s+", "").Split(",");
-        Init(double.Parse(args[0]), int.Parse(args[1]), int.Parse(args[2]));
+        _number = DEFAULT_NUMBER;
+        _base = DEFAULT_BASE;
+        _accuracy = DEFAULT_ACCURACY;
     }
 
-    private void Init(double number = 0, int @base = 2, int accuracy = 0)
+    public PNumber(
+        double number = DEFAULT_NUMBER,
+        int @base = DEFAULT_BASE,
+        int accuracy = DEFAULT_ACCURACY
+    )
     {
-        CheckBaseRange(@base);
+        ValidateBase(@base);
+        ValidateAccuracy(accuracy);
 
         _number = number;
         _base = @base;
         _accuracy = accuracy;
     }
 
-    private static void CheckBaseRange(int base_)
+    public PNumber(
+        string number = DEFAULT_NUMBER_STR,
+        int @base = DEFAULT_BASE,
+        int accuracy = DEFAULT_ACCURACY
+    )
     {
-        if (base_ < MIN_BASE || base_ > MAX_BASE)
+        ValidateBase(@base);
+        ValidateAccuracy(accuracy);
+
+        _base = @base;
+        _accuracy = accuracy;
+
+        _number = PHelper.ArbitraryToDecimalSystem(number, @base);
+    }
+
+    private static void ValidateBase(int @base)
+    {
+        if (@base < MIN_BASE || @base > MAX_BASE)
         {
             throw new Exception("Base must be in range [2..16]");
         }
     }
 
-    private static void CheckAccuracy(int accuracy)
+    private static void ValidateAccuracy(int accuracy)
     {
-        if (accuracy < 0)
+        if (accuracy < 0 || accuracy > 16)
         {
-            throw new Exception("Accuracy must be higher than zero");
+            throw new Exception("Accuracy must be in range [2..16]");
         }
     }
 
@@ -54,6 +98,66 @@ public class PNumber
         {
             throw new Exception("Base and accuracy must be equals");
         }
+    }
+
+    public bool IsNegative()
+    {
+        return _number < 0;
+    }
+
+    public override bool IsNull()
+    {
+        return _number == 0;
+    }
+
+    public override PNumber Pow(double n = 2)
+    {
+        return new PNumber(Math.Pow(_number, n), _base, _accuracy);
+    }
+
+    public override PNumber Root(double n = 2)
+    {
+        return Pow(1 / n);
+    }
+
+    public override PNumber Reciprocal()
+    {
+        return new PNumber(1 / _number, _base, _accuracy);
+    }
+
+    protected override Number Add(Number rhs)
+    {
+        return this + (PNumber)rhs;
+    }
+
+    protected override Number Subtract(Number rhs)
+    {
+        return this - (PNumber)rhs;
+    }
+
+    protected override Number Multiply(Number rhs)
+    {
+        return this * (PNumber)rhs;
+    }
+
+    protected override Number Divide(Number rhs)
+    {
+        return this / (PNumber)rhs;
+    }
+
+    protected override bool Equals(Number rhs)
+    {
+        return this == (PNumber)rhs;
+    }
+
+    public override void FromString(string number)
+    {
+        _number = PHelper.ArbitraryToDecimalSystem(number, _base);
+    }
+
+    public override string ToString()
+    {
+        return PHelper.DecimalToArbitrarySystem(_number, _base);
     }
 
     public static PNumber operator +(PNumber lhs, PNumber rhs)
@@ -68,6 +172,11 @@ public class PNumber
         return new PNumber(lhs._number - rhs._number, lhs._base, lhs._accuracy);
     }
 
+    public static PNumber operator -(PNumber rhs)
+    {
+        return new PNumber(-rhs._number, rhs._base, rhs._accuracy);
+    }
+
     public static PNumber operator *(PNumber lhs, PNumber rhs)
     {
         CheckBaseAccuracyEquals(lhs, rhs);
@@ -80,6 +189,12 @@ public class PNumber
         return new PNumber(lhs._number / rhs._number, lhs._base, lhs._accuracy);
     }
 
+    public static PNumber operator %(PNumber lhs, PNumber rhs)
+    {
+        CheckBaseAccuracyEquals(lhs, rhs);
+        return new PNumber(lhs._number % rhs._number, lhs._base, lhs._accuracy);
+    }
+
     public static bool operator ==(PNumber lhs, PNumber rhs)
     {
         return lhs._number == rhs._number
@@ -89,90 +204,62 @@ public class PNumber
 
     public static bool operator !=(PNumber lhs, PNumber rhs)
     {
-        return lhs._number != rhs._number
-            || lhs._base != rhs._base
-            || lhs._accuracy != rhs._accuracy;
+        return !(lhs == rhs);
     }
 
-    public static PNumber Revers(PNumber lhs)
+    public static bool operator >(PNumber lhs, PNumber rhs)
     {
-        return new PNumber(1 / lhs._number, lhs._base, lhs._accuracy);
+        return lhs._number > rhs._number;
     }
 
-    public static PNumber Pow(PNumber lhs, int degree = 2)
+    public static bool operator <(PNumber lhs, PNumber rhs)
     {
-        return new PNumber(Math.Pow(lhs._number, degree), lhs._base, lhs._accuracy);
+        return lhs._number < rhs._number;
     }
 
-    public double GetNumber()
+    public static bool operator >=(PNumber lhs, PNumber rhs)
     {
-        return _number;
+        return lhs._number >= rhs._number;
     }
 
-    public double GetBase()
+    public static bool operator <=(PNumber lhs, PNumber rhs)
     {
-        return _base;
+        return lhs._number <= rhs._number;
     }
 
-    public string GetBaseString()
+    public static implicit operator PNumber(double v)
     {
-        return _base.ToString();
+        return new PNumber(v);
     }
 
-    public void SetBase(int @base)
+    public static explicit operator double(PNumber v)
     {
-        CheckBaseRange(@base);
-        _base = @base;
-    }
-
-    public void SetBase(string @base)
-    {
-        _base = int.Parse(@base);
-        CheckBaseRange(_base);
-    }
-
-    public double GetAccuracy()
-    {
-        return _accuracy;
-    }
-
-    public string GetAccuracyString()
-    {
-        return _accuracy.ToString();
-    }
-
-    public void SetAccuracy(int accuracy)
-    {
-        CheckAccuracy(accuracy);
-        _accuracy = accuracy;
-    }
-
-    public void SetAccuracy(string accuracy)
-    {
-        _accuracy = int.Parse(accuracy);
-        CheckAccuracy(_accuracy);
-    }
-
-    public string GetConvertedNumber()
-    {
-        return DecimalToArbitrarySystem(_number, _base);
-    }
-
-    new public string ToString()
-    {
-        return $"{_number}, {_base}, {_accuracy}";
+        return v._number;
     }
 
     public override int GetHashCode()
     {
-        return string.GetHashCode(ToString());
+        return string.GetHashCode($"{_number},{_base},{_accuracy}");
     }
 
     public override bool Equals(object? obj)
     {
-        return GetHashCode() == obj?.GetHashCode();
-    }
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
 
+        if (ReferenceEquals(obj, null))
+        {
+            return false;
+        }
+
+        return Equals((PNumber)obj);
+    }
+}
+
+public static class PHelper
+{
     const string Digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public static string DecimalToArbitrarySystem(double decimalNumber, int radix)
@@ -201,13 +288,6 @@ public class PNumber
         return $"{integerStr}{delimiter}{floatStr}";
     }
 
-    /// <summary>
-    /// Converts the given decimal number to the numeral system with the
-    /// specified radix (in the range [2, 36]).
-    /// </summary>
-    /// <param name="decimalNumber">The number to convert.</param>
-    /// <param name="radix">The radix of the destination numeral system (in the range [2, 36]).</param>
-    /// <returns></returns>
     public static string DecimalToArbitrarySystemInt(long decimalNumber, int radix)
     {
         if (decimalNumber == 0)
@@ -235,13 +315,6 @@ public class PNumber
         return result;
     }
 
-    /// <summary>
-    /// Converts the given decimal number to the numeral system with the
-    /// specified radix (in the range [2, 36]).
-    /// </summary>
-    /// <param name="decimalNumber">The number to convert.</param>
-    /// <param name="radix">The radix of the destination numeral system (in the range [2, 36]).</param>
-    /// <returns></returns>
     public static string DecimalToArbitrarySystemDouble(double decimalNumber, int radix)
     {
         const int PrecisionBits = 16;
@@ -290,14 +363,6 @@ public class PNumber
         return integerNumber + fractionalNumber;
     }
 
-    /// <summary>
-    /// Converts the given number from the numeral system with the specified
-    /// radix (in the range [2, 36]) to decimal numeral system.
-    /// </summary>
-    /// <param name="number">The arbitrary numeral system number to convert.</param>
-    /// <param name="radix">The radix of the numeral system the given number
-    /// is in (in the range [2, 36]).</param>
-    /// <returns></returns>
     public static long ArbitraryToDecimalSystemInt(string number, int radix)
     {
         // Make sure the arbitrary numeral system number is in upper case
@@ -329,14 +394,6 @@ public class PNumber
         return result;
     }
 
-    /// <summary>
-    /// Converts the given number from the numeral system with the specified
-    /// radix (in the range [2, 36]) to decimal numeral system.
-    /// </summary>
-    /// <param name="number">The arbitrary numeral system number to convert.</param>
-    /// <param name="radix">The radix of the numeral system the given number
-    /// is in (in the range [2, 36]).</param>
-    /// <returns></returns>
     public static double ArbitraryToDecimalSystemDouble(string number, int radix)
     {
         // Make sure the arbitrary numeral system number is in upper case

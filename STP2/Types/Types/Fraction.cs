@@ -2,10 +2,57 @@
 
 namespace Types;
 
-public class Fraction
+public class Fraction : Number
 {
-    private BigInteger _nominator = 0;
-    private BigInteger _denominator = 0;
+    private const int DEFAULT_NOMINATOR = 0;
+    private const int DEFAULT_DENOMINATOR = 1;
+
+    private PNumber _nominator = new();
+    private PNumber _denominator = new();
+
+    public PNumber Nominator
+    {
+        get => _nominator;
+        set => _nominator = value;
+    }
+    public PNumber Denominator
+    {
+        get => _denominator;
+        set => _denominator = value;
+    }
+
+    public Fraction()
+    {
+        _nominator = DEFAULT_NOMINATOR;
+        _denominator = DEFAULT_DENOMINATOR;
+    }
+
+    public Fraction(PNumber? nominator = default, PNumber? denominator = default)
+    {
+        _nominator = nominator ?? DEFAULT_NOMINATOR;
+        _denominator = denominator ?? DEFAULT_DENOMINATOR;
+
+        Reduce();
+    }
+
+    public Fraction(string number)
+    {
+        FromString(number);
+    }
+
+    private static PNumber Gcd(PNumber a, PNumber b)
+    {
+        while (b != 0)
+        {
+            (a, b) = (b, a % b);
+        }
+        return a;
+    }
+
+    private static PNumber Lcm(PNumber a, PNumber b)
+    {
+        return a / Gcd(a, b) * b;
+    }
 
     private void Reduce()
     {
@@ -18,92 +65,112 @@ public class Fraction
         }
     }
 
-    private static BigInteger Gcd(BigInteger a, BigInteger b)
+    public override bool IsNull()
     {
-        while (b != 0)
+        return _nominator == 0;
+    }
+
+    public override Fraction Pow(double n = 2)
+    {
+        var nominator = Math.Pow((double)_nominator, n);
+        var denominator = Math.Pow((double)_denominator, n);
+
+        if (n < 1)
         {
-            var temp = b;
-            b = a % b;
-            a = temp;
+            return new((nominator / denominator).ToString());
         }
-        return a;
+
+        var result = new Fraction((PNumber)nominator, (PNumber)denominator);
+        result.Reduce();
+
+        return result;
     }
 
-    private static BigInteger Lcm(BigInteger a, BigInteger b)
+    public override Fraction Root(double n = 2)
     {
-        return a / Gcd(a, b) * b;
+        return Pow(1 / n);
     }
 
-    public Fraction()
+    public override Fraction Reciprocal()
     {
-        _nominator = 0;
-        _denominator = 1;
-
-        Reduce();
+        return new(_denominator, _nominator);
     }
 
-    public Fraction(BigInteger numerator, BigInteger denominator)
+    protected override Fraction Add(Number rhs)
     {
-        _nominator = numerator;
-        _denominator = denominator;
-
-        Reduce();
+        return this + (Fraction)rhs;
     }
 
-    public Fraction(string fractionString)
+    protected override Fraction Subtract(Number rhs)
     {
-        int delimeterPosition = fractionString.IndexOf('/');
+        return this - (Fraction)rhs;
+    }
+
+    protected override Fraction Multiply(Number rhs)
+    {
+        return this * (Fraction)rhs;
+    }
+
+    protected override Fraction Divide(Number rhs)
+    {
+        return this / (Fraction)rhs;
+    }
+
+    protected override bool Equals(Number rhs)
+    {
+        var rhs_ = (Fraction)rhs;
+        return _nominator == rhs_._nominator && _denominator == rhs_._denominator;
+    }
+
+    public override void FromString(string number)
+    {
+        int delimeterPosition = number.IndexOf('/');
 
         if (delimeterPosition < 0)
         {
-            delimeterPosition = fractionString.IndexOf(',');
+            delimeterPosition = number.IndexOf(',');
 
             if (delimeterPosition < 0)
             {
-                if (!BigInteger.TryParse(fractionString, out BigInteger integer))
-                {
-                    throw new Exception($"Invalid string");
-                }
-
-                _nominator = integer;
+                _nominator = new PNumber(number, 10, 16);
                 _denominator = 1;
 
                 Reduce();
                 return;
             }
 
-            var integerPart = fractionString[..delimeterPosition];
-            var fractionalPart = fractionString[(delimeterPosition + 1)..];
+            var integerPart = number[..delimeterPosition];
+            var fractionalPart = number[(delimeterPosition + 1)..];
 
             var trimmedFractional = fractionalPart.TrimEnd('0');
 
-            _denominator = BigInteger.Parse($"1{new string('0', trimmedFractional.Length)}");
+            _denominator = new PNumber($"1{new string('0', trimmedFractional.Length)}");
             _nominator =
-                BigInteger.Parse(integerPart) * _denominator
-                + (BigInteger)double.Parse(fractionalPart);
+                new PNumber(integerPart) * _denominator + (PNumber)double.Parse(fractionalPart);
 
             Reduce();
             return;
         }
 
-        _nominator = BigInteger.Parse(fractionString[..delimeterPosition]);
-        _denominator = BigInteger.Parse(fractionString[(delimeterPosition + 1)..]);
+        _nominator = new PNumber(number[..delimeterPosition]);
+        _denominator = new PNumber(
+            number.Length - 1 > delimeterPosition ? number[(delimeterPosition + 1)..] : "1"
+        );
 
         Reduce();
     }
 
-    public Fraction(Fraction x)
+    public override string ToString()
     {
-        _nominator = x._nominator;
-        _denominator = x._denominator;
+        return $"{Nominator}/{Denominator}";
     }
 
-    public static Fraction operator +(Fraction a, Fraction b)
+    public static Fraction operator +(Fraction lhs, Fraction rhs)
     {
-        var unionDenominator = Lcm(a._denominator, b._denominator);
+        var unionDenominator = Lcm(lhs._denominator, rhs._denominator);
 
-        var firstNumber = a._nominator * unionDenominator / a._denominator;
-        var secondNumber = b._nominator * unionDenominator / b._denominator;
+        var firstNumber = lhs._nominator * unionDenominator / lhs._denominator;
+        var secondNumber = rhs._nominator * unionDenominator / rhs._denominator;
 
         var result = new Fraction(firstNumber + secondNumber, unionDenominator);
         result.Reduce();
@@ -111,12 +178,12 @@ public class Fraction
         return result;
     }
 
-    public static Fraction operator -(Fraction a, Fraction b)
+    public static Fraction operator -(Fraction lhs, Fraction rhs)
     {
-        var unionDenominator = Lcm(a._denominator, b._denominator);
+        var unionDenominator = Lcm(lhs._denominator, rhs._denominator);
 
-        var firstNumber = a._nominator * unionDenominator / a._denominator;
-        var secondNumber = b._nominator * unionDenominator / b._denominator;
+        var firstNumber = lhs._nominator * unionDenominator / lhs._denominator;
+        var secondNumber = rhs._nominator * unionDenominator / rhs._denominator;
 
         var result = new Fraction(firstNumber - secondNumber, unionDenominator);
         result.Reduce();
@@ -124,18 +191,21 @@ public class Fraction
         return result;
     }
 
-    public static Fraction operator *(Fraction a, Fraction b)
+    public static Fraction operator *(Fraction lhs, Fraction rhs)
     {
-        var result = new Fraction(a._nominator * b._nominator, a._denominator * b._denominator);
+        var result = new Fraction(
+            lhs._nominator * rhs._nominator,
+            lhs._denominator * rhs._denominator
+        );
         result.Reduce();
 
         return result;
     }
 
-    public static Fraction operator /(Fraction a, Fraction b)
+    public static Fraction operator /(Fraction lhs, Fraction rhs)
     {
-        var nominator = a._nominator * b._denominator;
-        var denominator = a._denominator * b._nominator;
+        var nominator = lhs._nominator * rhs._denominator;
+        var denominator = lhs._denominator * rhs._nominator;
 
         if (denominator < 0)
         {
@@ -149,92 +219,14 @@ public class Fraction
         return result;
     }
 
-    public static Fraction Pow(Fraction a, double n = 2)
+    public static bool operator ==(Fraction lhs, Fraction rhs)
     {
-        var nominator = Math.Pow((double)a._nominator, n);
-        var denominator = Math.Pow((double)a._denominator, n);
-
-        if (n < 1)
-        {
-            return new((nominator / denominator).ToString());
-        }
-
-        var result = new Fraction((BigInteger)nominator, (BigInteger)denominator);
-        result.Reduce();
-
-        return result;
+        return lhs._nominator == rhs._nominator && lhs._denominator == rhs._denominator;
     }
 
-    public static Fraction Root(Fraction a, double n = 2)
+    public static bool operator !=(Fraction lhs, Fraction rhs)
     {
-        return Pow(a, 1 / n);
-    }
-
-    public static Fraction Reverse(Fraction a)
-    {
-        return new(a._denominator, a._nominator);
-    }
-
-    public static Fraction Minus(Fraction a)
-    {
-        Fraction z = new(0, 1);
-        return new(z - a);
-    }
-
-    public static bool operator ==(Fraction a, Fraction b)
-    {
-        return a._nominator == b._nominator && a._denominator == b._denominator;
-    }
-
-    public static bool operator !=(Fraction a, Fraction b)
-    {
-        return a._nominator != b._nominator || a._denominator != b._denominator;
-    }
-
-    public BigInteger GetNominator()
-    {
-        return _nominator;
-    }
-
-    public BigInteger GetDenominator()
-    {
-        return _denominator;
-    }
-
-    public string GetNominatorString()
-    {
-        return _nominator.ToString();
-    }
-
-    public string GetDenominatorString()
-    {
-        return _denominator.ToString();
-    }
-
-    public string ToFractionString()
-    {
-        return $"{GetNominatorString()}/{GetDenominatorString()}";
-    }
-
-    new public string ToString()
-    {
-        var floatNumber = (double)GetNominator() / (double)GetDenominator();
-
-        var floatStr = floatNumber.ToString();
-
-        if (floatStr.Length > 18)
-        {
-            return floatNumber.ToString("e10");
-        }
-
-        floatStr = floatNumber.ToString($"0.{new string('#', 16)}");
-
-        if (floatStr.Length > 18)
-        {
-            return floatNumber.ToString("e10");
-        }
-
-        return floatStr;
+        return !(lhs == rhs);
     }
 
     public override int GetHashCode()
@@ -244,6 +236,16 @@ public class Fraction
 
     public override bool Equals(object? obj)
     {
-        return GetHashCode() == obj?.GetHashCode();
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (ReferenceEquals(obj, null))
+        {
+            return false;
+        }
+
+        return Equals((Fraction)obj);
     }
 }

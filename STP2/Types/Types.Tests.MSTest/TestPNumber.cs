@@ -20,7 +20,7 @@ public class TestPNumber
     [ExpectedException(typeof(Exception))]
     public void TestPNumberThird()
     {
-        var _ = new PNumber("1, 29, 1");
+        var _ = new PNumber("1", 29, 1);
     }
 
     [TestMethod]
@@ -94,7 +94,7 @@ public class TestPNumber
     {
         PNumber Value = new PNumber(2, 2, 3);
 
-        PNumber AssertValue = PNumber.Pow(Value, 2);
+        PNumber AssertValue = Value.Pow(2);
 
         PNumber ExpectedValue = new PNumber(4, 2, 3);
 
@@ -106,7 +106,7 @@ public class TestPNumber
     {
         PNumber Value = new PNumber(2, 2, 3);
 
-        PNumber AssertValue = PNumber.Revers(Value);
+        PNumber AssertValue = Value.Reciprocal();
 
         PNumber ExpectedValue = new PNumber(1.0 / 2, 2, 3);
 
@@ -118,7 +118,7 @@ public class TestPNumber
     {
         PNumber Value = new PNumber(2, 2, 3);
 
-        var AssertValue = Value.GetNumber();
+        var AssertValue = Value.Number;
 
         var ExpectedValue = 2;
 
@@ -132,7 +132,7 @@ public class TestPNumber
 
         var AssertValue = Value.ToString();
 
-        var ExpectedValue = "2, 2, 3";
+        var ExpectedValue = "10";
 
         Assert.IsTrue(ExpectedValue == AssertValue);
     }
@@ -142,7 +142,7 @@ public class TestPNumber
     {
         PNumber Value = new PNumber(2, 2, 3);
 
-        var AssertValue = Value.GetBase();
+        var AssertValue = Value.Base;
 
         var ExpectedValue = 2;
 
@@ -154,7 +154,7 @@ public class TestPNumber
     {
         PNumber Value = new PNumber(2, 2, 3);
 
-        var AssertValue = Value.GetAccuracy();
+        var AssertValue = Value.Accuracy;
 
         var ExpectedValue = 3;
 
@@ -166,7 +166,7 @@ public class TestPNumber
     {
         PNumber AssertValue = new PNumber(2, 2, 3);
 
-        AssertValue.SetBase(5);
+        AssertValue.Base = 5;
         var ExpectedValue = new PNumber(2, 5, 3);
 
         Assert.IsTrue(ExpectedValue == AssertValue);
@@ -177,7 +177,7 @@ public class TestPNumber
     {
         PNumber AssertValue = new PNumber(2, 2, 3);
 
-        AssertValue.SetAccuracy(5);
+        AssertValue.Accuracy = 5;
 
         var ExpectedValue = new PNumber(2, 2, 5);
 

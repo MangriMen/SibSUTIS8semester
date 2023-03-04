@@ -1,87 +1,92 @@
-﻿using System.Text.RegularExpressions;
+﻿namespace Editors;
 
-namespace Editors;
-
-public class FractionEditor
+public class FractionEditor : Editor
 {
-    private bool _isError = false;
-    public bool IsError
+    public const string ZERO = "0";
+    public const char SIGN = '-';
+    public const char SEPARATOR = '/';
+
+    private readonly PNumberEditor _nominator = new();
+    private readonly PNumberEditor _denominator = new();
+
+    public override string Zero
     {
-        get => _isError;
-        set
-        {
-            _isError = value;
-            _currentNumber = "Error";
-        }
+        get => ZERO;
+    }
+    public override string Separator { get; set; } = SEPARATOR.ToString();
+
+    protected override string AddDigitLS(int digit)
+    {
+        Number =
+            $"{_nominator.AddDigit(digit)}{(HaveSeparator ? SEPARATOR : string.Empty)}{_denominator.Number}";
+        return Number;
     }
 
-    private string _currentNumber = "";
-    public string CurrentNumber
+    protected override string AddDigitRS(int digit)
     {
-        get => _currentNumber;
-        set
-        {
-            bool isValid = Regex.Match(value, "[0-9]+").Success;
-            if (!isValid)
-            {
-                throw new Exception("Invalid number");
-            }
-
-            _currentNumber = value;
-        }
+        Number =
+            $"{_nominator.Number}{(HaveSeparator ? SEPARATOR : string.Empty)}{_denominator.AddDigit(digit)}";
+        return Number;
     }
 
-    public FractionEditor()
+    public override string AddDigit(int digit)
     {
-        Clear();
-    }
-
-    public bool IsNull()
-    {
-        return _currentNumber.Length == 1 && _currentNumber[0] == '0';
-    }
-
-    public void ToggleNegative()
-    {
-        if (IsNull())
+        var separatorIndex = Number.IndexOf(SEPARATOR);
+        if (separatorIndex < 0)
         {
-            return;
-        }
-
-        if (_currentNumber[0] == '-')
-        {
-            _currentNumber = _currentNumber[1..];
+            return AddDigitLS(digit);
         }
         else
         {
-            _currentNumber = $"-{_currentNumber}";
+            return AddDigitRS(digit);
         }
     }
 
-    public void AppendNumber(string num)
+    public override string AddSeparator()
     {
-        if (IsNull())
+        if (IsNull)
         {
-            _currentNumber = num;
-            return;
+            Number = ZERO;
         }
 
-        _currentNumber += num;
-    }
-
-    public void PopNumber()
-    {
-        if (_currentNumber.Length == 1)
+        if (!Number.Contains(Separator))
         {
-            Clear();
-            return;
+            Number += SEPARATOR;
         }
 
-        _currentNumber = _currentNumber[..^1];
+        HaveSeparator = true;
+
+        return Number;
     }
 
-    public void Clear()
+    public override string Backspace()
     {
-        _currentNumber = "0";
+        if (Number.Length > 0)
+        {
+            Number = Number[..^1];
+        }
+        else
+        {
+            Number = ZERO;
+        }
+
+        return Number;
+    }
+
+    public override string ToggleNegative()
+    {
+        Number = Number[0] switch
+        {
+            SIGN => Number[1..],
+            _ => $"{SIGN}{Number}",
+        };
+        return Number;
+    }
+
+    public override string Clear()
+    {
+        _nominator.Clear();
+        _denominator.Clear();
+        return base.Clear();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Calculator;
+﻿using Types;
+
+namespace Calculator;
 
 public static class Memory
 {
@@ -13,7 +15,7 @@ public static class Memory
 }
 
 public class Memory<T>
-    where T : new()
+    where T : Number, new()
 {
     private T _number = new();
     private bool _isOn = true;

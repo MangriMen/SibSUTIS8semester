@@ -1,11 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Calculator;
 using rgr.Controls;
+using Types;
+using Editors;
+using Calculator;
 
 namespace rgr.Models;
 
 public class Calculator<T, U> : ObservableObject
-    where U : new()
+    where T : Editor, new()
+    where U : Number, new()
 {
     private const int MAX_NUMBER_LENGTH = 16;
 
@@ -45,18 +48,6 @@ public class Calculator<T, U> : ObservableObject
             { Calculator.Processor.Operation.Divide, CalculatorButton.Types.Divide }
         };
 
-    private static readonly Dictionary<
-        Processor.Function,
-        CalculatorButton.Types
-    > _functionsToTypes =
-        new()
-        {
-            { Calculator.Processor.Function.Module, CalculatorButton.Types.Module },
-            { Calculator.Processor.Function.Reciprocal, CalculatorButton.Types.Reciprocal },
-            { Calculator.Processor.Function.Sqr, CalculatorButton.Types.Sqr },
-            { Calculator.Processor.Function.Sqrt, CalculatorButton.Types.Sqrt }
-        };
-
     private static readonly Dictionary<CalculatorButton.Types, string> _functionFromatStrings =
         new()
         {
@@ -66,12 +57,11 @@ public class Calculator<T, U> : ObservableObject
             { CalculatorButton.Types.Sqrt, "sqrt( {0} )" },
         };
 
-    private readonly Calculator.Memory<U> Memory = new();
-
-    private readonly dynamic Editor =
-        Activator.CreateInstance(typeof(T)) ?? throw new Exception("Unable to create editor");
+    private readonly T Editor = new();
 
     private readonly Processor<U> Processor = new();
+
+    private readonly Calculator.Memory<U> Memory = new();
 
     private bool _isNewInput = false;
 
@@ -83,27 +73,28 @@ public class Calculator<T, U> : ObservableObject
     }
 
     public bool IsMemorySet => Memory.IsOn;
-    public bool IsNoError => !Editor.IsError;
-    public string Input => Editor.CurrentNumber;
+    public bool IsNoError => !false;
+    public string Input => Editor.Number != string.Empty ? Editor.Number : Editor.Zero;
 
-    private void SetNumberToInput(dynamic? number)
+    private void SetNumberToInput(U number)
     {
         try
         {
-            Editor.CurrentNumber = number?.ToString();
+            Editor.Number = number.ToString();
         }
         catch
         {
-            Editor.IsError = true;
             OnPropertyChanged(nameof(IsNoError));
         }
 
         OnPropertyChanged(nameof(Input));
     }
 
-    private dynamic? GetNumberFromInput()
+    private U GetNumberFromInput()
     {
-        return Activator.CreateInstance(typeof(U), Input);
+        var number = new U();
+        number.FromString(Input);
+        return number;
     }
 
     private (string, string) GetOperands()
@@ -125,7 +116,6 @@ public class Calculator<T, U> : ObservableObject
         }
         catch
         {
-            Editor.IsError = true;
             OnPropertyChanged(nameof(IsNoError));
         }
 
@@ -134,47 +124,29 @@ public class Calculator<T, U> : ObservableObject
 
     public void AppendSymbolToInput(CalculatorButton.Types type)
     {
-        if (Input.Length > MAX_NUMBER_LENGTH)
-        {
-            return;
-        }
-
-        var toAppend = type switch
-        {
-            CalculatorButton.Types.ComplexI => "+i*",
-            _ => CalculatorButton.ActionSymbols[type]
-        };
-
-        switch (type)
-        {
-            case CalculatorButton.Types.Delimiter:
-            case CalculatorButton.Types.ComplexI:
-                if (Editor.CurrentNumber.Contains(toAppend))
-                {
-                    return;
-                }
-                break;
-        }
-
         if (_isNewInput)
         {
             ClearInput();
             _isNewInput = false;
         }
 
-        Editor.AppendNumber(toAppend);
+        if (Input.Length > MAX_NUMBER_LENGTH)
+        {
+            return;
+        }
+
+        Editor.AddDigit(int.Parse(CalculatorButton.ActionSymbols[type]));
         OnPropertyChanged(nameof(Input));
     }
 
     public void EraseNumberFromInput()
     {
-        Editor.PopNumber();
+        Editor.Backspace();
         OnPropertyChanged(nameof(Input));
     }
 
     public void ClearInput()
     {
-        Editor.IsError = false;
         Editor.Clear();
         OnPropertyChanged(nameof(IsNoError));
         OnPropertyChanged(nameof(Input));
@@ -200,10 +172,17 @@ public class Calculator<T, U> : ObservableObject
     public void EqualPerformed()
     {
         Processor.RightOperand = GetNumberFromInput();
-
         var (firstOperand, secondOperand) = GetOperands();
-        var operation = CalculatorButton.ActionSymbols[_operationsToTypes[Processor.LastOperation]];
         var equalSign = CalculatorButton.ActionSymbols[CalculatorButton.Types.Equal];
+
+        if (Processor.LastOperation == Calculator.Processor.Operation.None)
+        {
+            Processor.LeftOperand = GetNumberFromInput();
+            Buffer = string.Join(' ', Processor.LeftOperand, equalSign);
+            return;
+        }
+
+        var operation = CalculatorButton.ActionSymbols[_operationsToTypes[Processor.LastOperation]];
 
         if (firstOperand == string.Empty || secondOperand == string.Empty)
         {
@@ -221,9 +200,15 @@ public class Calculator<T, U> : ObservableObject
 
     public void OperationPerformed(CalculatorButton.Types type)
     {
-        Buffer = $"{Input} {CalculatorButton.ActionSymbols[type]} ";
+        if (!Processor.IsOperationDone)
+        {
+            EqualPerformed();
+        }
+
         Processor.LeftOperand = GetNumberFromInput();
         Processor.LastOperation = _typesToOperations[type];
+
+        Buffer = $"{Processor.LeftOperand} {CalculatorButton.ActionSymbols[type]} ";
         _isNewInput = true;
     }
 
@@ -252,12 +237,6 @@ public class Calculator<T, U> : ObservableObject
 
     public void ProcessCalculatorButton(CalculatorButton.Types type)
     {
-        if (Editor.IsError)
-        {
-            ClearAll();
-            return;
-        }
-
         switch (type)
         {
             case CalculatorButton.Types.Zero:
@@ -270,9 +249,20 @@ public class Calculator<T, U> : ObservableObject
             case CalculatorButton.Types.Seven:
             case CalculatorButton.Types.Eight:
             case CalculatorButton.Types.Nine:
-            case CalculatorButton.Types.Delimiter:
-            case CalculatorButton.Types.ComplexI:
                 AppendSymbolToInput(type);
+                break;
+            case CalculatorButton.Types.Delimiter:
+                Editor.Separator = ",";
+                Editor.AddSeparator();
+                OnPropertyChanged(nameof(Input));
+                break;
+            case CalculatorButton.Types.Slash:
+                Editor.AddSeparator();
+                OnPropertyChanged(nameof(Input));
+                break;
+            case CalculatorButton.Types.ComplexI:
+                Editor.AddSeparator();
+                OnPropertyChanged(nameof(Input));
                 break;
             case CalculatorButton.Types.Plus:
             case CalculatorButton.Types.Minus:

@@ -11,8 +11,8 @@ public class TestComplex
         var expectedReal = 2.0;
         var expectedImag = 3.0;
 
-        var actualReal = Value.GetReal();
-        var actualImag = Value.GetImag();
+        var actualReal = Value.Real;
+        var actualImag = Value.Image;
 
         Assert.AreEqual(actualReal, expectedReal);
         Assert.AreEqual(actualImag, expectedImag);
@@ -26,8 +26,8 @@ public class TestComplex
         var expectedReal = 2.0;
         var expectedImag = 3.0;
 
-        var actualReal = Value.GetReal();
-        var actualImag = Value.GetImag();
+        var actualReal = Value.Real;
+        var actualImag = Value.Image;
 
         Assert.AreEqual(expectedReal, actualReal);
         Assert.AreEqual(expectedImag, actualImag);
@@ -112,7 +112,7 @@ public class TestComplex
     {
         var Value = new Complex(32, 16);
 
-        var AssertValue = Complex.Pow(Value);
+        var AssertValue = Value.Pow(2);
 
         var ExpectedValue = new Complex(768, 1024);
 
@@ -156,11 +156,11 @@ public class TestComplex
     }
 
     [TestMethod]
-    public void TestComplexGetReal()
+    public void TestComplexReal()
     {
         var Value = new Complex(2, 2);
 
-        var AssertValue = Value.GetReal();
+        var AssertValue = Value.Real;
 
         var ExpectedValue = 2;
 
@@ -168,11 +168,11 @@ public class TestComplex
     }
 
     [TestMethod]
-    public void TestComplexGetImag()
+    public void TestComplexImage()
     {
         var Value = new Complex(2, 2);
 
-        var AssertValue = Value.GetImag();
+        var AssertValue = Value.Image;
 
         var ExpectedValue = 2;
 
@@ -188,7 +188,7 @@ public class TestComplex
 
         var ExpectedValue = "2+i*2";
 
-        Assert.IsTrue(ExpectedValue == AssertValue);
+        Assert.AreEqual(ExpectedValue, AssertValue);
     }
 
     [TestMethod]
@@ -196,7 +196,7 @@ public class TestComplex
     {
         var Value = new Complex(3840, 2048);
 
-        var AssertValue = Complex.Root(Value, 2, 0);
+        var AssertValue = Value.Root(2);
 
         var ExpectedValue = new Complex(64, 16);
 

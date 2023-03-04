@@ -8,7 +8,7 @@ public class TestComplexEditor
     {
         var Value = new ComplexEditor();
 
-        var AssertValue = Value.IsNull();
+        var AssertValue = Value.IsNull;
 
         var ExpectedValue = true;
 
@@ -16,59 +16,59 @@ public class TestComplexEditor
     }
 
     [TestMethod]
-    public void TestPNumberAppendNumber()
+    public void TestPNumberAddDigit()
     {
         var Value = new ComplexEditor();
-        Value.AppendNumber("5");
+        Value.AddDigit(5);
 
-        var AssertValue = Value.CurrentNumber;
+        var AssertValue = Value.Number;
 
         var ExpectedValue = "5";
 
-        Assert.IsTrue(ExpectedValue == AssertValue);
+        Assert.AreEqual(ExpectedValue, AssertValue);
     }
 
     [TestMethod]
-    public void TestPNumberPopNumberBack()
+    public void TestPNumberBackspace()
     {
         var Value = new ComplexEditor();
-        Value.AppendNumber("5");
-        Value.AppendNumber("8");
-        Value.PopNumber();
+        Value.AddDigit(5);
+        Value.AddDigit(8);
+        Value.Backspace();
 
-        var AssertValue = Value.CurrentNumber;
+        var AssertValue = Value.Number;
 
         var ExpectedValue = "5";
 
-        Assert.IsTrue(ExpectedValue == AssertValue);
+        Assert.AreEqual(ExpectedValue, AssertValue);
     }
 
     [TestMethod]
     public void TestPNumberClear()
     {
         var Value = new ComplexEditor();
-        Value.AppendNumber("5");
-        Value.AppendNumber("8");
+        Value.AddDigit(5);
+        Value.AddDigit(8);
         Value.Clear();
 
-        var AssertValue = Value.CurrentNumber;
+        var AssertValue = Value.Number;
 
-        var ExpectedValue = "0+i*0";
+        var ExpectedValue = string.Empty;
 
-        Assert.IsTrue(ExpectedValue == AssertValue);
+        Assert.AreEqual(ExpectedValue, AssertValue);
     }
 
     [TestMethod]
     public void TestPNumberToggleNegative()
     {
         var Value = new ComplexEditor();
-        Value.AppendNumber("12");
+        Value.AddDigit(12);
         Value.ToggleNegative();
 
-        var AssertValue = Value.CurrentNumber;
+        var AssertValue = Value.Number;
 
         var ExpectedValue = "-12";
 
-        Assert.IsTrue(ExpectedValue == AssertValue);
+        Assert.AreEqual(ExpectedValue, AssertValue);
     }
 }

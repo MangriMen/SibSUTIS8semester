@@ -2,84 +2,99 @@
 
 namespace Types;
 
-public class Complex
+public class Complex : Number
 {
-    private double _real;
-    private double _imag;
+    private const double DEFAULT_IMAGE_REAL = 0;
+
+    private PNumber _real = new();
+    private PNumber _img = new();
+
+    public PNumber Real
+    {
+        get => _real;
+        set => _real = value;
+    }
+    public PNumber Image
+    {
+        get => _img;
+        set => _img = value;
+    }
 
     public Complex()
     {
-        Init();
+        _real = DEFAULT_IMAGE_REAL;
+        _img = DEFAULT_IMAGE_REAL;
     }
 
-    public Complex(double a = 0, double b = 0)
+    public Complex(PNumber? real = default, PNumber? image = default)
     {
-        Init(a, b);
+        _real = real ?? DEFAULT_IMAGE_REAL;
+        _img = image ?? DEFAULT_IMAGE_REAL;
     }
 
-    public Complex(string str)
+    public Complex(string number)
     {
-        var splitter = str.Split('+');
-        var a = double.Parse(splitter[0]);
-        var b = 0.0;
+        FromString(number);
+    }
 
-        if (splitter.Length > 1)
+    public static double Abs(Complex rhs)
+    {
+        return Math.Sqrt((double)((rhs._real * rhs._real) + (rhs._img * rhs._img)));
+    }
+
+    public static double AngleRadians(Complex complex)
+    {
+        if (complex._real > 0)
         {
-            b = double.Parse(Regex.Replace(splitter[1][2..], @"\(|\)", ""));
+            return Math.Atan((double)(complex._img / complex._real));
+        }
+        else if (complex._real < 0)
+        {
+            return Math.Atan((double)(complex._img / complex._real)) + Math.PI;
+        }
+        else if (complex._real == 0 && complex._img < 0)
+        {
+            return -Math.PI / 2;
+        }
+        else if (complex._real == 0 && complex._img > 0)
+        {
+            return Math.PI / 2;
+        }
+        else
+        {
+            throw new Exception("Can't take a angle");
+        }
+    }
+
+    public override bool IsNull()
+    {
+        return _real == 0 && _img == 0;
+    }
+
+    public Complex Root(double n = 2, int i = 0)
+    {
+        var roots = new List<Complex>();
+        double phi = Math.Pow(Abs(this), 1 / (double)n);
+
+        for (int k = 0; k < n; k++)
+        {
+            double coeff = 2 * Math.PI * k;
+            roots.Add(
+                new Complex(phi, 0)
+                    * new Complex(
+                        Math.Cos((AngleRadians(this) + coeff) / n),
+                        Math.Sin((AngleRadians(this) + coeff) / n)
+                    )
+            );
         }
 
-        Init(a, b);
+        return roots[i];
     }
 
-    private void Init(double a = 0, double b = 0)
+    public override Complex Pow(double n = 2)
     {
-        _real = a;
-        _imag = b;
-    }
-
-    static public Complex operator +(Complex lhs, Complex rhs)
-    {
-        return new Complex(rhs._real + lhs._real, rhs._imag + lhs._imag);
-    }
-
-    static public Complex operator -(Complex lhs, Complex rhs)
-    {
-        return new Complex(lhs._real - rhs._real, lhs._imag - rhs._imag);
-    }
-
-    static public Complex operator *(Complex lhs, Complex rhs)
-    {
-        return new Complex(
-            rhs._real * lhs._real - rhs._imag * lhs._imag,
-            rhs._real * lhs._imag + lhs._real * rhs._imag
-        );
-        ;
-    }
-
-    static public Complex operator /(Complex lhs, Complex rhs)
-    {
-        double denomimator = rhs._real * rhs._real + rhs._imag * rhs._imag;
-
-        double nominatorReal = lhs._real * rhs._real + lhs._imag * rhs._imag;
-        double nominatorImag = rhs._real * lhs._imag - lhs._real * rhs._imag;
-
-        return new Complex(nominatorReal / denomimator, nominatorImag / denomimator);
-    }
-
-    static public bool operator ==(Complex rhs, Complex lhs)
-    {
-        return rhs?._real == lhs?._real && rhs?._imag == lhs?._imag;
-    }
-
-    static public bool operator !=(Complex rhs, Complex lhs)
-    {
-        return rhs._real != lhs._real || rhs._imag != lhs._imag;
-    }
-
-    static public Complex Pow(Complex number, double n = 2)
-    {
-        double phi = Math.Atan2(number._imag, number._real);
-        double r = Math.Sqrt(number._real * number._real + number._imag * number._imag);
+        double phi = Math.Atan2((double)_img, (double)_real);
+        double r = Math.Sqrt((double)(_real * _real + _img * _img));
 
         double R = Math.Pow(r, n);
         double Phi = n * phi;
@@ -92,84 +107,95 @@ public class Complex
         return complex;
     }
 
-    public static double Abs(Complex complex)
+    public override Complex Root(double n = 2)
     {
-        return Math.Sqrt(complex._real * complex._real + complex._imag * complex._imag);
+        return Root(n, 0);
     }
 
-    public static double AngleRadians(Complex complex)
+    public override Number Reciprocal()
     {
-        if (complex._real > 0)
+        return new Complex(_real, -_img);
+    }
+
+    protected override Number Add(Number rhs)
+    {
+        return this + (Complex)rhs;
+    }
+
+    protected override Number Subtract(Number rhs)
+    {
+        return this - (Complex)rhs;
+    }
+
+    protected override Number Multiply(Number rhs)
+    {
+        return this * (Complex)rhs;
+    }
+
+    protected override Number Divide(Number rhs)
+    {
+        return this / (Complex)rhs;
+    }
+
+    protected override bool Equals(Number rhs)
+    {
+        return this == (Complex)rhs;
+    }
+
+    public override void FromString(string number)
+    {
+        var parts = number.Split('+');
+        _real = double.Parse(parts[0]);
+        _img = 0.0;
+
+        if (parts.Length > 1)
         {
-            return Math.Atan(complex._imag / complex._real);
-        }
-        else if (complex._real < 0)
-        {
-            return Math.Atan(complex._imag / complex._real) + Math.PI;
-        }
-        else if (complex._real == 0 && complex._imag < 0)
-        {
-            return -Math.PI / 2;
-        }
-        else if (complex._real == 0 && complex._imag > 0)
-        {
-            return Math.PI / 2;
-        }
-        else
-        {
-            throw new Exception("Can't take a angle");
+            _img = double.Parse(Regex.Replace(parts[1][2..], @"\(|\)", ""));
         }
     }
 
-    public static Complex Root(Complex complex, int n = 2, int i = 0)
+    public override string ToString()
     {
-        var roots = new List<Complex>();
-        double phi = Math.Pow(Abs(complex), 1 / (double)n);
-
-        for (int k = 0; k < n; k++)
-        {
-            double coeff = 2 * Math.PI * k;
-            roots.Add(
-                new Complex(phi, 0)
-                    * new Complex(
-                        Math.Cos((AngleRadians(complex) + coeff) / n),
-                        Math.Sin((AngleRadians(complex) + coeff) / n)
-                    )
-            );
-        }
-
-        return roots[i];
+        string img = _img >= 0 ? Image.ToString() : "(" + Image.ToString() + ")";
+        return Real.ToString() + "+i*" + img;
     }
 
-    public double GetReal()
+    static public Complex operator +(Complex lhs, Complex rhs)
     {
-        return _real;
+        return new Complex(rhs._real + lhs._real, rhs._img + lhs._img);
     }
 
-    public double GetImag()
+    static public Complex operator -(Complex lhs, Complex rhs)
     {
-        return _imag;
+        return new Complex(lhs._real - rhs._real, lhs._img - rhs._img);
     }
 
-    public string RealString()
+    static public Complex operator *(Complex lhs, Complex rhs)
     {
-        return _real.ToString();
+        return new Complex(
+            rhs._real * lhs._real - rhs._img * lhs._img,
+            rhs._real * lhs._img + lhs._real * rhs._img
+        );
     }
 
-    public string ImagString()
+    static public Complex operator /(Complex lhs, Complex rhs)
     {
-        return _imag.ToString();
+        double denomimator = (double)(rhs._real * rhs._real + rhs._img * rhs._img);
+
+        double nominatorReal = (double)(lhs._real * rhs._real + lhs._img * rhs._img);
+        double nominatorImag = (double)(rhs._real * lhs._img - lhs._real * rhs._img);
+
+        return new Complex(nominatorReal / denomimator, nominatorImag / denomimator);
     }
 
-    new public string ToString()
+    static public bool operator ==(Complex rhs, Complex lhs)
     {
-        string img = _imag >= 0 ? ImagString() : "(" + ImagString() + ")";
-        return RealString() + "+i*" + img;
+        return rhs._real == lhs._real && rhs._img == lhs._img;
     }
 
-    public void Show()
+    static public bool operator !=(Complex rhs, Complex lhs)
     {
-        Console.WriteLine($"real: {_real}, imag: {_imag}");
+        return rhs._real != lhs._real || rhs._img != lhs._img;
     }
 
     public override int GetHashCode()
@@ -179,6 +205,16 @@ public class Complex
 
     public override bool Equals(object? obj)
     {
-        return GetHashCode() == obj?.GetHashCode();
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (ReferenceEquals(obj, null))
+        {
+            return false;
+        }
+
+        return Equals((Complex)obj);
     }
 }

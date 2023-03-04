@@ -71,6 +71,8 @@ public partial class App : Application
                     // Views and ViewModels
                     services.AddTransient<ComplexViewModel>();
                     services.AddTransient<ComplexPage>();
+                    services.AddTransient<PNumberViewModel>();
+                    services.AddTransient<PNumberPage>();
                     services.AddTransient<NumberConverterViewModel>();
                     services.AddTransient<NumberConverterPage>();
                     services.AddTransient<SettingsViewModel>();

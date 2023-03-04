@@ -8,8 +8,8 @@ public class TestFraction
     {
         Fraction Value = new Fraction(5, 3);
 
-        var AssertValue1 = Value.GetNominator();
-        var AssertValue2 = Value.GetDenominator();
+        var AssertValue1 = Value.Nominator;
+        var AssertValue2 = Value.Denominator;
 
         var ExpectedValue1 = 5;
         var ExpectedValue2 = 3;
@@ -24,8 +24,8 @@ public class TestFraction
         var Value = "2/3";
         Fraction FromStringToFraction = new Fraction(Value);
 
-        var AssertValue1 = FromStringToFraction.GetNominator();
-        var AssertValue2 = FromStringToFraction.GetDenominator();
+        var AssertValue1 = FromStringToFraction.Nominator;
+        var AssertValue2 = FromStringToFraction.Denominator;
 
         var ExpectedValue1 = 2;
         var ExpectedValue2 = 3;
@@ -40,8 +40,8 @@ public class TestFraction
         var Value = "12/8";
         Fraction FromStringToFraction = new Fraction(Value);
 
-        var AssertValue1 = FromStringToFraction.GetNominator();
-        var AssertValue2 = FromStringToFraction.GetDenominator();
+        var AssertValue1 = FromStringToFraction.Nominator;
+        var AssertValue2 = FromStringToFraction.Denominator;
 
         var ExpectedValue1 = 3;
         var ExpectedValue2 = 2;
@@ -55,8 +55,8 @@ public class TestFraction
     {
         Fraction Value = new Fraction(12, 8);
 
-        var AssertValue1 = Value.GetNominator();
-        var AssertValue2 = Value.GetDenominator();
+        var AssertValue1 = Value.Nominator;
+        var AssertValue2 = Value.Denominator;
 
         var ExpectedValue1 = 3;
         var ExpectedValue2 = 2;
@@ -122,7 +122,7 @@ public class TestFraction
     {
         Fraction Value = new Fraction(4, 5);
 
-        Fraction AssertValue = Fraction.Pow(Value, 2);
+        Fraction AssertValue = Value.Pow(2);
 
         Fraction ExpectedValue = new Fraction(16, 25);
 
@@ -134,7 +134,7 @@ public class TestFraction
     {
         Fraction Value = new Fraction(4, 5);
 
-        Fraction AssertValue = Fraction.Reverse(Value);
+        Fraction AssertValue = Value.Reciprocal();
 
         Fraction ExpectedValue = new Fraction(5, 4);
 
@@ -190,7 +190,7 @@ public class TestFraction
     {
         Fraction Value = new Fraction(2, 3);
 
-        var AssertValue = Value.GetNominator();
+        var AssertValue = Value.Nominator;
 
         var ExpectedValue = 2;
 
@@ -202,33 +202,9 @@ public class TestFraction
     {
         Fraction Value = new Fraction(2, 3);
 
-        var AssertValue = Value.GetDenominator();
+        var AssertValue = Value.Denominator;
 
         var ExpectedValue = 3;
-
-        Assert.AreEqual(ExpectedValue, AssertValue);
-    }
-
-    [TestMethod]
-    public void TestFractionGetNominatorString()
-    {
-        Fraction Value = new Fraction(2, 3);
-
-        var AssertValue = Value.GetNominatorString();
-
-        var ExpectedValue = "2";
-
-        Assert.AreEqual(ExpectedValue, AssertValue);
-    }
-
-    [TestMethod]
-    public void TestFractionGetDenominatorString()
-    {
-        Fraction Value = new Fraction(2, 3);
-
-        var AssertValue = Value.GetDenominatorString();
-
-        var ExpectedValue = "3";
 
         Assert.AreEqual(ExpectedValue, AssertValue);
     }
@@ -238,7 +214,7 @@ public class TestFraction
     {
         var Value = new Fraction(2, 3);
 
-        var AssertValue = Value.ToFractionString();
+        var AssertValue = Value.ToString();
 
         var ExpectedValue = "2/3";
 

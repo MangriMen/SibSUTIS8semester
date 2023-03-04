@@ -12,6 +12,6 @@ public sealed partial class MainWindow : WindowEx
         Content = null;
         Title = "AppDisplayName".GetLocalized();
         MinWidth = 336;
-        MinHeight = 508;
+        MinHeight = 524;
     }
 }

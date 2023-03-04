@@ -1,3 +1,5 @@
+using Types;
+
 namespace Calculator.Tests.MSTest;
 
 [TestClass]
@@ -6,7 +8,7 @@ public class TestMemory
     [TestMethod]
     public void TestConstructor()
     {
-        var memory = new Memory<int>();
+        var memory = new Memory<PNumber>();
 
         var expected = 0;
         var actual = memory.Number;
@@ -21,7 +23,7 @@ public class TestMemory
     [TestMethod]
     public void TestGetNumber()
     {
-        var memory = new Memory<int>();
+        var memory = new Memory<PNumber>();
         memory.Store(2);
 
         var expected = 2;
@@ -33,7 +35,7 @@ public class TestMemory
     [TestMethod]
     public void TestStore()
     {
-        var memory = new Memory<int>();
+        var memory = new Memory<PNumber>();
         memory.Store(2);
 
         var expected = 2;
@@ -45,7 +47,7 @@ public class TestMemory
     [TestMethod]
     public void TestRead()
     {
-        var memory = new Memory<int>();
+        var memory = new Memory<PNumber>();
         memory.Store(2);
 
         var expected = 2;
@@ -57,7 +59,7 @@ public class TestMemory
     [TestMethod]
     public void TestAdd()
     {
-        var memory = new Memory<int>();
+        var memory = new Memory<PNumber>();
         memory.Store(2);
         memory.Add(2);
 
@@ -70,7 +72,7 @@ public class TestMemory
     [TestMethod]
     public void TestSubtract()
     {
-        var memory = new Memory<int>();
+        var memory = new Memory<PNumber>();
         memory.Store(2);
         memory.Subtract(2);
 
@@ -83,7 +85,7 @@ public class TestMemory
     [TestMethod]
     public void TestClear()
     {
-        var memory = new Memory<int>();
+        var memory = new Memory<PNumber>();
         memory.Store(2);
         memory.Clear();
 
@@ -96,7 +98,7 @@ public class TestMemory
     [TestMethod]
     public void TestGetStateOn()
     {
-        var memory = new Memory<int>();
+        var memory = new Memory<PNumber>();
         memory.Store(2);
 
         var expected = true;
@@ -108,7 +110,7 @@ public class TestMemory
     [TestMethod]
     public void TestGetStateOff()
     {
-        var memory = new Memory<int>();
+        var memory = new Memory<PNumber>();
         memory.Store(2);
         memory.Clear();
 

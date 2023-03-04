@@ -39,6 +39,7 @@ public sealed partial class CalculatorButton : UserControl
         Clear,
         ClearEntry,
         ComplexI,
+        Slash
     }
 
     public static readonly Dictionary<Types, string> ActionSymbols =
@@ -76,6 +77,7 @@ public sealed partial class CalculatorButton : UserControl
             { Types.Clear, "C" },
             { Types.ClearEntry, "CE" },
             { Types.ComplexI, "i" },
+            { Types.Slash, "/" },
         };
 
     public Types Type

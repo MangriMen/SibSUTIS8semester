@@ -68,25 +68,26 @@ public class Converter : ObservableObject
 
     public int[] Notations => _notations;
     public int SourceNotation => _notations[_sourceNotationIndex];
-    public string NumberInput => Editor.CurrentNumber;
+    public string NumberInput =>
+        Editor.Number != string.Empty ? Editor.Number : FractionEditor.ZERO;
+
+    public Converter()
+    {
+        ConvertNumber();
+    }
 
     private void AppendSymbolToInput(CalculatorButton.Types type)
     {
-        if (Editor.CurrentNumber.Length >= MAX_NUMBER_LENGTH)
+        if (Editor.Number.Length >= MAX_NUMBER_LENGTH)
         {
             return;
         }
 
-        var symbol = CalculatorButton.ActionSymbols[type];
-
         switch (type)
         {
             case CalculatorButton.Types.Delimiter:
-                if (Editor.CurrentNumber.Contains(symbol))
-                {
-                    return;
-                }
-                break;
+                Editor.AddSeparator();
+                return;
         }
 
         if (_isNewInput)
@@ -95,13 +96,13 @@ public class Converter : ObservableObject
             _isNewInput = false;
         }
 
-        Editor.AppendNumber(symbol);
+        Editor.AddDigit(int.Parse(CalculatorButton.ActionSymbols[type]));
         OnPropertyChanged(nameof(NumberInput));
     }
 
     private void EraseNumberFromInput()
     {
-        Editor.PopNumber();
+        Editor.Backspace();
         OnPropertyChanged(nameof(NumberInput));
     }
 
@@ -110,18 +111,16 @@ public class Converter : ObservableObject
         _isNewInput = true;
         Editor.Clear();
         OnPropertyChanged(nameof(NumberInput));
-        DestinationText = new PNumber().GetConvertedNumber();
+        DestinationText = new PNumber().ToString();
     }
 
     private void ConvertNumber()
     {
         _number = new(
-            PNumber.ArbitraryToDecimalSystem(Editor.CurrentNumber, SourceNotation),
-            SourceNotation,
-            0
+            PHelper.ArbitraryToDecimalSystem(Editor.Number, SourceNotation),
+            Notations[DestinationNotationIndex]
         );
-        _number.SetBase(_notations[DestinationNotationIndex]);
-        DestinationText = _number.GetConvertedNumber().ToUpper();
+        DestinationText = _number.ToString().ToUpper();
     }
 
     public void ProcessCalculatorButton(CalculatorButton.Types type)

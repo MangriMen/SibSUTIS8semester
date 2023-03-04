@@ -159,4 +159,7 @@
   <data name="Shell_NumberConverter.Content" xml:space="preserve">
     <value>Number</value>
   </data>
+  <data name="Shell_PNumber.Content" xml:space="preserve">
+    <value>PNumber</value>
+  </data>
 </root>
