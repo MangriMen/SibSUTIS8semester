@@ -9,27 +9,54 @@ public class FractionEditor : Editor
     private readonly PNumberEditor _nominator = new();
     private readonly PNumberEditor _denominator = new();
 
-    public override string Zero
-    {
-        get => ZERO;
-    }
     public override string Separator { get; set; } = SEPARATOR.ToString();
+    public override string Zero => ZERO;
 
-    protected override string AddDigitLS(int digit)
+    public override string Number
     {
-        Number =
-            $"{_nominator.AddDigit(digit)}{(HaveSeparator ? SEPARATOR : string.Empty)}{_denominator.Number}";
+        get =>
+            $"{(HaveSign ? SIGN : string.Empty)}{_nominator.Number}{(HaveSeparator ? SEPARATOR : string.Empty)}{_denominator.Number}";
+        set
+        {
+            if (value == string.Empty)
+            {
+                return;
+            }
+
+            var parts = value.Split(SEPARATOR);
+
+            HaveSign = false;
+            HaveSeparator = false;
+
+            _nominator.Number = parts[0];
+            if (parts[0][0] == SIGN)
+            {
+                HaveSign = true;
+                _nominator.Number = parts[0][1..];
+            }
+
+            _denominator.Number = string.Empty;
+            if (parts.Length == 2)
+            {
+                HaveSeparator = true;
+                _denominator.Number = parts[1];
+            }
+        }
+    }
+
+    protected override string AddDigitLS(string digit)
+    {
+        _nominator.AddDigit(digit);
         return Number;
     }
 
-    protected override string AddDigitRS(int digit)
+    protected override string AddDigitRS(string digit)
     {
-        Number =
-            $"{_nominator.Number}{(HaveSeparator ? SEPARATOR : string.Empty)}{_denominator.AddDigit(digit)}";
+        _denominator.AddDigit(digit);
         return Number;
     }
 
-    public override string AddDigit(int digit)
+    public override string AddDigit(string digit)
     {
         var separatorIndex = Number.IndexOf(SEPARATOR);
         if (separatorIndex < 0)
@@ -46,12 +73,7 @@ public class FractionEditor : Editor
     {
         if (IsNull)
         {
-            Number = ZERO;
-        }
-
-        if (!Number.Contains(Separator))
-        {
-            Number += SEPARATOR;
+            _nominator.AddDigit(ZERO);
         }
 
         HaveSeparator = true;
@@ -61,13 +83,21 @@ public class FractionEditor : Editor
 
     public override string Backspace()
     {
-        if (Number.Length > 0)
+        if (Number.Length > 1 && Number[^1] == SEPARATOR)
         {
-            Number = Number[..^1];
+            HaveSeparator = false;
         }
-        else
+        else if (Number.Length > 0)
         {
-            Number = ZERO;
+            var delimeterIndex = Number.IndexOf(SEPARATOR);
+            if (delimeterIndex < 0)
+            {
+                _nominator.Backspace();
+            }
+            else
+            {
+                _denominator.Backspace();
+            }
         }
 
         return Number;
@@ -75,11 +105,8 @@ public class FractionEditor : Editor
 
     public override string ToggleNegative()
     {
-        Number = Number[0] switch
-        {
-            SIGN => Number[1..],
-            _ => $"{SIGN}{Number}",
-        };
+        HaveSign = !HaveSign;
+
         return Number;
     }
 

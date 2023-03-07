@@ -28,17 +28,6 @@ public static class Processor
 public class Processor<T>
     where T : Number, new()
 {
-    private readonly T _oneHundred = (
-        (Func<T>)(
-            () =>
-            {
-                var tmp = new T();
-                tmp.FromString("100");
-                return tmp;
-            }
-        )
-    )();
-
     private T _leftOperand = new();
     private T _rightOperand = new();
 
@@ -114,6 +103,9 @@ public class Processor<T>
             true => _leftOperand,
             false => _rightOperand
         };
+
+        var _oneHundred = new T();
+        _oneHundred.FromString("100", result.Base);
 
         result = function switch
         {

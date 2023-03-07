@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 using Microsoft.UI.Xaml.Navigation;
-
 using rgr.Contracts.Services;
 using rgr.Views;
+using rgr.Models;
 
 namespace rgr.ViewModels;
 

@@ -9,9 +9,9 @@ public class PNumberEditor : Editor
 
     public override string Zero => ZERO;
 
-    protected override string AddDigitLS(int digit)
+    protected override string AddDigitLS(string digit)
     {
-        if (digit == 0)
+        if (digit == ZERO)
         {
             if (Number.Length == 0 || (Number.Length == 1 && Number.StartsWith(ZERO)))
             {
@@ -20,6 +20,11 @@ public class PNumberEditor : Editor
         }
 
         var digitStr = digit.ToString();
+
+        if (Number.Length == 2 && Number.StartsWith(ZERO))
+        {
+            Number = digitStr;
+        }
 
         var separatorIndex = Number.IndexOf(SEPARATOR);
         if (separatorIndex < 0)
@@ -34,9 +39,9 @@ public class PNumberEditor : Editor
         return Number;
     }
 
-    protected override string AddDigitRS(int digit)
+    protected override string AddDigitRS(string digit)
     {
-        if (digit == 0)
+        if (digit == ZERO)
         {
             var separatorIndex = Number.IndexOf(SEPARATOR);
             var rightPart = Number[(separatorIndex + 1)..];
@@ -50,7 +55,7 @@ public class PNumberEditor : Editor
         return Number;
     }
 
-    public override string AddDigit(int digit)
+    public override string AddDigit(string digit)
     {
         var separatorIndex = Number.IndexOf(SEPARATOR);
         if (separatorIndex < 0)

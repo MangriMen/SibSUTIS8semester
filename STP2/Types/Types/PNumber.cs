@@ -21,7 +21,7 @@ public class PNumber : Number
         get => _number;
         set => _number = value;
     }
-    public int Base
+    public override int Base
     {
         get => _base;
         set
@@ -150,9 +150,10 @@ public class PNumber : Number
         return this == (PNumber)rhs;
     }
 
-    public override void FromString(string number)
+    public override void FromString(string number, int @base = 10)
     {
-        _number = PHelper.ArbitraryToDecimalSystem(number, _base);
+        Base = @base;
+        _number = PHelper.ArbitraryToDecimalSystem(number, @base);
     }
 
     public override string ToString()

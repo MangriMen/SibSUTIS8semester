@@ -1,0 +1,16 @@
+<UserControl
+    x:Class="rgr.Controls.NotationSelector"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:rgr.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <ComboBox
+            ItemsSource="{x:Bind Notations}"
+            SelectedIndex="{x:Bind SelectedIndex, Mode=TwoWay}"
+            SelectionChanged="ComboBox_SelectionChanged" />
+    </Grid>
+</UserControl>

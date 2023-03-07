@@ -19,6 +19,11 @@ public class Complex : Number
         get => _img;
         set => _img = value;
     }
+    public override int Base
+    {
+        get => _real.Base;
+        set => _real.Base = _img.Base = value;
+    }
 
     public Complex()
     {
@@ -142,15 +147,15 @@ public class Complex : Number
         return this == (Complex)rhs;
     }
 
-    public override void FromString(string number)
+    public override void FromString(string number, int @base = 10)
     {
         var parts = number.Split('+');
-        _real = double.Parse(parts[0]);
+        _real = new(parts[0], @base);
         _img = 0.0;
 
         if (parts.Length > 1)
         {
-            _img = double.Parse(Regex.Replace(parts[1][2..], @"\(|\)", ""));
+            _img = new(Regex.Replace(parts[1][2..], @"\(|\)", ""), @base);
         }
     }
 

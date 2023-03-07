@@ -3,6 +3,7 @@ using rgr.Controls;
 using Types;
 using Editors;
 using Calculator;
+using Microsoft.UI.Xaml.Controls;
 
 namespace rgr.Models;
 
@@ -76,8 +77,23 @@ public class Calculator<T, U> : ObservableObject
     public bool IsNoError => !false;
     public string Input => Editor.Number != string.Empty ? Editor.Number : Editor.Zero;
 
+    private int _selectedNotationIndex = 0;
+    public int SelectedNotationIndex
+    {
+        get => _selectedNotationIndex;
+        set
+        {
+            SetProperty(ref _selectedNotationIndex, value);
+            ClearAll();
+            OnPropertyChanged(nameof(SelectedNotation));
+        }
+    }
+
+    public int SelectedNotation => Constants.Notations[SelectedNotationIndex];
+
     private void SetNumberToInput(U number)
     {
+        number.Base = SelectedNotation;
         try
         {
             Editor.Number = number.ToString();
@@ -93,7 +109,8 @@ public class Calculator<T, U> : ObservableObject
     private U GetNumberFromInput()
     {
         var number = new U();
-        number.FromString(Input);
+        number.FromString(Input, SelectedNotation);
+        number.Base = SelectedNotation;
         return number;
     }
 
@@ -135,7 +152,7 @@ public class Calculator<T, U> : ObservableObject
             return;
         }
 
-        Editor.AddDigit(int.Parse(CalculatorButton.ActionSymbols[type]));
+        Editor.AddDigit(CalculatorButton.ActionSymbols[type]);
         OnPropertyChanged(nameof(Input));
     }
 
@@ -249,6 +266,12 @@ public class Calculator<T, U> : ObservableObject
             case CalculatorButton.Types.Seven:
             case CalculatorButton.Types.Eight:
             case CalculatorButton.Types.Nine:
+            case CalculatorButton.Types.Ten:
+            case CalculatorButton.Types.Eleven:
+            case CalculatorButton.Types.Twelve:
+            case CalculatorButton.Types.Thirteen:
+            case CalculatorButton.Types.Fourteen:
+            case CalculatorButton.Types.Fifteen:
                 AppendSymbolToInput(type);
                 break;
             case CalculatorButton.Types.Delimiter:

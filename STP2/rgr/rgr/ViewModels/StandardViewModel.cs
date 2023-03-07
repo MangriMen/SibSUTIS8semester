@@ -15,6 +15,13 @@ public class StandardViewModel : ObservableRecipient
 
     public TextBlock? _mainInputObject;
 
+    private object? _headerContext;
+    public object? HeaderContext
+    {
+        get => _headerContext;
+        set => SetProperty(ref _headerContext, value);
+    }
+
     public StandardViewModel() { }
 
     public void CalculatorButtonClick(object sender, RoutedEventArgs e)
@@ -44,5 +51,11 @@ public class StandardViewModel : ObservableRecipient
     public void MainInput_Loaded(object sender, RoutedEventArgs e)
     {
         _mainInputObject = (TextBlock)sender;
+    }
+
+    public void NotationSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var selector = (NotationSelector)sender;
+        Calculator.SelectedNotationIndex = selector.SelectedIndex;
     }
 }

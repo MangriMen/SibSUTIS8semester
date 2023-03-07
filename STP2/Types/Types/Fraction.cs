@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Net.Http.Headers;
+using System.Numerics;
 
 namespace Types;
 
@@ -19,6 +20,11 @@ public class Fraction : Number
     {
         get => _denominator;
         set => _denominator = value;
+    }
+    public override int Base
+    {
+        get => _nominator.Base;
+        set => _nominator.Base = _denominator.Base = value;
     }
 
     public Fraction()
@@ -42,7 +48,8 @@ public class Fraction : Number
 
     private static PNumber Gcd(PNumber a, PNumber b)
     {
-        while (b != 0)
+        var zero = new PNumber(0, a.Base);
+        while (b != zero)
         {
             (a, b) = (b, a % b);
         }
@@ -58,7 +65,8 @@ public class Fraction : Number
     {
         var GCD = Gcd(_nominator, _denominator);
 
-        if (GCD != 1)
+        var one = new PNumber(1, _nominator.Base);
+        if (GCD != one)
         {
             _nominator /= GCD;
             _denominator /= GCD;
@@ -122,40 +130,20 @@ public class Fraction : Number
         return _nominator == rhs_._nominator && _denominator == rhs_._denominator;
     }
 
-    public override void FromString(string number)
+    public override void FromString(string number, int @base = 10)
     {
         int delimeterPosition = number.IndexOf('/');
 
         if (delimeterPosition < 0)
         {
-            delimeterPosition = number.IndexOf(',');
-
-            if (delimeterPosition < 0)
-            {
-                _nominator = new PNumber(number, 10, 16);
-                _denominator = 1;
-
-                Reduce();
-                return;
-            }
-
-            var integerPart = number[..delimeterPosition];
-            var fractionalPart = number[(delimeterPosition + 1)..];
-
-            var trimmedFractional = fractionalPart.TrimEnd('0');
-
-            _denominator = new PNumber($"1{new string('0', trimmedFractional.Length)}");
-            _nominator =
-                new PNumber(integerPart) * _denominator + (PNumber)double.Parse(fractionalPart);
-
-            Reduce();
-            return;
+            _nominator = new(number, @base);
+            _denominator = new(1, @base);
         }
-
-        _nominator = new PNumber(number[..delimeterPosition]);
-        _denominator = new PNumber(
-            number.Length - 1 > delimeterPosition ? number[(delimeterPosition + 1)..] : "1"
-        );
+        else
+        {
+            _nominator = new(number[..delimeterPosition], @base);
+            _denominator = new(number[(delimeterPosition + 1)..], @base);
+        }
 
         Reduce();
     }

@@ -9,34 +9,13 @@ public class Converter : ObservableObject
 {
     private const int MAX_NUMBER_LENGTH = 10;
 
-    private const int DEFAULT_NOTATION_INDEX = 8;
-
-    private static readonly int[] _notations = new int[15]
-    {
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16
-    };
-
     private readonly PNumberEditor Editor = new();
 
     private PNumber _number = new();
 
     private bool _isNewInput = false;
 
-    private int _sourceNotationIndex = DEFAULT_NOTATION_INDEX;
+    private int _sourceNotationIndex = Constants.DEFAULT_NOTATION_INDEX;
     public int SourceNotationIndex
     {
         get => _sourceNotationIndex;
@@ -48,7 +27,7 @@ public class Converter : ObservableObject
         }
     }
 
-    private int _destinationNotationIndex = DEFAULT_NOTATION_INDEX;
+    private int _destinationNotationIndex = Constants.DEFAULT_NOTATION_INDEX;
     public int DestinationNotationIndex
     {
         get => _destinationNotationIndex;
@@ -66,8 +45,8 @@ public class Converter : ObservableObject
         set => SetProperty(ref _destinationText, value);
     }
 
-    public int[] Notations => _notations;
-    public int SourceNotation => _notations[_sourceNotationIndex];
+    public int[] Notations => Constants.Notations;
+    public int SourceNotation => Notations[_sourceNotationIndex];
     public string NumberInput =>
         Editor.Number != string.Empty ? Editor.Number : FractionEditor.ZERO;
 
@@ -96,7 +75,7 @@ public class Converter : ObservableObject
             _isNewInput = false;
         }
 
-        Editor.AddDigit(int.Parse(CalculatorButton.ActionSymbols[type]));
+        Editor.AddDigit(CalculatorButton.ActionSymbols[type]);
         OnPropertyChanged(nameof(NumberInput));
     }
 

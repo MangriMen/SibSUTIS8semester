@@ -45,4 +45,10 @@ public class ComplexViewModel : ObservableRecipient
     {
         _mainInputObject = (TextBlock)sender;
     }
+
+    public void NotationSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var selector = (NotationSelector)sender;
+        Calculator.SelectedNotationIndex = selector.SelectedIndex;
+    }
 }

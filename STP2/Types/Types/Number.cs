@@ -2,6 +2,7 @@
 
 public abstract class Number
 {
+    public abstract int Base { get; set; }
     public abstract bool IsNull();
     public abstract Number Pow(double n = 2);
     public abstract Number Root(double n = 2);
@@ -12,7 +13,7 @@ public abstract class Number
     protected abstract Number Divide(Number rhs);
     protected abstract bool Equals(Number rhs);
 
-    public abstract void FromString(string number);
+    public abstract void FromString(string number, int @base = 10);
 
     public abstract override string ToString();
 
