@@ -1,0 +1,15 @@
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\bin\Debug\net6.0\lab12.deps.json
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\bin\Debug\net6.0\lab12.dll
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\bin\Debug\net6.0\lab12.pdb
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\bin\Debug\net6.0\lab5.dll
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\bin\Debug\net6.0\lab5.pdb
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\obj\Debug\net6.0\lab12.csproj.AssemblyReference.cache
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\obj\Debug\net6.0\lab12.GeneratedMSBuildEditorConfig.editorconfig
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\obj\Debug\net6.0\lab12.AssemblyInfoInputs.cache
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\obj\Debug\net6.0\lab12.AssemblyInfo.cs
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\obj\Debug\net6.0\lab12.csproj.CoreCompileInputs.cache
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\obj\Debug\net6.0\lab12.csproj.CopyComplete
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\obj\Debug\net6.0\lab12.dll
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\obj\Debug\net6.0\refint\lab12.dll
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\obj\Debug\net6.0\lab12.pdb
+D:\GIT University\SibSUTIS8semester\STP2\rgr\lab12\obj\Debug\net6.0\ref\lab12.dll

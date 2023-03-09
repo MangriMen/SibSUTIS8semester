@@ -1,0 +1,218 @@
+﻿<Page x:ConnectionId='1'
+    x:Class="rgr.Views.NumberConverterPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:rgr.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:rgr.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <x:Double x:Key="TextBlockFontSize">48</x:Double>
+        <VerticalAlignment x:Key="TextBlockAlignment">Bottom</VerticalAlignment>
+    </Page.Resources>
+
+    <Grid x:ConnectionId='2' x:Name="ContentArea">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Padding="8,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:ConnectionId='22'
+                    Grid.Row="0"
+                    MaxHeight="64"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="{StaticResource TextBlockAlignment}"
+                    FontSize="{StaticResource TextBlockFontSize}"
+                                                                 
+                                                                       />
+
+                <ComboBox x:ConnectionId='23'
+                    Grid.Row="1"
+                                                              
+                                                                                                                             />
+
+                <TextBlock x:ConnectionId='24'
+                    Grid.Row="2"
+                    MaxHeight="64"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="{StaticResource TextBlockAlignment}"
+                    FontSize="{StaticResource TextBlockFontSize}"
+                                                                     
+                                                                           />
+
+                <ComboBox x:ConnectionId='25'
+                    Grid.Row="3"
+                                                              
+                                                                                                                                  />
+            </Grid>
+
+            <Grid
+                Grid.Row="3"
+                Padding="4"
+                ColumnSpacing="2"
+                RowSpacing="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="32" />
+                    <RowDefinition Height="*" MinHeight="32" />
+                    <RowDefinition Height="*" MinHeight="32" />
+                    <RowDefinition Height="*" MinHeight="32" />
+                    <RowDefinition Height="*" MinHeight="32" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid
+                    Grid.Row="0"
+                    Grid.RowSpan="5"
+                    Grid.Column="0"
+                    RowSpacing="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" MinHeight="32" />
+                        <RowDefinition Height="*" MinHeight="32" />
+                        <RowDefinition Height="*" MinHeight="32" />
+                        <RowDefinition Height="*" MinHeight="32" />
+                        <RowDefinition Height="*" MinHeight="32" />
+                        <RowDefinition Height="*" MinHeight="32" />
+                    </Grid.RowDefinitions>
+
+                    <controls:CalculatorButton x:ConnectionId='16'
+                        Grid.Row="0"
+                        Grid.Column="0"
+                                                                        
+                                                                                 
+                        Type="Ten" />
+                    <controls:CalculatorButton x:ConnectionId='17'
+                        Grid.Row="1"
+                        Grid.Column="0"
+                                                                        
+                                                                                 
+                        Type="Eleven" />
+                    <controls:CalculatorButton x:ConnectionId='18'
+                        Grid.Row="2"
+                        Grid.Column="0"
+                                                                        
+                                                                                 
+                        Type="Twelve" />
+                    <controls:CalculatorButton x:ConnectionId='19'
+                        Grid.Row="3"
+                        Grid.Column="0"
+                                                                        
+                                                                                 
+                        Type="Thirteen" />
+                    <controls:CalculatorButton x:ConnectionId='20'
+                        Grid.Row="4"
+                        Grid.Column="0"
+                                                                        
+                                                                                 
+                        Type="Fourteen" />
+                    <controls:CalculatorButton x:ConnectionId='21'
+                        Grid.Row="5"
+                        Grid.Column="0"
+                                                                        
+                                                                                 
+                        Type="Fifteen" />
+                </Grid>
+
+                <controls:CalculatorButton x:ConnectionId='3'
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="1"
+                                                                    
+                    Type="ClearEntry" />
+                <controls:CalculatorButton x:ConnectionId='4'
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Grid.ColumnSpan="2"
+                                                                    
+                    Type="Backspace" />
+                <controls:CalculatorButton x:ConnectionId='5'
+                    Grid.Row="1"
+                    Grid.Column="1"
+                                                                    
+                                                                             
+                    Type="Seven" />
+                <controls:CalculatorButton x:ConnectionId='6'
+                    Grid.Row="1"
+                    Grid.Column="2"
+                                                                    
+                                                                             
+                    Type="Eight" />
+                <controls:CalculatorButton x:ConnectionId='7'
+                    Grid.Row="1"
+                    Grid.Column="3"
+                                                                    
+                                                                             
+                    Type="Nine" />
+                <controls:CalculatorButton x:ConnectionId='8'
+                    Grid.Row="2"
+                    Grid.Column="1"
+                                                                    
+                                                                             
+                    Type="Four" />
+                <controls:CalculatorButton x:ConnectionId='9'
+                    Grid.Row="2"
+                    Grid.Column="2"
+                                                                    
+                                                                             
+                    Type="Five" />
+                <controls:CalculatorButton x:ConnectionId='10'
+                    Grid.Row="2"
+                    Grid.Column="3"
+                                                                    
+                                                                             
+                    Type="Six" />
+                <controls:CalculatorButton x:ConnectionId='11'
+                    Grid.Row="3"
+                    Grid.Column="1"
+                                                                    
+                                                                             
+                    Type="One" />
+                <controls:CalculatorButton x:ConnectionId='12'
+                    Grid.Row="3"
+                    Grid.Column="2"
+                                                                    
+                                                                             
+                    Type="Two" />
+                <controls:CalculatorButton x:ConnectionId='13'
+                    Grid.Row="3"
+                    Grid.Column="3"
+                                                                    
+                                                                             
+                    Type="Three" />
+                <controls:CalculatorButton x:ConnectionId='14'
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                                                                    
+                                                                             
+                    Type="Zero" />
+                <controls:CalculatorButton x:ConnectionId='15'
+                    Grid.Row="4"
+                    Grid.Column="4"
+                                                                    
+                    Type="Delimiter" />
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
+

@@ -1,0 +1,7 @@
+rgr.Tests.MSTest\Microsoft.TestPlatform.PlatformAbstractions.dll
+rgr.Tests.MSTest\testhost.dll
+rgr.Tests.MSTest\testhost.exe
+rgr.Tests.MSTest\ru\Microsoft.TestPlatform.AdapterUtilities.resources.dll
+rgr.Tests.MSTest\ru\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
+rgr.Tests.MSTest\ru\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
+rgr.Tests.MSTest\ru\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll

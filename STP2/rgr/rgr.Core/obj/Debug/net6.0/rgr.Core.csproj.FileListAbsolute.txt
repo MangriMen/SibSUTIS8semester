@@ -1,0 +1,12 @@
+D:\GIT University\SibSUTIS8semester\STP2\rgr\rgr.Core\bin\Debug\net6.0\rgr.Core.deps.json
+D:\GIT University\SibSUTIS8semester\STP2\rgr\rgr.Core\bin\Debug\net6.0\rgr.Core.dll
+D:\GIT University\SibSUTIS8semester\STP2\rgr\rgr.Core\bin\Debug\net6.0\rgr.Core.pdb
+D:\GIT University\SibSUTIS8semester\STP2\rgr\rgr.Core\obj\Debug\net6.0\rgr.Core.csproj.AssemblyReference.cache
+D:\GIT University\SibSUTIS8semester\STP2\rgr\rgr.Core\obj\Debug\net6.0\rgr.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\GIT University\SibSUTIS8semester\STP2\rgr\rgr.Core\obj\Debug\net6.0\rgr.Core.AssemblyInfoInputs.cache
+D:\GIT University\SibSUTIS8semester\STP2\rgr\rgr.Core\obj\Debug\net6.0\rgr.Core.AssemblyInfo.cs
+D:\GIT University\SibSUTIS8semester\STP2\rgr\rgr.Core\obj\Debug\net6.0\rgr.Core.csproj.CoreCompileInputs.cache
+D:\GIT University\SibSUTIS8semester\STP2\rgr\rgr.Core\obj\Debug\net6.0\rgr.Core.dll
+D:\GIT University\SibSUTIS8semester\STP2\rgr\rgr.Core\obj\Debug\net6.0\refint\rgr.Core.dll
+D:\GIT University\SibSUTIS8semester\STP2\rgr\rgr.Core\obj\Debug\net6.0\rgr.Core.pdb
+D:\GIT University\SibSUTIS8semester\STP2\rgr\rgr.Core\obj\Debug\net6.0\ref\rgr.Core.dll

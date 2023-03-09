@@ -1,0 +1,12 @@
+D:\GIT University\SibSUTIS8semester\STP2\lab9\lab9\bin\Debug\net6.0\lab9.deps.json
+D:\GIT University\SibSUTIS8semester\STP2\lab9\lab9\bin\Debug\net6.0\lab9.dll
+D:\GIT University\SibSUTIS8semester\STP2\lab9\lab9\bin\Debug\net6.0\lab9.pdb
+D:\GIT University\SibSUTIS8semester\STP2\lab9\lab9\obj\Debug\net6.0\lab9.csproj.AssemblyReference.cache
+D:\GIT University\SibSUTIS8semester\STP2\lab9\lab9\obj\Debug\net6.0\lab9.GeneratedMSBuildEditorConfig.editorconfig
+D:\GIT University\SibSUTIS8semester\STP2\lab9\lab9\obj\Debug\net6.0\lab9.AssemblyInfoInputs.cache
+D:\GIT University\SibSUTIS8semester\STP2\lab9\lab9\obj\Debug\net6.0\lab9.AssemblyInfo.cs
+D:\GIT University\SibSUTIS8semester\STP2\lab9\lab9\obj\Debug\net6.0\lab9.csproj.CoreCompileInputs.cache
+D:\GIT University\SibSUTIS8semester\STP2\lab9\lab9\obj\Debug\net6.0\lab9.dll
+D:\GIT University\SibSUTIS8semester\STP2\lab9\lab9\obj\Debug\net6.0\refint\lab9.dll
+D:\GIT University\SibSUTIS8semester\STP2\lab9\lab9\obj\Debug\net6.0\lab9.pdb
+D:\GIT University\SibSUTIS8semester\STP2\lab9\lab9\obj\Debug\net6.0\ref\lab9.dll

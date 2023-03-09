@@ -1,0 +1,871 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr.Tests.MSTest\\rgr.Tests.MSTest.csproj": {}
+  },
+  "projects": {
+    "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab10\\lab10\\lab10.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab10\\lab10\\lab10.csproj",
+        "projectName": "lab10",
+        "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab10\\lab10\\lab10.csproj",
+        "packagesPath": "C:\\Users\\wwwsy\\.nuget\\packages\\",
+        "outputPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab10\\lab10\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wwwsy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab11\\lab11\\lab11.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab11\\lab11\\lab11.csproj",
+        "projectName": "lab11",
+        "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab11\\lab11\\lab11.csproj",
+        "packagesPath": "C:\\Users\\wwwsy\\.nuget\\packages\\",
+        "outputPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab11\\lab11\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wwwsy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab5\\lab5\\lab5.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab5\\lab5\\lab5.csproj",
+        "projectName": "lab5",
+        "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab5\\lab5\\lab5.csproj",
+        "packagesPath": "C:\\Users\\wwwsy\\.nuget\\packages\\",
+        "outputPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab5\\lab5\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wwwsy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab6\\lab6\\lab6.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab6\\lab6\\lab6.csproj",
+        "projectName": "lab6",
+        "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab6\\lab6\\lab6.csproj",
+        "packagesPath": "C:\\Users\\wwwsy\\.nuget\\packages\\",
+        "outputPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab6\\lab6\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wwwsy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab7\\lab7\\lab7.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab7\\lab7\\lab7.csproj",
+        "projectName": "lab7",
+        "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab7\\lab7\\lab7.csproj",
+        "packagesPath": "C:\\Users\\wwwsy\\.nuget\\packages\\",
+        "outputPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab7\\lab7\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wwwsy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab8\\lab8\\lab8.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab8\\lab8\\lab8.csproj",
+        "projectName": "lab8",
+        "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab8\\lab8\\lab8.csproj",
+        "packagesPath": "C:\\Users\\wwwsy\\.nuget\\packages\\",
+        "outputPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab8\\lab8\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wwwsy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab9\\lab9\\lab9.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab9\\lab9\\lab9.csproj",
+        "projectName": "lab9",
+        "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab9\\lab9\\lab9.csproj",
+        "packagesPath": "C:\\Users\\wwwsy\\.nuget\\packages\\",
+        "outputPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab9\\lab9\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wwwsy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\lab12\\lab12.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\lab12\\lab12.csproj",
+        "projectName": "lab12",
+        "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\lab12\\lab12.csproj",
+        "packagesPath": "C:\\Users\\wwwsy\\.nuget\\packages\\",
+        "outputPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\lab12\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wwwsy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab5\\lab5\\lab5.csproj": {
+                "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab5\\lab5\\lab5.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr.Core\\rgr.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr.Core\\rgr.Core.csproj",
+        "projectName": "rgr.Core",
+        "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr.Core\\rgr.Core.csproj",
+        "packagesPath": "C:\\Users\\wwwsy\\.nuget\\packages\\",
+        "outputPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr.Core\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wwwsy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr.Tests.MSTest\\rgr.Tests.MSTest.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr.Tests.MSTest\\rgr.Tests.MSTest.csproj",
+        "projectName": "rgr.Tests.MSTest",
+        "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr.Tests.MSTest\\rgr.Tests.MSTest.csproj",
+        "packagesPath": "C:\\Users\\wwwsy\\.nuget\\packages\\",
+        "outputPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr.Tests.MSTest\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wwwsy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0-windows10.0.22621.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0-windows10.0.22621": {
+            "targetAlias": "net6.0-windows10.0.22621.0",
+            "projectReferences": {
+              "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr\\rgr.csproj": {
+                "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr\\rgr.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0-windows10.0.22621": {
+          "targetAlias": "net6.0-windows10.0.22621.0",
+          "dependencies": {
+            "MSTest.TestAdapter": {
+              "target": "Package",
+              "version": "[2.2.10, )"
+            },
+            "MSTest.TestFramework": {
+              "target": "Package",
+              "version": "[2.2.10, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.2.0, )"
+            },
+            "coverlet.collector": {
+              "target": "Package",
+              "version": "[3.1.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-arm",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-arm64",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x86",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-arm",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-arm64",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x64",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x86",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.Windows.SDK.NET.Ref",
+              "version": "[10.0.22621.27, 10.0.22621.27]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-arm64",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x86",
+              "version": "[6.0.9, 6.0.9]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.Windows.SDK.NET.Ref": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win10-arm": {
+          "#import": []
+        },
+        "win10-arm-aot": {
+          "#import": []
+        },
+        "win10-arm64-aot": {
+          "#import": []
+        },
+        "win10-x64": {
+          "#import": []
+        },
+        "win10-x64-aot": {
+          "#import": []
+        },
+        "win10-x86": {
+          "#import": []
+        },
+        "win10-x86-aot": {
+          "#import": []
+        }
+      }
+    },
+    "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr\\rgr.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr\\rgr.csproj",
+        "projectName": "rgr",
+        "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr\\rgr.csproj",
+        "packagesPath": "C:\\Users\\wwwsy\\.nuget\\packages\\",
+        "outputPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "D:\\Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\wwwsy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0-windows10.0.22621.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0-windows10.0.22621": {
+            "targetAlias": "net6.0-windows10.0.22621.0",
+            "projectReferences": {
+              "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab10\\lab10\\lab10.csproj": {
+                "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab10\\lab10\\lab10.csproj"
+              },
+              "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab11\\lab11\\lab11.csproj": {
+                "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab11\\lab11\\lab11.csproj"
+              },
+              "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab5\\lab5\\lab5.csproj": {
+                "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab5\\lab5\\lab5.csproj"
+              },
+              "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab6\\lab6\\lab6.csproj": {
+                "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab6\\lab6\\lab6.csproj"
+              },
+              "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab7\\lab7\\lab7.csproj": {
+                "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab7\\lab7\\lab7.csproj"
+              },
+              "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab8\\lab8\\lab8.csproj": {
+                "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab8\\lab8\\lab8.csproj"
+              },
+              "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab9\\lab9\\lab9.csproj": {
+                "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\lab9\\lab9\\lab9.csproj"
+              },
+              "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\lab12\\lab12.csproj": {
+                "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\lab12\\lab12.csproj"
+              },
+              "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr.Core\\rgr.Core.csproj": {
+                "projectPath": "D:\\GIT University\\SibSUTIS8semester\\STP2\\rgr\\rgr.Core\\rgr.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0-windows10.0.22621": {
+          "targetAlias": "net6.0-windows10.0.22621.0",
+          "dependencies": {
+            "CommunityToolkit.Mvvm": {
+              "target": "Package",
+              "version": "[7.1.2, )"
+            },
+            "Microsoft.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[6.0.1, )"
+            },
+            "Microsoft.WindowsAppSDK": {
+              "target": "Package",
+              "version": "[1.1.3, )"
+            },
+            "Microsoft.Xaml.Behaviors.WinUI.Managed": {
+              "target": "Package",
+              "version": "[2.0.8, )"
+            },
+            "WinUIEx": {
+              "target": "Package",
+              "version": "[1.8.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-arm64",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.AspNetCore.App.Runtime.win-x86",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-arm64",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x64",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Runtime.win-x86",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.Windows.SDK.NET.Ref",
+              "version": "[10.0.22621.27, 10.0.22621.27]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-arm64",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
+              "version": "[6.0.9, 6.0.9]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x86",
+              "version": "[6.0.9, 6.0.9]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.Windows.SDK.NET.Ref": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win10-arm64": {
+          "#import": []
+        },
+        "win10-x64": {
+          "#import": []
+        },
+        "win10-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}
