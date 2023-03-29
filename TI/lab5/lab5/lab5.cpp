@@ -113,7 +113,7 @@ void randomMat(string fname) {
 }
 
 tuple<vector<string>, int, int> ReadMatrix(string filename) {
-    ifstream file_in("input.txt");
+    ifstream file_in(filename);
     if (!file_in.is_open()) {
         throw new exception("Cannot open matrix file");
     }
