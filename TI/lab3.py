@@ -49,14 +49,17 @@ def getMethod(text: str, probabilities: tuple[list[str], list[float]],
 
 
 def main():
-    filename = 'lab2/text.txt'
+    filename = 'lab1/probability.txt'
 
     text = utils.normalize_text(filename)
+    with open(filename, 'r', encoding='utf-8') as file:
+        text = ''.join([line.strip() for line in file.readlines()])
+
     probabilities_list = [
         formulas.getSymbolsAndProbabilities(text, symbol_count)
         for symbol_count in range(1, 2)
     ]
-    text_entropy = formulas.calculateEntropy(probabilities_list[0][1])
+    text_entropy = 2
 
     codings = {
         "huffman":
@@ -68,7 +71,7 @@ def main():
     rows: list[list[str]] = []
     for coding_ in codings:
         rows.append([
-            coding_, 'Киберзолушка',
+            coding_, 'probability',
             codings[coding_]["average_length"] - text_entropy
         ])
         for entropy in codings[coding_]["entropy_list"]:
