@@ -178,6 +178,7 @@ public class Calculator<T, U> : ObservableObject
     {
         ClearBuffer();
         ClearInput();
+        Processor.Reset();
     }
 
     public void ToggleNegative()

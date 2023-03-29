@@ -43,12 +43,14 @@ public class Memory<T>
     public void Add(T obj)
     {
         _isOn = true;
+        _number.Base = obj.Base;
         _number = (dynamic?)_number + (dynamic?)obj;
     }
 
     public void Subtract(T obj)
     {
         _isOn = true;
+        _number.Base = obj.Base;
         _number = (dynamic?)_number - (dynamic?)obj;
     }
 

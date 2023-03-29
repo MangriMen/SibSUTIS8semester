@@ -75,7 +75,7 @@ public class ComplexEditor : Editor
     {
         if (IsNull)
         {
-            _real.AddDigit(ZERO);
+            _real.AddDigit(PNumberEditor.ZERO);
         }
 
         if (Separator != SEPARATOR)
@@ -123,7 +123,14 @@ public class ComplexEditor : Editor
 
     public override string ToggleNegative()
     {
-        HaveSign = !HaveSign;
+        if (!HaveSeparator)
+        {
+            _real.ToggleNegative();
+        }
+        else
+        {
+            _img.ToggleNegative();
+        }
 
         return Number;
     }
